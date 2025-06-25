@@ -25,4 +25,4 @@ jobs:
         run: npm run build -- --configuration production
 
       - name: Deploy to GitHub Pages
-        run: npx angular-cli-ghpages --dir=dist/<nom-de-ton-projet> --cname app.bailo.ch
+        run: npx angular-cli-ghpages --dir=dist/bailo-webapp --cname app.bailo.ch
