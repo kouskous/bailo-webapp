@@ -24,11 +24,7 @@ import {
 export class LeaseCard {
   @Input()
   lease: Lease | undefined;
-  protected readonly HouseIcon = HouseIcon;
   protected readonly MapPinIcon = MapPinIcon;
   protected readonly CalendarIcon = CalendarIcon;
-  protected readonly SwissFrancIcon = SwissFrancIcon;
-  protected readonly HandCoinsIcon = HandCoinsIcon;
-  protected readonly DollarSignIcon = DollarSignIcon;
   protected readonly Banknote = Banknote;
 }
