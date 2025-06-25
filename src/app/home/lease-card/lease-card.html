@@ -15,15 +15,15 @@
     <hr class="border-t border-gray-200/50 my-2"/>
 
     <!-- 3. Période du bail -->
-    <div class="flex items-center text-sm text-gray-600">
-      <span class="mr-2">📅</span>
+    <div class="flex items-center text-sm flex items-center gap-1 text-gray-600">
+      <lucide-icon [img]="CalendarIcon"></lucide-icon>
       <span>{{ lease.startDate | date:'MMM y' }} – {{ lease.endDate | date:'MMM y' }}</span>
     </div>
 
     <!-- 4. Loyer -->
-    <div class="flex items-baseline text-gray-800">
-      <span class="text-xl font-semibold">💰 {{ lease.rentAmount }}</span>
-      <span class="ml-1 text-sm font-medium">{{ lease.rentCurrency }}</span>
+    <div class="flex items-baseline text-gray-800 flex items-center gap-1">
+      <lucide-icon [img]="Banknote"></lucide-icon>
+      <span class="ml-1 text-sm font-medium"> {{ lease.rentAmount }} {{ lease.rentCurrency }}</span>
       <span class="ml-2 text-sm text-gray-500">/ {{ lease.paymentFrequency || 'mois' }}</span>
     </div>
   </div>
