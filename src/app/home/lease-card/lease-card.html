@@ -1,0 +1,32 @@
+@if (lease) {
+  <div
+    class="max-w-md w-full bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-6 shadow-lg text-gray-900 cursor-pointer space-y-4">
+
+    <!-- 1. Nom du bien (titre principal) -->
+    <h2 class="text-2xl font-bold leading-tight">
+      {{ lease.property?.name }}
+    </h2>
+
+    <!-- 2. Adresse (sous-titre) -->
+    <p class="text-sm text-gray-700">
+      {{ lease.property?.address?.street }}, {{ lease.property?.address?.city }}
+    </p>
+
+    <hr class="border-t border-gray-200/50 my-2"/>
+
+    <!-- 3. Période du bail -->
+    <div class="flex items-center text-sm text-gray-600">
+      <span class="mr-2">📅</span>
+      <span>{{ lease.startDate | date:'MMM y' }} – {{ lease.endDate | date:'MMM y' }}</span>
+    </div>
+
+    <!-- 4. Loyer -->
+    <div class="flex items-baseline text-gray-800">
+      <span class="text-xl font-semibold">💰 {{ lease.rentAmount }}</span>
+      <span class="ml-1 text-sm font-medium">{{ lease.rentCurrency }}</span>
+      <span class="ml-2 text-sm text-gray-500">/ {{ lease.paymentFrequency || 'mois' }}</span>
+    </div>
+  </div>
+
+}
+
