@@ -1,13 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Lease} from '../../model/lease/lease';
 import {LeaseRepository} from '../../repository/lease-repository';
-import {DatePipe} from '@angular/common';
 import {LeaseCard} from './lease-card/lease-card';
 
 @Component({
   selector: 'app-home',
   imports: [
-    DatePipe,
     LeaseCard
   ],
   templateUrl: './home.html',

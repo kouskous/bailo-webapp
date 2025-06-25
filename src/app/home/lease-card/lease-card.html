@@ -8,8 +8,8 @@
     </h2>
 
     <!-- 2. Adresse (sous-titre) -->
-    <p class="text-sm text-gray-700">
-      {{ lease.property?.address?.street }}, {{ lease.property?.address?.city }}
+    <p class="text-sm text-gray-700 flex items-center gap-1">
+      <lucide-icon [img]="MapPinIcon"></lucide-icon> {{ lease.property?.address?.street }}, {{ lease.property?.address?.city }}
     </p>
 
     <hr class="border-t border-gray-200/50 my-2"/>
