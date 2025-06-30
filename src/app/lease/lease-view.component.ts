@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {FlameIcon, HomeIcon, LayoutIcon, LucideAngularModule, MapPinIcon, RulerIcon} from 'lucide-angular';
+import {FlameIcon, HomeIcon, LayoutIcon, LucideAngularModule, MapPinIcon, PencilIcon, RulerIcon} from 'lucide-angular';
 import {LeaseRepository} from '../../repository/lease-repository';
 import {Lease} from '../../model/lease/lease';
 import {ActivatedRoute, RouterLink} from '@angular/router';
@@ -39,4 +39,9 @@ export class LeaseView implements OnInit {
   protected readonly MapPinIcon = MapPinIcon;
   protected readonly HomeIcon = HomeIcon;
   protected readonly FlameIcon = FlameIcon;
+  protected readonly PencilIcon = PencilIcon;
+
+  editProperty() {
+
+  }
 }
