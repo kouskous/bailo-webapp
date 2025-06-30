@@ -17,7 +17,7 @@ export class App {
   constructor(public auth: AuthService) {
     combineLatest([
       this.auth.isLoading$,
-      timer(3000)
+      timer(2000)
     ]).pipe(take(1))
       .subscribe(() => {
        this.isLoading = false;

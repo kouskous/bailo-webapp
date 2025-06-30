@@ -4,13 +4,16 @@ import {LeaseRepository} from '../../repository/lease-repository';
 import {LeaseCard} from './lease-card/lease-card';
 import {RouterLink} from '@angular/router';
 import {LucideAngularModule, PlusCircleIcon} from 'lucide-angular';
+import {LeaseSkeletonCard} from './lease-skeleton-card/lease-skeleton-card';
+import {combineLatest, take, timer} from 'rxjs';
 
 @Component({
   selector: 'app-home',
   imports: [
     LeaseCard,
     RouterLink,
-    LucideAngularModule
+    LucideAngularModule,
+    LeaseSkeletonCard
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss'
@@ -19,6 +22,7 @@ export class Home implements OnInit {
 
 
   leases: Lease[] = [];
+  loading = true;
 
   constructor(private readonly leaseRepository: LeaseRepository) {
   }
@@ -28,10 +32,13 @@ export class Home implements OnInit {
   }
 
   private loadLeases() {
-    this.leaseRepository.findAll().subscribe((leases: Lease[]) => {
+    combineLatest([
+      this.leaseRepository.findAll(),
+      timer(2000)
+    ]).pipe(take(1)).subscribe(([leases]) => {
       this.leases = leases;
-      console.log('Leases loaded:', this.leases);
-    })
+      this.loading = false;
+    });
   }
 
   protected readonly PlusCircleIcon = PlusCircleIcon;

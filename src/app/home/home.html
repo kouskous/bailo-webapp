@@ -1,16 +1,13 @@
 <div class="px-2 md:px-48 py-4 md:py-8">
-  @if (leases.length == 0) {
-    <div class="text-3xl font-bold mb-4 md:mb-8 text-gray-800 gap-2">Bonjour Koussila</div>
-    <div class="mt-8  bg-white rounded-lg shadow-sm pt-4 pb-8 flex flex-col items-center justify-center">
-      <img class="h-64" alt="home" src="/illustrations/home.png">
-      <div class="mt-2 text-2xl text-gray-600 font-bold mb-4">Vous n'avez pas de bien en location</div>
-      <button type="button" class="mt-4 bg-red-400 text-white font-semibold p-4 rounded-xl cursor-pointer">Ajouter une
-        location
-      </button>
-    </div>
-  } @else {
-    <div class="text-3xl font-bold mb-4 md:mb-8 text-gray-800 gap-2">Mes locations</div>
-    <div class="flex flex-row flex-wrap gap-4">
+  <div class="text-3xl font-bold mb-4 md:mb-8 text-gray-800 gap-2">Mes locations</div>
+  <div class="flex flex-row flex-wrap gap-4">
+    @if (loading) {
+      @for (i of [1, 2, 3]; track i) {
+        <div class="w-full md:w-80">
+          <app-lease-skeleton-card></app-lease-skeleton-card>
+        </div>
+      }
+    } @else {
       @for (lease of leases; track lease.id) {
         <div class="w-full md:w-80">
           <app-lease-card [lease]="lease"></app-lease-card>
@@ -32,6 +29,6 @@
           Créez un nouveau contrat de location
         </p>
       </div>
-    </div>
-  }
+    }
+  </div>
 </div>
