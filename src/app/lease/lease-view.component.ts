@@ -1,9 +1,18 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {FlameIcon, HomeIcon, LayoutIcon, LucideAngularModule, MapPinIcon, PencilIcon, RulerIcon} from 'lucide-angular';
+import {
+  ArrowLeftIcon,
+  FlameIcon,
+  HomeIcon,
+  LayoutIcon,
+  LucideAngularModule,
+  MapPinIcon,
+  RulerIcon
+} from 'lucide-angular';
 import {LeaseRepository} from '../../repository/lease-repository';
 import {Lease} from '../../model/lease/lease';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {DatePipe, TitleCasePipe} from '@angular/common';
+import {LeaseViewSkeleton} from './lease-view-skeleton/lease-view-skeleton';
 
 @Component({
   selector: 'app-lease',
@@ -11,7 +20,8 @@ import {DatePipe, TitleCasePipe} from '@angular/common';
     LucideAngularModule,
     RouterLink,
     TitleCasePipe,
-    DatePipe
+    DatePipe,
+    LeaseViewSkeleton
   ],
   templateUrl: './lease-view.component.html',
   styleUrl: './lease-view.component.scss'
@@ -19,7 +29,8 @@ import {DatePipe, TitleCasePipe} from '@angular/common';
 export class LeaseView implements OnInit {
   leaseId: string | null = null;
   lease: Lease | undefined;
-  private route = inject(ActivatedRoute);
+  loading = true;
+  private readonly route = inject(ActivatedRoute);
   protected readonly RulerIcon = RulerIcon;
 
   constructor(private readonly leaseRepository: LeaseRepository) {
@@ -27,10 +38,10 @@ export class LeaseView implements OnInit {
 
   ngOnInit(): void {
     this.leaseId = this.route.snapshot.paramMap.get('id')
-    if( this.leaseId){
-      this.leaseRepository.findById(this.leaseId).subscribe((lease: Lease)=>{
-        console.log(lease);
+    if (this.leaseId) {
+      this.leaseRepository.findById(this.leaseId).subscribe((lease: Lease) => {
         this.lease = lease;
+        this.loading = false;
       })
     }
   }
@@ -39,9 +50,5 @@ export class LeaseView implements OnInit {
   protected readonly MapPinIcon = MapPinIcon;
   protected readonly HomeIcon = HomeIcon;
   protected readonly FlameIcon = FlameIcon;
-  protected readonly PencilIcon = PencilIcon;
-
-  editProperty() {
-
-  }
+  protected readonly ArrowLeftIcon = ArrowLeftIcon;
 }

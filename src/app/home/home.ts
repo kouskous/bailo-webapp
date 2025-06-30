@@ -34,7 +34,7 @@ export class Home implements OnInit {
   private loadLeases() {
     combineLatest([
       this.leaseRepository.findAll(),
-      timer(2000)
+      timer(1000)
     ]).pipe(take(1)).subscribe(([leases]) => {
       this.leases = leases;
       this.loading = false;

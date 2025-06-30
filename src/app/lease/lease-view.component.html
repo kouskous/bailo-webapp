@@ -1,108 +1,124 @@
-<div class=" md:px-48 py-4 md:py-8">
-  <div class="text-3xl font-bold mb-4 md:mb-8 text-gray-800 gap-2">{{ lease?.property?.name }}</div>
-  <div class="flex flex-wrap gap-4">
-    <div
-      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-4 hover:bg-opacity-40 transition cursor-pointer"
-      [routerLink]="['/lease', lease?.property?.id, 'property']"
-    >
-      <!-- Nom du bien -->
-      <h2 class="text-2xl font-bold">Votre bien</h2>
+@if (loading) {
+  <app-lease-view-skeleton></app-lease-view-skeleton>
+} @else {
+  <div class=" md:px-48 py-4 md:py-8">
+    <div class="flex items-center gap-4 mb-4 md:mb-8">
+      <a
+        routerLink="/home"
+        class="w-10 h-10 flex items-center justify-center bg-white bg-opacity-30 backdrop-blur-md rounded-full shadow-md hover:bg-opacity-40 transition"
+      >
+        <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-red-500"></lucide-icon>
+      </a>
 
-      <!-- Adresse -->
-      <p class="text-sm text-gray-700 flex items-center gap-1">
-        <lucide-icon [img]="MapPinIcon"></lucide-icon>
-        {{ lease?.property?.address?.street }}, {{ lease?.property?.address?.city }}
-      </p>
-
-      <hr class="border-t border-gray-300/50 my-2"/>
-
-      <!-- Type & Surface -->
-      <div class="text-sm text-gray-700 flex items-center gap-2">
-        <lucide-icon [img]="HomeIcon"></lucide-icon>
-        <span>{{ lease?.property?.type | titlecase }}</span> ·
-        <span>{{ lease?.property?.surface?.livingArea }} m²</span>
+      <div class="text-3xl font-bold text-gray-800">
+        {{ lease?.property?.name }}
       </div>
+    </div>
+    <div class="flex flex-wrap gap-4">
+      <div
+        class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-4 hover:bg-opacity-40 transition cursor-pointer"
+        [routerLink]="['/lease', lease?.property?.id, 'property']"
+      >
+        <!-- Nom du bien -->
+        <h2 class="text-2xl font-bold">Votre bien</h2>
 
-      <!-- Pièces -->
-      <div class="text-sm text-gray-700 flex items-center gap-2">
-        <lucide-icon [img]="LayoutIcon"></lucide-icon>
-        <span>{{ lease?.property?.roomDetails?.rooms }} pièces</span>
-        <span>· {{ lease?.property?.roomDetails?.bedrooms }} chambres</span>
-        <span>· {{ lease?.property?.roomDetails?.bathrooms }} sdb</span>
-      </div>
+        <!-- Adresse -->
+        <p class="text-sm text-gray-700 flex items-center gap-1">
+          <lucide-icon [img]="MapPinIcon"></lucide-icon>
+          {{ lease?.property?.address?.street }}, {{ lease?.property?.address?.city }}
+        </p>
 
-      <!-- Chauffage & DPE -->
-      <div class="text-sm text-gray-700 flex items-center gap-2">
-        <lucide-icon [img]="FlameIcon"></lucide-icon>
-        <span >Chauffage {{ lease?.property?.heating?.type?.toLowerCase() }}</span>
-        <span >· DPE {{ lease?.property?.energyLabel }}</span>
-      </div>
+        <hr class="border-t border-gray-300/50 my-2"/>
 
-      <!-- Caractéristiques -->
-      <div class="text-xs text-gray-600 flex flex-wrap gap-2 mt-2">
-        <span class="bg-gray-200 px-2 py-1 rounded-full">Balcon</span>
-        <span class="bg-gray-200 px-2 py-1 rounded-full">Terrasse</span>
-        <span class="bg-gray-200 px-2 py-1 rounded-full">Jardin</span>
-        <span class="bg-gray-200 px-2 py-1 rounded-full">Garage</span>
-        <span class="bg-gray-200 px-2 py-1 rounded-full">Cheminée</span>
-        <span class="bg-gray-200 px-2 py-1 rounded-full">Piscine</span>
-        <!-- ajoute ce que tu veux ici -->
-      </div>
-    </div >
-    <div class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2  cursor-pointer">
-      <h3 class="text-xl font-bold">Propriétaire</h3>
-      <div class="border-t border-gray-300/40 pt-2">
-        <div class="text-gray-800 font-medium">
-          Koussila ZEKRI
+        <!-- Type & Surface -->
+        <div class="text-sm text-gray-700 flex items-center gap-2">
+          <lucide-icon [img]="HomeIcon"></lucide-icon>
+          <span>{{ lease?.property?.type | titlecase }}</span> ·
+          <span>{{ lease?.property?.surface?.livingArea }} m²</span>
         </div>
-        <div class="text-xs text-gray-600">
-          koussila zekri&#64;gmail.com<br/>
-          +33123456789
+
+        <!-- Pièces -->
+        <div class="text-sm text-gray-700 flex items-center gap-2">
+          <lucide-icon [img]="LayoutIcon"></lucide-icon>
+          <span>{{ lease?.property?.roomDetails?.rooms }} pièces</span>
+          <span>· {{ lease?.property?.roomDetails?.bedrooms }} chambres</span>
+          <span>· {{ lease?.property?.roomDetails?.bathrooms }} sdb</span>
+        </div>
+
+        <!-- Chauffage & DPE -->
+        <div class="text-sm text-gray-700 flex items-center gap-2">
+          <lucide-icon [img]="FlameIcon"></lucide-icon>
+          <span>Chauffage {{ lease?.property?.heating?.type?.toLowerCase() }}</span>
+          <span>· DPE {{ lease?.property?.energyLabel }}</span>
+        </div>
+
+        <!-- Caractéristiques -->
+        <div class="text-xs text-gray-600 flex flex-wrap gap-2 mt-2">
+          <span class="bg-gray-200 px-2 py-1 rounded-full">Balcon</span>
+          <span class="bg-gray-200 px-2 py-1 rounded-full">Terrasse</span>
+          <span class="bg-gray-200 px-2 py-1 rounded-full">Jardin</span>
+          <span class="bg-gray-200 px-2 py-1 rounded-full">Garage</span>
+          <span class="bg-gray-200 px-2 py-1 rounded-full">Cheminée</span>
+          <span class="bg-gray-200 px-2 py-1 rounded-full">Piscine</span>
+          <!-- ajoute ce que tu veux ici -->
         </div>
       </div>
-      <h3 class="text-xl font-bold mt-8">Locataires</h3>
-      <div class="border-t border-gray-300/40 pt-2">
-        <div class="text-gray-800 font-medium">
-          Koussila ZEKRI
+      <div
+        class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2  cursor-pointer">
+        <h3 class="text-xl font-bold">Propriétaire</h3>
+        <div class="border-t border-gray-300/40 pt-2">
+          <div class="text-gray-800 font-medium">
+            Koussila ZEKRI
+          </div>
+          <div class="text-xs text-gray-600">
+            koussila zekri&#64;gmail.com<br/>
+            +33123456789
+          </div>
         </div>
-        <div class="text-xs text-gray-600">
-          koussila zekri&#64;gmail.com<br/>
-          +33123456789
+        <h3 class="text-xl font-bold mt-8">Locataires</h3>
+        <div class="border-t border-gray-300/40 pt-2">
+          <div class="text-gray-800 font-medium">
+            Koussila ZEKRI
+          </div>
+          <div class="text-xs text-gray-600">
+            koussila zekri&#64;gmail.com<br/>
+            +33123456789
+          </div>
+        </div>
+      </div>
+      <div
+        class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2  cursor-pointer">
+        <h3 class="text-xl font-bold">Détails de la location</h3>
+
+        <div class="border-t border-gray-300/40 pt-2 space-y-2 text-sm text-gray-700">
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-800">Période</span>
+            <span>{{ lease?.startDate | date:'dd MMM yyyy' }} – {{ lease?.endDate | date:'dd MMM yyyy' }}</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-800">Loyer</span>
+            <span>{{ lease?.rentAmount }} {{ lease?.rentCurrency }}</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-800">Fréquence</span>
+            <span>{{ lease?.paymentFrequency || 'Mensuel' }}</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-800">Dépôt de garantie</span>
+            <span>{{ lease?.securityDeposit }} {{ lease?.rentCurrency }}</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="font-medium text-gray-800">Statut</span>
+            <span class="capitalize">{{ lease?.status?.toLowerCase() }}</span>
+          </div>
         </div>
       </div>
     </div>
-    <div class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2  cursor-pointer">
-      <h3 class="text-xl font-bold">Détails de la location</h3>
 
-      <div class="border-t border-gray-300/40 pt-2 space-y-2 text-sm text-gray-700">
-        <div class="flex justify-between">
-          <span class="font-medium text-gray-800">Période</span>
-          <span>{{ lease?.startDate | date:'dd MMM yyyy' }} – {{ lease?.endDate | date:'dd MMM yyyy' }}</span>
-        </div>
 
-        <div class="flex justify-between">
-          <span class="font-medium text-gray-800">Loyer</span>
-          <span>{{ lease?.rentAmount }} {{ lease?.rentCurrency }}</span>
-        </div>
-
-        <div class="flex justify-between">
-          <span class="font-medium text-gray-800">Fréquence</span>
-          <span>{{ lease?.paymentFrequency || 'Mensuel' }}</span>
-        </div>
-
-        <div class="flex justify-between" >
-          <span class="font-medium text-gray-800">Dépôt de garantie</span>
-          <span>{{ lease?.securityDeposit }} {{ lease?.rentCurrency }}</span>
-        </div>
-
-        <div class="flex justify-between">
-          <span class="font-medium text-gray-800">Statut</span>
-          <span class="capitalize">{{ lease?.status?.toLowerCase() }}</span>
-        </div>
-      </div>
-    </div>
   </div>
-
-
-
-</div>
+}
