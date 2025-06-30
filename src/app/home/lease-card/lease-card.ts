@@ -1,22 +1,15 @@
 import {Component, Input} from '@angular/core';
 import {Lease} from '../../../model/lease/lease';
 import {DatePipe} from '@angular/common';
-import {
-  Banknote,
-  CalendarIcon,
-  DollarSignIcon,
-  HandCoinsIcon,
-  HouseIcon,
-  LucideAngularModule,
-  MapPinIcon,
-  SwissFrancIcon
-} from 'lucide-angular';
+import {Banknote, CalendarIcon, LucideAngularModule, MapPinIcon} from 'lucide-angular';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-lease-card',
   imports: [
     DatePipe,
-    LucideAngularModule
+    LucideAngularModule,
+    RouterLink
   ],
   templateUrl: './lease-card.html',
   styleUrl: './lease-card.scss'

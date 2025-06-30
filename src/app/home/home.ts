@@ -2,11 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import {Lease} from '../../model/lease/lease';
 import {LeaseRepository} from '../../repository/lease-repository';
 import {LeaseCard} from './lease-card/lease-card';
+import {RouterLink} from '@angular/router';
+import {LucideAngularModule, PlusCircleIcon} from 'lucide-angular';
 
 @Component({
   selector: 'app-home',
   imports: [
-    LeaseCard
+    LeaseCard,
+    RouterLink,
+    LucideAngularModule
   ],
   templateUrl: './home.html',
   styleUrl: './home.scss'
@@ -29,4 +33,6 @@ export class Home implements OnInit {
       console.log('Leases loaded:', this.leases);
     })
   }
+
+  protected readonly PlusCircleIcon = PlusCircleIcon;
 }

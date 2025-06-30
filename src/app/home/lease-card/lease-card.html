@@ -1,5 +1,6 @@
 @if (lease) {
-  <div class="max-w-md w-full bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 cursor-pointer space-y-4">
+  <div class="bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 cursor-pointer space-y-4"
+    [routerLink]="['/lease', lease.id]">
 
     <div class="h-32 flex justify-center">
       <img class="h-full" src="/illustrations/home.svg">

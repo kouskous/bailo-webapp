@@ -24,10 +24,15 @@ export class LeaseRepository {
   }
 
   findById(id: string): Observable<Lease> {
-    return from(supabase.from('lease').select('*').eq('id', id).single()).pipe(
+    return from(supabase.from('lease')
+      .select(`*,
+        property:property (*, address:address (*)),
+        tenants: tenant (*, address:address (*))
+      `).eq('id', id).single()
+    ).pipe(
       map((response: any) => {
         if (response.error) throw response.error;
-        return response.data as Lease;
+        return convertKeysToCamelCase<Lease>(response.data);
       })
     );
   }

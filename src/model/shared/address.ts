@@ -4,6 +4,8 @@ export interface Address {
   city: string;
   state: string;
   country: string;
+  floor?: number;
+  apartmentNumber?: string;
   latitude?: number;
   longitude?: number;
 }

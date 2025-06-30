@@ -12,8 +12,26 @@
     <div class="text-3xl font-bold mb-4 md:mb-8 text-gray-800 gap-2">Mes locations</div>
     <div class="flex flex-row flex-wrap gap-4">
       @for (lease of leases; track lease.id) {
-        <app-lease-card [lease]="lease"></app-lease-card>
+        <div class="w-full md:w-80">
+          <app-lease-card [lease]="lease"></app-lease-card>
+        </div>
+
       }
+      <div
+        class="w-full md:w-80 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 cursor-pointer space-y-4 hover:bg-opacity-40 transition"
+        [routerLink]="['/lease', 'new']">
+        <div class="h-32 flex justify-center items-center">
+          <lucide-icon [img]="PlusCircleIcon" class="w-12 h-12 text-red-500"></lucide-icon>
+        </div>
+
+        <h2 class="text-2xl font-bold leading-tight text-center">
+          Nouveau bail
+        </h2>
+
+        <p class="text-sm text-gray-600 text-center">
+          Créez un nouveau contrat de location
+        </p>
+      </div>
     </div>
   }
 </div>
