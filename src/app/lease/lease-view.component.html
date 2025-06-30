@@ -1,7 +1,7 @@
 @if (loading) {
   <app-lease-view-skeleton></app-lease-view-skeleton>
 } @else {
-  <div class=" md:px-48 py-4 md:py-8">
+  <div class="p-2 md:px-48 py-4 md:py-8">
     <div class="flex items-center gap-4 mb-4 md:mb-8">
       <a
         routerLink="/home"
@@ -20,7 +20,7 @@
         [routerLink]="['/lease', lease?.property?.id, 'property']"
       >
         <!-- Nom du bien -->
-        <h2 class="text-2xl font-bold">Votre bien</h2>
+        <h2 class="text-2xl font-bold">Mon bien</h2>
 
         <!-- Adresse -->
         <p class="text-sm text-gray-700 flex items-center gap-1">
@@ -65,7 +65,7 @@
       </div>
       <div
         class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2  cursor-pointer">
-        <h3 class="text-xl font-bold">Propriétaire</h3>
+        <h3 class="text-xl font-bold">Propriétaires</h3>
         <div class="border-t border-gray-300/40 pt-2">
           <div class="text-gray-800 font-medium">
             Koussila ZEKRI
@@ -114,6 +114,12 @@
           <div class="flex justify-between">
             <span class="font-medium text-gray-800">Statut</span>
             <span class="capitalize">{{ lease?.status?.toLowerCase() }}</span>
+          </div>
+          <div class="flex items-center justify-center mt-8">
+            <button class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition flex items-center gap-2">
+              <lucide-icon [img]="FileTextIcon" class="w-5 h-5"></lucide-icon>
+              Générer le bail (PDF)
+            </button>
           </div>
         </div>
       </div>

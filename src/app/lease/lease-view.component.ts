@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {
-  ArrowLeftIcon,
+  ArrowLeftIcon, FileTextIcon,
   FlameIcon,
   HomeIcon,
   LayoutIcon,
@@ -51,4 +51,5 @@ export class LeaseView implements OnInit {
   protected readonly HomeIcon = HomeIcon;
   protected readonly FlameIcon = FlameIcon;
   protected readonly ArrowLeftIcon = ArrowLeftIcon;
+  protected readonly FileTextIcon = FileTextIcon;
 }
