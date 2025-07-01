@@ -1,4 +1,5 @@
-<div class=" md:px-48 py-4 md:py-8">
+<div class="p-2 md:px-48 py-4 md:py-8">
+  <!-- Header -->
   <div class="flex items-center gap-4 mb-4 md:mb-8">
     <a
       routerLink="/home"
@@ -6,9 +7,42 @@
     >
       <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-red-500"></lucide-icon>
     </a>
+    <div class="text-3xl font-bold text-gray-800">Éditer le bien</div>
+  </div>
 
-    <div class="text-3xl font-bold text-gray-800">
-      Mon Bien
+  <div class="flex flex-wrap gap-4">
+    <div
+      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
+      <h3 class="text-xl font-bold">Informations générales</h3>
+      <label class="block mb-4">
+        <span class="text-gray-700 font-medium">Nom du bien</span>
+        <input
+          type="text"
+          class="mt-1 w-full rounded-md border border-gray-300 bg-white bg-opacity-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50 transition"
+          placeholder="Nom du bien"
+        />
+      </label>
+    </div>
+    <div
+      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
+      <h3 class="text-xl font-bold">Adresse</h3>
+    </div>
+    <div
+      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
+      <h3 class="text-xl font-bold">Découpage</h3>
+    </div>
+    <div
+      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
+      <h3 class="text-xl font-bold">Surfaces</h3>
+    </div>
+    <div
+      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
+      <h3 class="text-xl font-bold">Performance Enérgetique</h3>
+    </div>
+    <div
+      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
+      <h3 class="text-xl font-bold">Options</h3>
     </div>
   </div>
+
 </div>
