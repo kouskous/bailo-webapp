@@ -18,7 +18,7 @@ export class TextInput implements ControlValueAccessor {
 
   @Input() label = '';
   @Input() placeholder = '';
-  @Input() type: 'text' | 'email' | 'password' = 'text';
+  @Input() type: 'number' | 'text' | 'email' | 'password' = 'text';
 
   value = '';
   isDisabled = false;

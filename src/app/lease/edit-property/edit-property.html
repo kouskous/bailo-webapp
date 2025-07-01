@@ -13,9 +13,12 @@
   <div class="flex flex-wrap gap-4">
     <div
       class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
-      <h3 class="text-xl font-bold">Informations générales</h3>
+      <h3 class="text-xl font-bold  flex items-center gap-2">
+        <lucide-icon [img]="TagIcon" class="w-5 h-5"></lucide-icon>
+        Informations générales
+      </h3>
       <div>
-        <app-text-input [label]="'Nom du bien'" [placeholder]="'Exemple: Studio Lausane'"></app-text-input>
+        <app-text-input [label]="'Nom du bien'" [placeholder]="'Exemple: Studio Lausanne'"></app-text-input>
       </div>
       <div class="mt-4">
         <app-dropdown [label]="'Type du bien'" [options]="propertyTypes"></app-dropdown>
@@ -24,7 +27,10 @@
 
     <div
       class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
-      <h3 class="text-xl font-bold">Adresse</h3>
+      <h3 class="text-xl font-bold flex items-center gap-2">
+        <lucide-icon [img]="MapPinIcon" class="w-5 h-5"></lucide-icon>
+        Adresse
+      </h3>
       <div>
         <app-text-input [label]="'Adresse'" [placeholder]="'Exemple: 2 rue du vieux moulin'"></app-text-input>
       </div>
@@ -36,26 +42,99 @@
         <app-text-input [label]="'Etage'" [placeholder]="'Exemple: 108'"></app-text-input>
       </div>
       <div class=" flex gap-4">
-        <app-text-input  [label]="'Code postal'" [placeholder]="'Exemple: 1005'"></app-text-input>
+        <app-text-input [label]="'Code postal'" [placeholder]="'Exemple: 1005'"></app-text-input>
         <app-text-input [label]="'Ville'" [placeholder]="'Lausanne'"></app-text-input>
       </div>
     </div>
     <div
       class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
-      <h3 class="text-xl font-bold">Découpage</h3>
+      <h3 class=" text-xl font-bold flex items-center gap-2">
+        <lucide-icon [img]="LayoutIcon" class="w-5 h-5"></lucide-icon>
+        Découpage
+      </h3>
+      <div class="flex gap-4">
+        <app-text-input [label]="'Nombre de pièces'" [placeholder]="'Exemple: 4'" inputType="number"></app-text-input>
+        <app-text-input [label]="'Chambres'" [placeholder]="'Exemple: 2'" inputType="number"></app-text-input>
+      </div>
+      <div class="flex gap-4">
+        <app-text-input [label]="'Salles de bain'" [placeholder]="'Exemple: 1'" inputType="number"></app-text-input>
+        <app-text-input [label]="'Toilettes'" [placeholder]="'Exemple: 1'" inputType="number"></app-text-input>
+      </div>
     </div>
     <div
       class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
-      <h3 class="text-xl font-bold">Surfaces</h3>
+      <h3 class=" text-xl font-bold flex items-center gap-2">
+        <lucide-icon [img]="RulerIcon" class="w-5 h-5"></lucide-icon>
+        Surfaces
+      </h3>
+      <div class="flex gap-4">
+        <app-text-input [label]="'Surface habitable (m²)'" [placeholder]="'Exemple: 85'"
+                        type="number"></app-text-input>
+        <app-text-input [label]="'Surface totale (m²)'" [placeholder]="'Exemple: 100'"
+                        type="number"></app-text-input>
+      </div>
+      <div class="flex gap-4">
+        <app-text-input [label]="'Surface du terrain (m²)'" [placeholder]="'Exemple: 300'"
+                        type="number"></app-text-input>
+        <app-text-input [label]="'Balcon (m²)'" [placeholder]="'Exemple: 5'" type="number"></app-text-input>
+      </div>
+      <div class="flex gap-4">
+        <app-text-input [label]="'Terrasse (m²)'" [placeholder]="'Exemple: 12'" type="number"></app-text-input>
+        <app-text-input [label]="'Jardin (m²)'" [placeholder]="'Exemple: 150'" type="number"></app-text-input>
+      </div>
     </div>
     <div
       class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
-      <h3 class="text-xl font-bold">Performance Enérgetique</h3>
+      <h3 class=" text-xl font-bold flex items-center gap-2">
+        <lucide-icon [img]="FlameIcon" class="w-5 h-5"></lucide-icon>
+        Performance Enérgetique
+      </h3>
+      <div class="flex gap-4">
+        <app-text-input
+          [label]="'Année de construction'"
+          [placeholder]="'Exemple: 2005'"
+          type="number">
+        </app-text-input>
+        <app-text-input
+          [label]="'Année de rénovation'"
+          [placeholder]="'Exemple: 2020'"
+          type="number">
+        </app-text-input>
+      </div>
+      <div class="">
+        <app-dropdown
+          [label]="'Système de chauffage'"
+          [options]="heatingOptions">
+        </app-dropdown>
+      </div>
+      <div class="">
+        <app-dropdown
+          [label]="'Étiquette énergétique (DPE)'"
+          [options]="energyLabels">
+        </app-dropdown>
+      </div>
     </div>
     <div
       class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
-      <h3 class="text-xl font-bold">Options</h3>
+      <h3 class=" text-xl font-bold flex items-center gap-2">
+        <lucide-icon [img]="SettingsIcon" class="w-5 h-5"></lucide-icon>
+        Équipements
+      </h3>
+      <div class="grid grid-cols-2 gap-2">
+        @for (feature of featuresOptions; track feature.key) {
+          <div>
+            <app-checkbox
+              [label]="feature.label">
+            </app-checkbox>
+          </div>
+        }
+      </div>
     </div>
   </div>
+  <button
+    class="fixed bottom-6 right-6 bg-red-600 hover:bg-red-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg"
+    aria-label="Sauvegarder">
+    <lucide-icon [img]="SaveIcon" class="w-6 h-6"></lucide-icon>
+  </button>
 
 </div>

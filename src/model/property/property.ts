@@ -18,7 +18,7 @@ export interface RoomDetails {
 
 export interface Heating {
   type: 'ELECTRIC' | 'GAS' | 'FUEL' | 'HEAT_PUMP' | 'DISTRICT' | 'WOOD' | 'SOLAR' | 'OTHER';
-  DISTRIBUTION: 'RADIATOR' | 'UNDERFLOOR' | 'AIR' | 'OTHER';
+  distribution: 'RADIATOR' | 'UNDERFLOOR' | 'AIR' | 'OTHER';
 }
 
 export interface PropertyFeature {

@@ -1,5 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {ArrowLeftIcon, LucideAngularModule, SaveIcon} from 'lucide-angular';
+import {
+  ArrowLeftIcon, FlameIcon,
+  LayoutIcon,
+  LucideAngularModule,
+  MapPin,
+  MapPinIcon,
+  RulerIcon,
+  SaveIcon, SettingsIcon,
+  TagIcon
+} from 'lucide-angular';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Property} from '../../../model/property/property';
@@ -7,6 +16,7 @@ import {Lease} from '../../../model/lease/lease';
 import {LeaseRepository} from '../../../repository/lease-repository';
 import {TextInput} from '../../layout/components/text-input/text-input';
 import {Dropdown} from '../../layout/components/dropdown/dropdown';
+import {Checkbox} from '../../layout/components/checkbox/checkbox';
 
 @Component({
   selector: 'app-edit-property',
@@ -16,7 +26,8 @@ import {Dropdown} from '../../layout/components/dropdown/dropdown';
     ReactiveFormsModule,
     FormsModule,
     TextInput,
-    Dropdown
+    Dropdown,
+    Checkbox
   ],
   templateUrl: './edit-property.html',
   styleUrl: './edit-property.scss'
@@ -25,19 +36,63 @@ export class EditProperty implements OnInit {
 
   propertyForm: FormGroup;
   property: Property | unknown = undefined;
-  heatingTypes = ['ELECTRIC', 'GAS', 'FUEL', 'HEAT_PUMP', 'DISTRICT', 'WOOD', 'SOLAR', 'OTHER'];
-  heatingDistributions = ['RADIATOR', 'UNDERFLOOR', 'AIR', 'OTHER'];
-  propertyTypes = [
-    { key: 'STUDIO', label: 'Studio' },
-    { key: 'APARTMENT', label: 'Appartement' },
-    { key: 'HOUSE', label: 'Maison' },
-    { key: 'DUPLEX', label: 'Duplex' },
-    { key: 'VILLA', label: 'Villa' },
-    { key: 'ROOM', label: 'Chambre' },
-    { key: 'COMMERCIAL', label: 'Local commercial' },
-    { key: 'LAND', label: 'Terrain' },
-    { key: 'OTHER', label: 'Autre' },
+  heatingOptions = [
+    {key: 'GAS', label: 'Gaz'},
+    {key: 'FUEL', label: 'Fioul'},
+    {key: 'ELECTRIC', label: 'Électrique'},
+    {key: 'HEAT_PUMP', label: 'Pompe à chaleur'},
+    {key: 'WOOD', label: 'Bois'},
+    {key: 'DISTRICT', label: 'Réseau urbain'},
+    {key: 'SOLAR', label: 'Solaire'}
   ];
+  heatingDistributions = [
+    {key: 'RADIATORS', label: 'Radiateurs'},
+    {key: 'UNDERFLOOR', label: 'Plancher chauffant'},
+    {key: 'AIR_BLOWER', label: 'Soufflage d’air chaud'},
+    {key: 'WALL_HEATING', label: 'Chauffage mural'},
+    {key: 'CEILING', label: 'Plafond chauffant'},
+    {key: 'STOVES', label: 'Poêles'},
+    {key: 'INDIVIDUAL_UNITS', label: 'Unités individuelles'},
+    {key: 'OTHER', label: 'Autre'}
+  ];
+  propertyTypes = [
+    {key: 'STUDIO', label: 'Studio'},
+    {key: 'APARTMENT', label: 'Appartement'},
+    {key: 'HOUSE', label: 'Maison'},
+    {key: 'DUPLEX', label: 'Duplex'},
+    {key: 'VILLA', label: 'Villa'},
+    {key: 'ROOM', label: 'Chambre'},
+    {key: 'COMMERCIAL', label: 'Local commercial'},
+    {key: 'LAND', label: 'Terrain'},
+    {key: 'OTHER', label: 'Autre'},
+  ];
+  energyLabels = [
+    {key: 'A', label: 'A - Très performant'},
+    {key: 'B', label: 'B - Performant'},
+    {key: 'C', label: 'C - Correct'},
+    {key: 'D', label: 'D - Passable'},
+    {key: 'E', label: 'E - Faible'},
+    {key: 'F', label: 'F - Très faible'},
+    {key: 'G', label: 'G - Extrêmement faible'}
+  ];
+  featuresOptions = [
+    { key: 'elevator', label: 'Ascenseur' },
+    { key: 'balcony', label: 'Balcon' },
+    { key: 'terrace', label: 'Terrasse' },
+    { key: 'garden', label: 'Jardin' },
+    { key: 'cellar', label: 'Cave' },
+    { key: 'garage', label: 'Garage' },
+    { key: 'parking', label: 'Place de parking' },
+    { key: 'attic', label: 'Grenier' },
+    { key: 'accessible', label: 'Accessible PMR' },
+    { key: 'intercom', label: 'Interphone' },
+    { key: 'securedDoor', label: 'Porte sécurisée' },
+    { key: 'swimmingPool', label: 'Piscine' },
+    { key: 'fireplace', label: 'Cheminée' },
+    { key: 'furnished', label: 'Meublé' },
+    { key: 'renovated', label: 'Rénové' }
+  ];
+
   leaseId: string | null = null;
   loading = true;
 
@@ -114,4 +169,15 @@ export class EditProperty implements OnInit {
   submit() {
 
   }
+
+  protected readonly MapPin = MapPin;
+  protected readonly MapPinIcon = MapPinIcon;
+  protected readonly RulerIcon = RulerIcon;
+  protected readonly LayoutIcon = LayoutIcon;
+  protected readonly TagIcon = TagIcon;
+
+
+  protected readonly SettingsIcon = SettingsIcon;
+  protected readonly FlameIcon = FlameIcon;
+  protected readonly SaveIcon = SaveIcon;
 }
