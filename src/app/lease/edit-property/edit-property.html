@@ -14,18 +14,31 @@
     <div
       class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
       <h3 class="text-xl font-bold">Informations générales</h3>
-      <label class="block mb-4">
-        <span class="text-gray-700 font-medium">Nom du bien</span>
-        <input
-          type="text"
-          class="mt-1 w-full rounded-md border border-gray-300 bg-white bg-opacity-50 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-red-500 focus:ring focus:ring-red-200 focus:ring-opacity-50 transition"
-          placeholder="Nom du bien"
-        />
-      </label>
+      <div>
+        <app-text-input [label]="'Nom du bien'" [placeholder]="'Exemple: Studio Lausane'"></app-text-input>
+      </div>
+      <div class="mt-4">
+        <app-dropdown [label]="'Type du bien'" [options]="propertyTypes"></app-dropdown>
+      </div>
     </div>
+
     <div
       class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
       <h3 class="text-xl font-bold">Adresse</h3>
+      <div>
+        <app-text-input [label]="'Adresse'" [placeholder]="'Exemple: 2 rue du vieux moulin'"></app-text-input>
+      </div>
+      <div>
+        <app-text-input [label]="'Complément'" [placeholder]="'Exemple: Résidence Les Lilas'"></app-text-input>
+      </div>
+      <div class=" flex gap-4">
+        <app-text-input [label]="'Batiment'" [placeholder]="'Exemple: A'"></app-text-input>
+        <app-text-input [label]="'Etage'" [placeholder]="'Exemple: 108'"></app-text-input>
+      </div>
+      <div class=" flex gap-4">
+        <app-text-input  [label]="'Code postal'" [placeholder]="'Exemple: 1005'"></app-text-input>
+        <app-text-input [label]="'Ville'" [placeholder]="'Lausanne'"></app-text-input>
+      </div>
     </div>
     <div
       class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">

@@ -5,6 +5,8 @@ import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 import {Property} from '../../../model/property/property';
 import {Lease} from '../../../model/lease/lease';
 import {LeaseRepository} from '../../../repository/lease-repository';
+import {TextInput} from '../../layout/components/text-input/text-input';
+import {Dropdown} from '../../layout/components/dropdown/dropdown';
 
 @Component({
   selector: 'app-edit-property',
@@ -12,7 +14,9 @@ import {LeaseRepository} from '../../../repository/lease-repository';
     LucideAngularModule,
     RouterLink,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    TextInput,
+    Dropdown
   ],
   templateUrl: './edit-property.html',
   styleUrl: './edit-property.scss'
@@ -23,7 +27,17 @@ export class EditProperty implements OnInit {
   property: Property | unknown = undefined;
   heatingTypes = ['ELECTRIC', 'GAS', 'FUEL', 'HEAT_PUMP', 'DISTRICT', 'WOOD', 'SOLAR', 'OTHER'];
   heatingDistributions = ['RADIATOR', 'UNDERFLOOR', 'AIR', 'OTHER'];
-  propertyTypes = ['APARTMENT', 'HOUSE', 'STUDIO', 'DUPLEX', 'VILLA', 'ROOM', 'COMMERCIAL', 'LAND', 'OTHER'];
+  propertyTypes = [
+    { key: 'STUDIO', label: 'Studio' },
+    { key: 'APARTMENT', label: 'Appartement' },
+    { key: 'HOUSE', label: 'Maison' },
+    { key: 'DUPLEX', label: 'Duplex' },
+    { key: 'VILLA', label: 'Villa' },
+    { key: 'ROOM', label: 'Chambre' },
+    { key: 'COMMERCIAL', label: 'Local commercial' },
+    { key: 'LAND', label: 'Terrain' },
+    { key: 'OTHER', label: 'Autre' },
+  ];
   leaseId: string | null = null;
   loading = true;
 
