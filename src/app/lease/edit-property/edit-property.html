@@ -10,7 +10,7 @@
     <div class="text-3xl font-bold text-gray-800">Éditer le bien</div>
   </div>
 
-  <div class="flex flex-wrap gap-4 mb-16" >
+  <div class="flex flex-wrap gap-4 mb-16">
     <div
       class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
       <h3 class="text-xl font-bold  flex items-center gap-2">
@@ -60,7 +60,7 @@
           [placeholder]="'Exemple: Lausanne'">
         </app-text-input>
       </div>
-      <div class="flex gap-4">
+      <div class="">
         <app-dropdown
           [label]="'Canton'"
           [options]="cantons">
@@ -134,6 +134,19 @@
             </app-checkbox>
           </div>
         }
+      </div>
+    </div>
+    <div
+      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
+      <h3 class=" text-xl font-bold flex items-center gap-2">
+        <lucide-icon [img]="InfoIcon" class="w-5 h-5"></lucide-icon>
+        Plus d'informations
+      </h3>
+      <div class="">
+        <app-text-area
+          [label]="'Description'"
+          [placeholder]="'Exemple: Charmant studio lumineux avec vue sur le lac...'">
+        </app-text-area>
       </div>
     </div>
   </div>

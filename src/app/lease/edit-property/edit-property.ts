@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {
-  ArrowLeftIcon, FlameIcon,
+  ArrowLeftIcon, FlameIcon, InfoIcon,
   LayoutIcon,
   LucideAngularModule,
   MapPin,
@@ -17,6 +17,7 @@ import {LeaseRepository} from '../../../repository/lease-repository';
 import {TextInput} from '../../layout/components/text-input/text-input';
 import {Dropdown} from '../../layout/components/dropdown/dropdown';
 import {Checkbox} from '../../layout/components/checkbox/checkbox';
+import {TextArea} from '../../layout/components/text-area/text-area';
 
 @Component({
   selector: 'app-edit-property',
@@ -27,7 +28,8 @@ import {Checkbox} from '../../layout/components/checkbox/checkbox';
     FormsModule,
     TextInput,
     Dropdown,
-    Checkbox
+    Checkbox,
+    TextArea
   ],
   templateUrl: './edit-property.html',
   styleUrl: './edit-property.scss'
@@ -202,4 +204,5 @@ export class EditProperty implements OnInit {
     }
   }
 
+  protected readonly InfoIcon = InfoIcon;
 }
