@@ -86,12 +86,38 @@ export class EditProperty implements OnInit {
     { key: 'attic', label: 'Grenier' },
     { key: 'accessible', label: 'Accessible PMR' },
     { key: 'intercom', label: 'Interphone' },
-    { key: 'securedDoor', label: 'Porte sécurisée' },
     { key: 'swimmingPool', label: 'Piscine' },
-    { key: 'fireplace', label: 'Cheminée' },
-    { key: 'furnished', label: 'Meublé' },
-    { key: 'renovated', label: 'Rénové' }
+    { key: 'fireplace', label: 'Cheminée' }
   ];
+  cantons = [
+    { key: 'AG', label: 'Argovie' },
+    { key: 'AI', label: 'Appenzell Rhodes-Intérieures' },
+    { key: 'AR', label: 'Appenzell Rhodes-Extérieures' },
+    { key: 'BE', label: 'Berne' },
+    { key: 'BL', label: 'Bâle-Campagne' },
+    { key: 'BS', label: 'Bâle-Ville' },
+    { key: 'FR', label: 'Fribourg' },
+    { key: 'GE', label: 'Genève' },
+    { key: 'GL', label: 'Glaris' },
+    { key: 'GR', label: 'Grisons' },
+    { key: 'JU', label: 'Jura' },
+    { key: 'LU', label: 'Lucerne' },
+    { key: 'NE', label: 'Neuchâtel' },
+    { key: 'NW', label: 'Nidwald' },
+    { key: 'OW', label: 'Obwald' },
+    { key: 'SG', label: 'Saint-Gall' },
+    { key: 'SH', label: 'Schaffhouse' },
+    { key: 'SO', label: 'Soleure' },
+    { key: 'SZ', label: 'Schwyz' },
+    { key: 'TG', label: 'Thurgovie' },
+    { key: 'TI', label: 'Tessin' },
+    { key: 'UR', label: 'Uri' },
+    { key: 'VD', label: 'Vaud' },
+    { key: 'VS', label: 'Valais' },
+    { key: 'ZG', label: 'Zoug' },
+    { key: 'ZH', label: 'Zurich' }
+  ];
+
 
   leaseId: string | null = null;
   loading = true;
@@ -156,28 +182,24 @@ export class EditProperty implements OnInit {
     });
   }
 
+  protected readonly MapPin = MapPin;
+  protected readonly MapPinIcon = MapPinIcon;
+  protected readonly RulerIcon = RulerIcon;
+  protected readonly LayoutIcon = LayoutIcon;
+  protected readonly TagIcon = TagIcon;
+  protected readonly SettingsIcon = SettingsIcon;
+  protected readonly FlameIcon = FlameIcon;
+  protected readonly SaveIcon = SaveIcon;
+
   ngOnInit(): void {
     this.leaseId = this.route.snapshot.paramMap.get('id')
     if (this.leaseId) {
       this.leaseRepository.findById(this.leaseId).subscribe((lease: Lease) => {
         this.property = lease.property;
         this.loading = false;
+        console.log('Lease loaded:', lease);
       })
     }
   }
 
-  submit() {
-
-  }
-
-  protected readonly MapPin = MapPin;
-  protected readonly MapPinIcon = MapPinIcon;
-  protected readonly RulerIcon = RulerIcon;
-  protected readonly LayoutIcon = LayoutIcon;
-  protected readonly TagIcon = TagIcon;
-
-
-  protected readonly SettingsIcon = SettingsIcon;
-  protected readonly FlameIcon = FlameIcon;
-  protected readonly SaveIcon = SaveIcon;
 }

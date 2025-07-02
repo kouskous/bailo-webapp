@@ -20,8 +20,16 @@
       <div>
         <app-text-input [label]="'Nom du bien'" [placeholder]="'Exemple: Studio Lausanne'"></app-text-input>
       </div>
-      <div class="mt-4">
+      <div class="mt-2">
         <app-dropdown [label]="'Type du bien'" [options]="propertyTypes"></app-dropdown>
+      </div>
+      <div class="flex gap-4 mt-4">
+        <app-text-input [label]="'Nombre de pièces'" [placeholder]="'Exemple: 4'" type="number"></app-text-input>
+        <app-text-input [label]="'Chambres'" [placeholder]="'Exemple: 2'" type="number"></app-text-input>
+      </div>
+      <div class="flex gap-4">
+        <app-text-input [label]="'Salles de bain'" [placeholder]="'Exemple: 1'" type="number"></app-text-input>
+        <app-text-input [label]="'Toilettes'" [placeholder]="'Exemple: 1'" type="number"></app-text-input>
       </div>
     </div>
 
@@ -41,24 +49,22 @@
         <app-text-input [label]="'Batiment'" [placeholder]="'Exemple: A'"></app-text-input>
         <app-text-input [label]="'Etage'" [placeholder]="'Exemple: 108'"></app-text-input>
       </div>
-      <div class=" flex gap-4">
-        <app-text-input [label]="'Code postal'" [placeholder]="'Exemple: 1005'"></app-text-input>
-        <app-text-input [label]="'Ville'" [placeholder]="'Lausanne'"></app-text-input>
-      </div>
-    </div>
-    <div
-      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
-      <h3 class=" text-xl font-bold flex items-center gap-2">
-        <lucide-icon [img]="LayoutIcon" class="w-5 h-5"></lucide-icon>
-        Découpage
-      </h3>
       <div class="flex gap-4">
-        <app-text-input [label]="'Nombre de pièces'" [placeholder]="'Exemple: 4'" inputType="number"></app-text-input>
-        <app-text-input [label]="'Chambres'" [placeholder]="'Exemple: 2'" inputType="number"></app-text-input>
+        <app-text-input
+          [label]="'Code postal'"
+          [placeholder]="'Exemple: 1005'">
+        </app-text-input>
+
+        <app-text-input
+          [label]="'Ville'"
+          [placeholder]="'Exemple: Lausanne'">
+        </app-text-input>
       </div>
       <div class="flex gap-4">
-        <app-text-input [label]="'Salles de bain'" [placeholder]="'Exemple: 1'" inputType="number"></app-text-input>
-        <app-text-input [label]="'Toilettes'" [placeholder]="'Exemple: 1'" inputType="number"></app-text-input>
+        <app-dropdown
+          [label]="'Canton'"
+          [options]="cantons">
+        </app-dropdown>
       </div>
     </div>
     <div
