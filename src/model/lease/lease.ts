@@ -9,15 +9,14 @@ export interface Lease {
   id: string;
   propertyId: string;
   property?: Property;
-  tenantIds: string[];
   tenants?: Tenant[];
-  startDate: Date;
-  endDate: Date;
-  rentAmount: number;
-  rentCurrency: Currency;
+  startDate?: Date;
+  endDate?: Date;
+  rentAmount?: number;
+  rentCurrency?: Currency;
   paymentFrequency?: PaymentFrequency;
   securityDeposit?: number;
-  status: LeaseStatus;
-  createdAt: Date;
-  updatedAt: Date;
+  status?: LeaseStatus;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

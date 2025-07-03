@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {from, map, Observable} from 'rxjs';
 import {Lease} from '../model/lease/lease';
 import {supabase} from './supabase.client';
-import {convertKeysToCamelCase} from './mapper';
+import {convertKeysToCamelCase, convertKeysToSnakeCase} from './mapper';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +38,7 @@ export class LeaseRepository {
   }
 
   create(lease: Lease): Observable<Lease> {
-    return from(supabase.from('lease').insert([lease]).select().single()).pipe(
+    return from(supabase.from('lease').insert(convertKeysToSnakeCase(lease)).select().single()).pipe(
       map((response: any) => {
         if (response.error) throw response.error;
         return response.data as Lease;

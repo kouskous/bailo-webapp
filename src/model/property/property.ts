@@ -1,26 +1,5 @@
 import {Address} from '../shared/address';
 
-export interface PropertySurface {
-  livingArea: number;
-  totalArea?: number;
-  landArea?: number;
-  balconyArea?: number;
-  terraceArea?: number;
-  gardenArea?: number;
-}
-
-export interface RoomDetails {
-  rooms: number;
-  bedrooms: number;
-  bathrooms: number;
-  toilets: number;
-}
-
-export interface Heating {
-  type: 'ELECTRIC' | 'GAS' | 'FUEL' | 'HEAT_PUMP' | 'DISTRICT' | 'WOOD' | 'SOLAR' | 'OTHER';
-  distribution: 'RADIATOR' | 'UNDERFLOOR' | 'AIR' | 'OTHER';
-}
-
 export interface PropertyFeature {
   elevator?: boolean;
   balcony?: boolean;
@@ -48,16 +27,33 @@ export interface Property {
   id: string
   name: string;
   type: 'APARTMENT' | 'HOUSE' | 'STUDIO' | 'DUPLEX' | 'VILLA' | 'ROOM' | 'COMMERCIAL' | 'LAND' | 'OTHER';
-  landlords: Landlord[];
+  addressId?: string;
   address: Address;
-  surface: PropertySurface;
-  roomDetails: RoomDetails;
   yearOfConstruction?: number;
-  yearOfRenovation?: number;
-  heating?: Heating;
+  yearOfRenovation?: string;
   energyLabel?: string; // DPE par ex. : A, B, C, ...
   features?: PropertyFeature;
   description?: string;
+
+  //surfaces
+  livingArea: string;
+  totalArea?: string;
+  landArea?: string;
+  balconyArea?: string;
+  terraceArea?: string;
+  gardenArea?: string;
+
+  //room details
+  rooms: string;
+  bedrooms: string;
+  bathrooms: string;
+  toilets: string;
+
+  // heating
+  heatingType: 'ELECTRIC' | 'GAS' | 'FUEL' | 'HEAT_PUMP' | 'DISTRICT' | 'WOOD' | 'SOLAR' | 'OTHER';
+  heatingDistribution: 'RADIATOR' | 'UNDERFLOOR' | 'AIR' | 'OTHER';
+
+  // timestamps
   createdAt: Date;
   updatedAt: Date;
 }

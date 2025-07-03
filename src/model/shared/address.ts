@@ -1,4 +1,5 @@
 export interface Address {
+  id?: string;
   street: string;
   additional: string;
   zipCode: string;
@@ -6,6 +7,5 @@ export interface Address {
   state: string;
   country: string;
   building?: string
-  floor?: number;
-  apartmentNumber?: string;
+  floor?: string;
 }

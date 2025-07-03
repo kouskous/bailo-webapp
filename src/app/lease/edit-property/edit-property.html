@@ -2,7 +2,7 @@
   <!-- Header -->
   <div class="flex items-center gap-4 mb-4 md:mb-8">
     <a
-      routerLink="/lease/{{leaseId}}"
+      [routerLink]="leaseId ? '/lease/' + leaseId : '/home'"
       class="w-10 h-10 flex items-center justify-center bg-white bg-opacity-30 backdrop-blur-md rounded-full shadow-md hover:bg-opacity-40 transition"
     >
       <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-red-500"></lucide-icon>
@@ -157,12 +157,12 @@
       <div class="grid grid-cols-2 gap-4">
         <app-dropdown
           [label]="'Système de chauffage'"
-          formControlName="type"
+          formControlName="heatingType"
           [options]="heatingOptions">
         </app-dropdown>
         <app-dropdown
           [label]="'Ditribution'"
-          formControlName="type"
+          formControlName="heatingDistribution"
           [options]="heatingDistributions">
         </app-dropdown>
       </div>
@@ -209,7 +209,8 @@
   </div>
   <div class="fixed bottom-4 left-0 w-full flex justify-center px-4">
     <button
-      class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition">
+      class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition"
+    (click)="save()">
       Sauvegarder
     </button>
   </div>

@@ -18,6 +18,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'lease/new',
+    component: EditProperty,
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'lease/:id',
     component: LeaseView,
     canActivate: [AuthGuard],

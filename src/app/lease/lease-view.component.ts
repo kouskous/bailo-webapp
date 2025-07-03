@@ -42,7 +42,9 @@ export class LeaseView implements OnInit {
       this.leaseRepository.findById(this.leaseId).subscribe((lease: Lease) => {
         this.lease = lease;
         this.loading = false;
-      })
+      });
+    } else {
+      this.loading = false;
     }
   }
 
