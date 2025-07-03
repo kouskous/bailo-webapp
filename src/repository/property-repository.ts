@@ -8,24 +8,6 @@ import {convertKeysToSnakeCase} from './mapper';
   providedIn: 'root'
 })
 export class PropertyRepository {
-  findAll(): Observable<Property[]> {
-    return from(supabase.from('property').select('*')).pipe(
-      map(response => {
-        if (response.error) throw response.error;
-        return response.data as Property[];
-      })
-    );
-  }
-
-  findById(id: string): Observable<Property> {
-    return from(supabase.from('property').select('*').eq('id', id).single()).pipe(
-      map(response => {
-        if (response.error) throw response.error;
-        return response.data as Property;
-      })
-    );
-  }
-
   create(property: Property): Observable<Property> {
     return from(supabase.from('property').insert(convertKeysToSnakeCase(property)).select().single()).pipe(
       map(response => {
@@ -35,8 +17,8 @@ export class PropertyRepository {
     );
   }
 
-  update(id: string, property: Partial<Property>): Observable<Property> {
-    return from(supabase.from('property').update(property).eq('id', id).select().single()).pipe(
+  update(property: Property): Observable<Property> {
+    return from(supabase.from('property').update(convertKeysToSnakeCase(property)).eq('id', property.id).select().single()).pipe(
       map(response => {
         if (response.error) throw response.error;
         return response.data as Property;
@@ -44,12 +26,4 @@ export class PropertyRepository {
     );
   }
 
-  delete(id: string): Observable<void> {
-    return from(supabase.from('property').delete().eq('id', id)).pipe(
-      map(response => {
-        if (response.error) throw response.error;
-        return;
-      })
-    );
-  }
 }

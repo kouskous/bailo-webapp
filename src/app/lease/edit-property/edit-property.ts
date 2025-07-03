@@ -238,6 +238,15 @@ export class EditProperty implements OnInit {
   }
 
   private update() {
+    this.addressRepository.update(this.buildAddressFromForm())
+      .subscribe((address: Address) => {
+        const property: Property = this.buildPropertyFromForm();
+        property.addressId = address.id;
+        property.id = this.property?.id ?? '';
+        this.propertyRepository.update(property).subscribe((property: Property) => {
+          this.router.navigate(['/lease', this.leaseId]).then();
+        })
+      });
   }
 
   private buildAddressFromForm(): Address {
@@ -261,7 +270,6 @@ export class EditProperty implements OnInit {
     const additionalInfo = this.propertyForm.get('additionalInformation')?.value;
 
     return {
-      id: this.property?.id ?? crypto.randomUUID(),
       name: general.name,
       type: general.type,
       rooms: general.rooms,
