@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {
-  ArrowLeftIcon, FlameIcon, InfoIcon,
-  LayoutIcon,
+  ArrowLeftIcon,
+  FlameIcon,
+  InfoIcon,
   LucideAngularModule,
-  MapPin,
   MapPinIcon,
   RulerIcon,
-  SaveIcon, SettingsIcon,
+  SaveIcon,
+  SettingsIcon,
   TagIcon
 } from 'lucide-angular';
 import {ActivatedRoute, RouterLink} from '@angular/router';
@@ -36,8 +37,8 @@ import {TextArea} from '../../layout/components/text-area/text-area';
 })
 export class EditProperty implements OnInit {
 
-  propertyForm: FormGroup;
-  property: Property | unknown = undefined;
+  propertyForm!: FormGroup;
+  property: Property | undefined = undefined;
   heatingOptions = [
     {key: 'GAS', label: 'Gaz'},
     {key: 'FUEL', label: 'Fioul'},
@@ -78,46 +79,46 @@ export class EditProperty implements OnInit {
     {key: 'G', label: 'G - Extrêmement faible'}
   ];
   featuresOptions = [
-    { key: 'elevator', label: 'Ascenseur' },
-    { key: 'balcony', label: 'Balcon' },
-    { key: 'terrace', label: 'Terrasse' },
-    { key: 'garden', label: 'Jardin' },
-    { key: 'cellar', label: 'Cave' },
-    { key: 'garage', label: 'Garage' },
-    { key: 'parking', label: 'Place de parking' },
-    { key: 'attic', label: 'Grenier' },
-    { key: 'accessible', label: 'Accessible PMR' },
-    { key: 'intercom', label: 'Interphone' },
-    { key: 'swimmingPool', label: 'Piscine' },
-    { key: 'fireplace', label: 'Cheminée' }
+    {key: 'elevator', label: 'Ascenseur'},
+    {key: 'balcony', label: 'Balcon'},
+    {key: 'terrace', label: 'Terrasse'},
+    {key: 'garden', label: 'Jardin'},
+    {key: 'cellar', label: 'Cave'},
+    {key: 'garage', label: 'Garage'},
+    {key: 'parking', label: 'Place de parking'},
+    {key: 'attic', label: 'Grenier'},
+    {key: 'accessible', label: 'Accessible PMR'},
+    {key: 'intercom', label: 'Interphone'},
+    {key: 'swimmingPool', label: 'Piscine'},
+    {key: 'fireplace', label: 'Cheminée'}
   ];
   cantons = [
-    { key: 'AG', label: 'Argovie' },
-    { key: 'AI', label: 'Appenzell Rhodes-Intérieures' },
-    { key: 'AR', label: 'Appenzell Rhodes-Extérieures' },
-    { key: 'BE', label: 'Berne' },
-    { key: 'BL', label: 'Bâle-Campagne' },
-    { key: 'BS', label: 'Bâle-Ville' },
-    { key: 'FR', label: 'Fribourg' },
-    { key: 'GE', label: 'Genève' },
-    { key: 'GL', label: 'Glaris' },
-    { key: 'GR', label: 'Grisons' },
-    { key: 'JU', label: 'Jura' },
-    { key: 'LU', label: 'Lucerne' },
-    { key: 'NE', label: 'Neuchâtel' },
-    { key: 'NW', label: 'Nidwald' },
-    { key: 'OW', label: 'Obwald' },
-    { key: 'SG', label: 'Saint-Gall' },
-    { key: 'SH', label: 'Schaffhouse' },
-    { key: 'SO', label: 'Soleure' },
-    { key: 'SZ', label: 'Schwyz' },
-    { key: 'TG', label: 'Thurgovie' },
-    { key: 'TI', label: 'Tessin' },
-    { key: 'UR', label: 'Uri' },
-    { key: 'VD', label: 'Vaud' },
-    { key: 'VS', label: 'Valais' },
-    { key: 'ZG', label: 'Zoug' },
-    { key: 'ZH', label: 'Zurich' }
+    {key: 'AG', label: 'Argovie'},
+    {key: 'AI', label: 'Appenzell Rhodes-Intérieures'},
+    {key: 'AR', label: 'Appenzell Rhodes-Extérieures'},
+    {key: 'BE', label: 'Berne'},
+    {key: 'BL', label: 'Bâle-Campagne'},
+    {key: 'BS', label: 'Bâle-Ville'},
+    {key: 'FR', label: 'Fribourg'},
+    {key: 'GE', label: 'Genève'},
+    {key: 'GL', label: 'Glaris'},
+    {key: 'GR', label: 'Grisons'},
+    {key: 'JU', label: 'Jura'},
+    {key: 'LU', label: 'Lucerne'},
+    {key: 'NE', label: 'Neuchâtel'},
+    {key: 'NW', label: 'Nidwald'},
+    {key: 'OW', label: 'Obwald'},
+    {key: 'SG', label: 'Saint-Gall'},
+    {key: 'SH', label: 'Schaffhouse'},
+    {key: 'SO', label: 'Soleure'},
+    {key: 'SZ', label: 'Schwyz'},
+    {key: 'TG', label: 'Thurgovie'},
+    {key: 'TI', label: 'Tessin'},
+    {key: 'UR', label: 'Uri'},
+    {key: 'VD', label: 'Vaud'},
+    {key: 'VS', label: 'Valais'},
+    {key: 'ZG', label: 'Zoug'},
+    {key: 'ZH', label: 'Zurich'}
   ];
 
 
@@ -129,69 +130,16 @@ export class EditProperty implements OnInit {
   constructor(private readonly fb: FormBuilder,
               private readonly route: ActivatedRoute,
               private readonly leaseRepository: LeaseRepository) {
-    this.propertyForm = this.fb.group({
-      id: [''],
-      name: ['', Validators.required],
-      type: ['', Validators.required],
-      address: this.fb.group({
-        street: [''],
-        additional: [''],
-        postalCode: [''],
-        city: [''],
-        country: [''],
-      }),
-      surface: this.fb.group({
-        livingArea: [0, Validators.required],
-        totalArea: [null],
-        landArea: [null],
-        balconyArea: [null],
-        terraceArea: [null],
-        gardenArea: [null],
-      }),
-      roomDetails: this.fb.group({
-        rooms: [0, Validators.required],
-        bedrooms: [0, Validators.required],
-        bathrooms: [0, Validators.required],
-        toilets: [0, Validators.required],
-      }),
-      yearOfConstruction: [null],
-      yearOfRenovation: [null],
-      heating: this.fb.group({
-        type: [''],
-        DISTRIBUTION: [''],
-      }),
-      energyLabel: [''],
-      features: this.fb.group({
-        elevator: [false],
-        balcony: [false],
-        terrace: [false],
-        garden: [false],
-        cellar: [false],
-        garage: [false],
-        parking: [false],
-        attic: [false],
-        accessible: [false],
-        intercom: [false],
-        securedDoor: [false],
-        swimmingPool: [false],
-        fireplace: [false],
-        furnished: [false],
-        renovated: [false],
-      }),
-      description: [''],
-      createdAt: [null],
-      updatedAt: [null],
-    });
+    this.initForm();
   }
 
-  protected readonly MapPin = MapPin;
+
   protected readonly MapPinIcon = MapPinIcon;
   protected readonly RulerIcon = RulerIcon;
-  protected readonly LayoutIcon = LayoutIcon;
   protected readonly TagIcon = TagIcon;
   protected readonly SettingsIcon = SettingsIcon;
   protected readonly FlameIcon = FlameIcon;
-  protected readonly SaveIcon = SaveIcon;
+  protected readonly InfoIcon = InfoIcon;
 
   ngOnInit(): void {
     this.leaseId = this.route.snapshot.paramMap.get('id')
@@ -199,10 +147,63 @@ export class EditProperty implements OnInit {
       this.leaseRepository.findById(this.leaseId).subscribe((lease: Lease) => {
         this.property = lease.property;
         this.loading = false;
-        console.log('Lease loaded:', lease);
+        this.initForm();
       })
     }
   }
 
-  protected readonly InfoIcon = InfoIcon;
+  private initForm(): void {
+    this.propertyForm = this.fb.group({
+      general: this.fb.group({
+        name: [this.property?.name ?? '', Validators.required],
+        type: [this.property?.type ?? '', Validators.required],
+        rooms: [this.property?.roomDetails?.rooms ?? '', Validators.required],
+        bedrooms: [this.property?.roomDetails?.bedrooms ?? '', Validators.required],
+        bathrooms: [this.property?.roomDetails?.bathrooms ?? '', Validators.required],
+        toilets: [this.property?.roomDetails?.toilets ?? '', Validators.required],
+      }),
+      address: this.fb.group({
+        street: [this.property?.address?.street ?? ''],
+        additional: [this.property?.address?.additional ?? ''],
+        building: [this.property?.address?.building ?? ''],
+        floor: [this.property?.address?.floor ?? ''],
+        zipCode: [this.property?.address?.zipCode ?? ''],
+        city: [this.property?.address?.city ?? ''],
+        state: [this.property?.address?.state ?? ''],
+        country: [this.property?.address?.country ?? '']
+      }),
+      surface: this.fb.group({
+        livingArea: [this.property?.surface?.livingArea ?? '', Validators.required],
+        totalArea: [this.property?.surface?.totalArea ?? ''],
+        landArea: [this.property?.surface?.landArea ?? ''],
+        balconyArea: [this.property?.surface?.balconyArea ?? ''],
+        terraceArea: [this.property?.surface?.terraceArea ?? ''],
+        gardenArea: [this.property?.surface?.gardenArea ?? ''],
+      }),
+      energy: this.fb.group({
+        yearOfConstruction: [this.property?.yearOfConstruction ?? ''],
+        yearOfRenovation: [this.property?.yearOfRenovation ?? ''],
+        type: [this.property?.heating?.type ?? ''],
+        distribution: [this.property?.heating?.distribution ?? ''],
+        energyLabel: [this.property?.energyLabel ?? '']
+      }),
+      features: this.fb.group({
+        elevator: [this.property?.features?.elevator?? false],
+        balcony: [this.property?.features?.balcony?? false],
+        terrace: [this.property?.features?.terrace?? false],
+        garden: [this.property?.features?.garden?? false],
+        cellar: [this.property?.features?.cellar?? false],
+        garage: [this.property?.features?.garage?? false],
+        parking: [this.property?.features?.parking?? false],
+        attic: [this.property?.features?.attic?? false],
+        accessible: [this.property?.features?.accessible?? false],
+        intercom: [this.property?.features?.intercom?? false],
+        swimmingPool: [this.property?.features?.swimmingPool?? false],
+        fireplace: [this.property?.features?.fireplace?? false]
+      }),
+      additionalInformation: this.fb.group({
+        description: [this.property?.description ?? ''],
+      })
+    });
+  }
 }

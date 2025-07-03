@@ -1,8 +1,8 @@
-<div class="p-2 md:px-48 py-4 md:py-8">
+<div class="p-2 md:px-48 py-4 md:py-8" [formGroup]="propertyForm">
   <!-- Header -->
   <div class="flex items-center gap-4 mb-4 md:mb-8">
     <a
-      routerLink="/home"
+      routerLink="/lease/{{leaseId}}"
       class="w-10 h-10 flex items-center justify-center bg-white bg-opacity-30 backdrop-blur-md rounded-full shadow-md hover:bg-opacity-40 transition"
     >
       <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-red-500"></lucide-icon>
@@ -12,85 +12,130 @@
 
   <div class="flex flex-wrap gap-4 mb-16">
     <div
-      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
+      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2"
+      formGroupName="general">
       <h3 class="text-xl font-bold  flex items-center gap-2">
         <lucide-icon [img]="TagIcon" class="w-5 h-5"></lucide-icon>
         Informations générales
       </h3>
       <div>
-        <app-text-input [label]="'Nom du bien'" [placeholder]="'Exemple: Studio Lausanne'"></app-text-input>
+        <app-text-input [label]="'Nom du bien'"
+                        [placeholder]="'Exemple: Studio Lausanne'"
+                        formControlName="name"></app-text-input>
       </div>
       <div class="mt-2">
-        <app-dropdown [label]="'Type du bien'" [options]="propertyTypes"></app-dropdown>
+        <app-dropdown [label]="'Type du bien'"
+                      [options]="propertyTypes"
+                      formControlName="type"></app-dropdown>
       </div>
-      <div class="flex gap-4 mt-4">
-        <app-text-input [label]="'Nombre de pièces'" [placeholder]="'Exemple: 4'" type="number"></app-text-input>
-        <app-text-input [label]="'Chambres'" [placeholder]="'Exemple: 2'" type="number"></app-text-input>
+      <div>
+        <div class="flex gap-4 mt-4">
+          <app-text-input [label]="'Nombre de pièces'"
+                          [placeholder]="'Exemple: 4'" type="number"
+                          formControlName="rooms"></app-text-input>
+          <app-text-input [label]="'Chambres'"
+                          [placeholder]="'Exemple: 2'" type="number"
+                          formControlName="bedrooms"></app-text-input>
+        </div>
+        <div class="flex gap-4">
+          <app-text-input [label]="'Salles de bain'"
+                          [placeholder]="'Exemple: 1'" type="number"
+                          formControlName="bathrooms"></app-text-input>
+          <app-text-input [label]="'Toilettes'"
+                          [placeholder]="'Exemple: 1'" type="number"
+                          formControlName="toilets"></app-text-input>
+        </div>
       </div>
-      <div class="flex gap-4">
-        <app-text-input [label]="'Salles de bain'" [placeholder]="'Exemple: 1'" type="number"></app-text-input>
-        <app-text-input [label]="'Toilettes'" [placeholder]="'Exemple: 1'" type="number"></app-text-input>
-      </div>
+
     </div>
 
     <div
-      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
+      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2"
+      formGroupName="address">
       <h3 class="text-xl font-bold flex items-center gap-2">
         <lucide-icon [img]="MapPinIcon" class="w-5 h-5"></lucide-icon>
         Adresse
       </h3>
       <div>
-        <app-text-input [label]="'Adresse'" [placeholder]="'Exemple: 2 rue du vieux moulin'"></app-text-input>
+        <app-text-input [label]="'Adresse'"
+                        [placeholder]="'Exemple: 2 rue du vieux moulin'"
+                        formControlName="street"></app-text-input>
       </div>
       <div>
-        <app-text-input [label]="'Complément'" [placeholder]="'Exemple: Résidence Les Lilas'"></app-text-input>
+        <app-text-input [label]="'Complément'"
+                        [placeholder]="'Exemple: Résidence Les Lilas'"
+                        formControlName="additional"></app-text-input>
       </div>
       <div class=" flex gap-4">
-        <app-text-input [label]="'Batiment'" [placeholder]="'Exemple: A'"></app-text-input>
-        <app-text-input [label]="'Etage'" [placeholder]="'Exemple: 108'"></app-text-input>
+        <app-text-input [label]="'Batiment'"
+                        [placeholder]="'Exemple: A'"
+                        formControlName="building"></app-text-input>
+        <app-text-input [label]="'Etage'"
+                        [placeholder]="'Exemple: 108'"
+                        formControlName="floor"></app-text-input>
       </div>
       <div class="flex gap-4">
         <app-text-input
           [label]="'Code postal'"
-          [placeholder]="'Exemple: 1005'">
+          [placeholder]="'Exemple: 1005'"
+          formControlName="zipCode">
         </app-text-input>
 
         <app-text-input
           [label]="'Ville'"
-          [placeholder]="'Exemple: Lausanne'">
+          [placeholder]="'Exemple: Lausanne'"
+          formControlName="city">
         </app-text-input>
       </div>
       <div class="">
         <app-dropdown
           [label]="'Canton'"
-          [options]="cantons">
+          [options]="cantons"
+          formControlName="state">
         </app-dropdown>
       </div>
     </div>
     <div
-      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
+      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2"
+      formGroupName="surface">
       <h3 class=" text-xl font-bold flex items-center gap-2">
         <lucide-icon [img]="RulerIcon" class="w-5 h-5"></lucide-icon>
         Surfaces
       </h3>
       <div class="flex gap-4">
-        <app-text-input [label]="'Surface habitable (m²)'" [placeholder]="'Exemple: 85'"
-                        type="number"></app-text-input>
-        <app-text-input [label]="'Surface totale (m²)'" [placeholder]="'Exemple: 100'"
+        <app-text-input [label]="'Surface habitable (m²)'"
+                        [placeholder]="'Exemple: 85'"
+                        type="number"
+                        formControlName="livingArea"></app-text-input>
+        <app-text-input [label]="'Surface totale (m²)'"
+                        [placeholder]="'Exemple: 100'"
+                        formControlName="totalArea"
                         type="number"></app-text-input>
       </div>
       <div class="flex gap-4">
-        <app-text-input [label]="'Surface du terrain (m²)'" [placeholder]="'Exemple: 300'"
+        <app-text-input [label]="'Surface du terrain (m²)'"
+                        [placeholder]="'Exemple: 300'"
+                        formControlName="landArea"
                         type="number"></app-text-input>
-        <app-text-input [label]="'Balcon (m²)'" [placeholder]="'Exemple: 5'" type="number"></app-text-input>
+        <app-text-input [label]="'Balcon (m²)'"
+                        [placeholder]="'Exemple: 5'"
+                        formControlName="balconyArea"
+                        type="number"></app-text-input>
       </div>
       <div class="flex gap-4">
-        <app-text-input [label]="'Terrasse (m²)'" [placeholder]="'Exemple: 12'" type="number"></app-text-input>
-        <app-text-input [label]="'Jardin (m²)'" [placeholder]="'Exemple: 150'" type="number"></app-text-input>
+        <app-text-input [label]="'Terrasse (m²)'"
+                        [placeholder]="'Exemple: 12'"
+                        formControlName="terraceArea"
+                        type="number"></app-text-input>
+        <app-text-input [label]="'Jardin (m²)'"
+                        [placeholder]="'Exemple: 150'"
+                        formControlName="gardenArea"
+                        type="number"></app-text-input>
       </div>
     </div>
     <div
-      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
+      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2"
+      formGroupName="energy">
       <h3 class=" text-xl font-bold flex items-center gap-2">
         <lucide-icon [img]="FlameIcon" class="w-5 h-5"></lucide-icon>
         Performance Enérgetique
@@ -99,29 +144,39 @@
         <app-text-input
           [label]="'Année de construction'"
           [placeholder]="'Exemple: 2005'"
+          formControlName="yearOfConstruction"
           type="number">
         </app-text-input>
         <app-text-input
           [label]="'Année de rénovation'"
           [placeholder]="'Exemple: 2020'"
+          formControlName="yearOfRenovation"
           type="number">
         </app-text-input>
       </div>
-      <div class="">
+      <div class="grid grid-cols-2 gap-4">
         <app-dropdown
           [label]="'Système de chauffage'"
+          formControlName="type"
           [options]="heatingOptions">
+        </app-dropdown>
+        <app-dropdown
+          [label]="'Ditribution'"
+          formControlName="type"
+          [options]="heatingDistributions">
         </app-dropdown>
       </div>
       <div class="">
         <app-dropdown
           [label]="'Étiquette énergétique (DPE)'"
+          formControlName="energyLabel"
           [options]="energyLabels">
         </app-dropdown>
       </div>
     </div>
     <div
-      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
+      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2"
+      formGroupName="features">
       <h3 class=" text-xl font-bold flex items-center gap-2">
         <lucide-icon [img]="SettingsIcon" class="w-5 h-5"></lucide-icon>
         Équipements
@@ -137,7 +192,8 @@
       </div>
     </div>
     <div
-      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2">
+      class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2"
+      formGroupName="additionalInformation">
       <h3 class=" text-xl font-bold flex items-center gap-2">
         <lucide-icon [img]="InfoIcon" class="w-5 h-5"></lucide-icon>
         Plus d'informations
@@ -145,6 +201,7 @@
       <div class="">
         <app-text-area
           [label]="'Description'"
+          formControlName="description"
           [placeholder]="'Exemple: Charmant studio lumineux avec vue sur le lac...'">
         </app-text-area>
       </div>
@@ -152,9 +209,7 @@
   </div>
   <div class="fixed bottom-4 left-0 w-full flex justify-center px-4">
     <button
-      class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition"
-
-    >
+      class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition">
       Sauvegarder
     </button>
   </div>

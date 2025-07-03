@@ -32,11 +32,8 @@ export interface PropertyFeature {
   attic?: boolean;
   accessible?: boolean;
   intercom?: boolean;
-  securedDoor?: boolean;
   swimmingPool?: boolean;
   fireplace?: boolean;
-  furnished?: boolean;
-  renovated?: boolean;
 }
 
 export interface Landlord {
