@@ -21,6 +21,7 @@ import {TextArea} from '../../layout/components/text-area/text-area';
 import {Address} from '../../../model/shared/address';
 import {AddressRepository} from '../../../repository/address-repository';
 import {PropertyRepository} from '../../../repository/property-repository';
+import {NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-edit-property',
@@ -32,7 +33,8 @@ import {PropertyRepository} from '../../../repository/property-repository';
     TextInput,
     Dropdown,
     Checkbox,
-    TextArea
+    TextArea,
+    NgClass
   ],
   templateUrl: './edit-property.html',
   styleUrl: './edit-property.scss'

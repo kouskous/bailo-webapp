@@ -14,6 +14,16 @@
             [disabled]="isDisabled"
             (input)="onInput($event)"
             (blur)="onBlur()"
-           class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-gray-400 sm:text-sm/6"/>
+           class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1  placeholder:text-gray-400 sm:text-sm/6"
+            [ngClass]="{
+              'outline-red-300': errorMessage,
+              'outline-gray-300': !errorMessage && !isDisabled,
+              'bg-gray-100': isDisabled
+            }"
+    />
   </div>
+  @if (errorMessage){
+    <div class="text-red-500 text-xs mt-1 ml-2.5">{{ errorMessage }}</div>
+  }
+
 </div>

@@ -28,4 +28,7 @@
             clip-rule="evenodd"/>
     </svg>
   </div>
+  @if (errorMessage){
+    <div class="text-red-500 text-xs mt-1 ml-2.5">{{ errorMessage }}</div>
+  }
 </div>

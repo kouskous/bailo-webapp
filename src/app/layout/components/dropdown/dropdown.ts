@@ -25,6 +25,7 @@ export class Dropdown implements ControlValueAccessor, OnInit {
   isDisabled = false;
 
   private ngControl?: NgControl | null;
+  errorMessage: string = '';
 
   constructor(private readonly injector: Injector) {
   }
@@ -62,6 +63,7 @@ export class Dropdown implements ControlValueAccessor, OnInit {
     const selectedKey = (event.target as HTMLSelectElement).value;
     this.value = selectedKey;
     this.onChange(selectedKey);
+    this.setErrorMessage();
   }
 
   onBlur(): void {
@@ -71,6 +73,29 @@ export class Dropdown implements ControlValueAccessor, OnInit {
   isRequired(): boolean {
     const control = this.ngControl?.control;
     return control?.validator?.({} as AbstractControl)?.['required'] ?? false;
+  }
+
+  private setErrorMessage() {
+    this.errorMessage = '';
+    if (this.ngControl?.errors){
+      Object.keys(this.ngControl?.errors).forEach((errorKey) =>
+        this.errorMessage = this.getMessage(errorKey, this.ngControl?.errors?.[errorKey])
+      );
+    }
+  }
+
+  private getMessage(type: string, value?: any): string {
+    const messages: Record<string, (val?: any) => string> = {
+      required: () => 'Ce champ est requis.',
+      email: () => 'Email invalide.',
+      minlength: (val) => `Minimum ${val.requiredLength} caractères.`,
+      maxlength: (val) => `Maximum ${val.requiredLength} caractères.`,
+      pattern: () => 'Format invalide.',
+      min: (val) => `Valeur minimale : ${val.min}.`,
+      max: (val) => `Valeur maximale : ${val.max}.`,
+    };
+
+    return messages[type]?.(value) || 'Champ invalide.';
   }
 
 }

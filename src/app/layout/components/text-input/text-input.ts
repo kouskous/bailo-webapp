@@ -1,9 +1,12 @@
-import {Component, forwardRef, Injector, Input, OnInit, Optional, Self} from '@angular/core';
+import {Component, forwardRef, Injector, Input, OnInit} from '@angular/core';
 import {AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
+import {NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-text-input',
-  imports: [],
+  imports: [
+    NgClass
+  ],
   templateUrl: './text-input.html',
   styleUrl: './text-input.scss',
   providers: [
@@ -37,6 +40,7 @@ export class TextInput implements ControlValueAccessor, OnInit {
   onChange = (value: any) => {};
 
   onTouched = () => {};
+  errorMessage: any;
 
   writeValue(value: any): void {
     this.value = value ?? '';
@@ -58,6 +62,7 @@ export class TextInput implements ControlValueAccessor, OnInit {
     const inputValue = (event.target as HTMLInputElement).value;
     this.value = inputValue;
     this.onChange(inputValue);
+    this.setErrorMessage();
   }
 
   onBlur(): void {
@@ -69,4 +74,26 @@ export class TextInput implements ControlValueAccessor, OnInit {
     return control?.validator?.({} as AbstractControl)?.['required'] ?? false;
   }
 
+  private setErrorMessage() {
+    this.errorMessage = '';
+    if (this.ngControl?.errors){
+      Object.keys(this.ngControl?.errors).forEach((errorKey) =>
+        this.errorMessage = this.getMessage(errorKey, this.ngControl?.errors?.[errorKey])
+      );
+    }
+  }
+
+  private getMessage(type: string, value?: any): string {
+    const messages: Record<string, (val?: any) => string> = {
+      required: () => 'Ce champ est requis.',
+      email: () => 'Email invalide.',
+      minlength: (val) => `Minimum ${val.requiredLength} caractères.`,
+      maxlength: (val) => `Maximum ${val.requiredLength} caractères.`,
+      pattern: () => 'Format invalide.',
+      min: (val) => `Valeur minimale : ${val.min}.`,
+      max: (val) => `Valeur maximale : ${val.max}.`,
+    };
+
+    return messages[type]?.(value) || 'Champ invalide.';
+  }
 }
