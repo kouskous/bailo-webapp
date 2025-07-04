@@ -188,6 +188,7 @@
           @for (feature of featuresOptions; track feature.key) {
             <div>
               <app-checkbox
+                [formControlName]="feature.key"
                 [label]="feature.label">
               </app-checkbox>
             </div>
@@ -212,7 +213,7 @@
     </div>
     <div class="fixed bottom-4 left-0 w-full flex justify-center px-4">
       <button
-        class="text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition"
+        class="text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition cursor-pointer"
         [disabled]="!propertyForm.valid"
         [ngClass]="{
           'bg-gray-300 text-gray-500': !propertyForm.valid,

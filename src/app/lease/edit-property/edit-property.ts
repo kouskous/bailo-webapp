@@ -279,7 +279,7 @@ export class EditProperty implements OnInit {
     const energy = this.propertyForm.get('energy')?.value;
     const features = this.propertyForm.get('features')?.value;
     const additionalInfo = this.propertyForm.get('additionalInformation')?.value;
-
+    console.log(features)
     return {
       name: general.name,
       type: general.type,
