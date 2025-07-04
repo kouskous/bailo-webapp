@@ -34,21 +34,21 @@
         <div class="text-sm text-gray-700 flex items-center gap-2">
           <lucide-icon [img]="HomeIcon"></lucide-icon>
           <span>{{ lease?.property?.type | titlecase }}</span> ·
-          <span>{{ lease?.property?.surface?.livingArea }} m²</span>
+          <span>{{ lease?.property?.livingArea }} m²</span>
         </div>
 
         <!-- Pièces -->
         <div class="text-sm text-gray-700 flex items-center gap-2">
           <lucide-icon [img]="LayoutIcon"></lucide-icon>
-          <span>{{ lease?.property?.roomDetails?.rooms }} pièces</span>
-          <span>· {{ lease?.property?.roomDetails?.bedrooms }} chambres</span>
-          <span>· {{ lease?.property?.roomDetails?.bathrooms }} sdb</span>
+          <span>{{ lease?.property?.rooms }} pièces</span>
+          <span>· {{ lease?.property?.bedrooms }} chambres</span>
+          <span>· {{ lease?.property?.bathrooms }} sdb</span>
         </div>
 
         <!-- Chauffage & DPE -->
         <div class="text-sm text-gray-700 flex items-center gap-2">
           <lucide-icon [img]="FlameIcon"></lucide-icon>
-          <span>Chauffage {{ lease?.property?.heating?.type?.toLowerCase() }}</span>
+          <span>Chauffage {{ lease?.property?.heatingType?.toLowerCase() }}</span>
           <span>· DPE {{ lease?.property?.energyLabel }}</span>
         </div>
 
