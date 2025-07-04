@@ -1,5 +1,10 @@
 <div class="">
-  <label for="field" class="block text-sm/6 font-medium text-gray-900">{{ label }}</label>
+  <label for="field" class="block text-sm/6 font-medium text-gray-900">{{ label }}
+    @if (isRequired()){
+      <span class="text-red-600">*</span>
+    }
+
+  </label>
   <div class="">
     <input  id="field"
             autocomplete="off"

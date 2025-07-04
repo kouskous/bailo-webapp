@@ -1,5 +1,5 @@
-import {Component, forwardRef, Input} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Component, forwardRef, Injector, Input, OnInit, Optional, Self} from '@angular/core';
+import {AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
 
 @Component({
   selector: 'app-text-input',
@@ -14,7 +14,7 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
     },
   ],
 })
-export class TextInput implements ControlValueAccessor {
+export class TextInput implements ControlValueAccessor, OnInit {
 
   @Input() label = '';
   @Input() placeholder = '';
@@ -22,6 +22,17 @@ export class TextInput implements ControlValueAccessor {
 
   value = '';
   isDisabled = false;
+  private ngControl?: NgControl | null;
+
+  constructor(private readonly injector: Injector) {
+  }
+
+  ngOnInit(): void {
+    this.ngControl = this.injector.get(NgControl, null, { self: true });
+    if (this.ngControl) {
+      this.ngControl.valueAccessor = this;
+    }
+  }
 
   onChange = (value: any) => {};
 
@@ -51,6 +62,11 @@ export class TextInput implements ControlValueAccessor {
 
   onBlur(): void {
     this.onTouched();
+  }
+
+  isRequired(): boolean {
+    const control = this.ngControl?.control;
+    return control?.validator?.({} as AbstractControl)?.['required'] ?? false;
   }
 
 }

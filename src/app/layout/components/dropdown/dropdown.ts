@@ -1,5 +1,5 @@
-import {Component, forwardRef, Input} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {Component, forwardRef, Injector, Input, OnInit} from '@angular/core';
+import {AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
 import {DropdownOption} from './dropdown-option';
 
 
@@ -16,13 +16,26 @@ import {DropdownOption} from './dropdown-option';
     },
   ],
 })
-export class Dropdown implements ControlValueAccessor {
+export class Dropdown implements ControlValueAccessor, OnInit {
   @Input() label = '';
   @Input() placeholder = 'Sélectionner...';
   @Input() options: DropdownOption[] = [];
 
   value: string | null = null;
   isDisabled = false;
+
+  private ngControl?: NgControl | null;
+
+  constructor(private readonly injector: Injector) {
+  }
+
+
+  ngOnInit(): void {
+    this.ngControl = this.injector.get(NgControl, null, {self: true});
+    if (this.ngControl) {
+      this.ngControl.valueAccessor = this;
+    }
+  }
 
   onChange = (value: any) => {
   };
@@ -53,6 +66,11 @@ export class Dropdown implements ControlValueAccessor {
 
   onBlur(): void {
     this.onTouched();
+  }
+
+  isRequired(): boolean {
+    const control = this.ngControl?.control;
+    return control?.validator?.({} as AbstractControl)?.['required'] ?? false;
   }
 
 }
