@@ -22,6 +22,8 @@ import {Address} from '../../../model/shared/address';
 import {AddressRepository} from '../../../repository/address-repository';
 import {PropertyRepository} from '../../../repository/property-repository';
 import {NgClass} from '@angular/common';
+import {EditPropertySkeleton} from './edit-property-skeleton/edit-property-skeleton';
+import {combineLatest, take, timer} from 'rxjs';
 
 @Component({
   selector: 'app-edit-property',
@@ -34,7 +36,8 @@ import {NgClass} from '@angular/common';
     Dropdown,
     Checkbox,
     TextArea,
-    NgClass
+    NgClass,
+    EditPropertySkeleton
   ],
   templateUrl: './edit-property.html',
   styleUrl: './edit-property.scss'
@@ -151,7 +154,11 @@ export class EditProperty implements OnInit {
   ngOnInit(): void {
     this.leaseId = this.route.snapshot.paramMap.get('id')
     if (this.leaseId) {
-      this.leaseRepository.findById(this.leaseId).subscribe((lease: Lease) => {
+      combineLatest([
+        this.leaseRepository.findById(this.leaseId),
+        timer(1000)
+      ]).pipe(take(1))
+      .subscribe(([lease]) => {
         this.property = lease.property;
         this.loading = false;
         this.initForm();
