@@ -13,6 +13,7 @@ import {Lease} from '../../model/lease/lease';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {DatePipe, TitleCasePipe} from '@angular/common';
 import {LeaseViewSkeleton} from './lease-view-skeleton/lease-view-skeleton';
+import {combineLatest, take, timer} from 'rxjs';
 
 @Component({
   selector: 'app-lease',
@@ -39,10 +40,14 @@ export class LeaseView implements OnInit {
   ngOnInit(): void {
     this.leaseId = this.route.snapshot.paramMap.get('id')
     if (this.leaseId) {
-      this.leaseRepository.findById(this.leaseId).subscribe((lease: Lease) => {
-        this.lease = lease;
-        this.loading = false;
-      });
+      combineLatest([
+        this.leaseRepository.findById(this.leaseId),
+        timer(500)
+      ]).pipe(take(1))
+        .subscribe(([lease]) => {
+          this.lease = lease;
+          this.loading = false;
+        });
     } else {
       this.loading = false;
     }

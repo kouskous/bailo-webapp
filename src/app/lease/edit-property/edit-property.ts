@@ -156,13 +156,15 @@ export class EditProperty implements OnInit {
     if (this.leaseId) {
       combineLatest([
         this.leaseRepository.findById(this.leaseId),
-        timer(1000)
+        timer(500)
       ]).pipe(take(1))
       .subscribe(([lease]) => {
         this.property = lease.property;
         this.loading = false;
         this.initForm();
       })
+    } else {
+      this.loading = false;
     }
   }
 
