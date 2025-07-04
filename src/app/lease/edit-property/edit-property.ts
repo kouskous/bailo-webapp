@@ -173,19 +173,19 @@ export class EditProperty implements OnInit {
         name: [this.property?.name ?? '', Validators.required],
         type: [this.property?.type ?? '', Validators.required],
         rooms: [this.property?.rooms ?? '', Validators.required],
-        bedrooms: [this.property?.bedrooms ?? '', Validators.required],
-        bathrooms: [this.property?.bathrooms ?? '', Validators.required],
-        toilets: [this.property?.toilets ?? '', Validators.required],
+        bedrooms: [this.property?.bedrooms ?? ''],
+        bathrooms: [this.property?.bathrooms ?? ''],
+        toilets: [this.property?.toilets ?? ''],
       }),
       address: this.fb.group({
-        street: [this.property?.address?.street ?? ''],
+        street: [this.property?.address?.street ?? '', Validators.required],
         additional: [this.property?.address?.additional ?? ''],
         building: [this.property?.address?.building ?? ''],
         floor: [this.property?.address?.floor ?? ''],
-        zipCode: [this.property?.address?.zipCode ?? ''],
-        city: [this.property?.address?.city ?? ''],
-        state: [this.property?.address?.state ?? ''],
-        country: [this.property?.address?.country ?? '']
+        zipCode: [this.property?.address?.zipCode ?? '', Validators.required],
+        city: [this.property?.address?.city ?? '', Validators.required],
+        state: [this.property?.address?.state ?? '', Validators.required],
+        country: [this.property?.address?.country ?? 'CH']
       }),
       surface: this.fb.group({
         livingArea: [this.property?.livingArea ?? '', Validators.required],
@@ -198,7 +198,7 @@ export class EditProperty implements OnInit {
       energy: this.fb.group({
         yearOfConstruction: [this.property?.yearOfConstruction ?? ''],
         yearOfRenovation: [this.property?.yearOfRenovation ?? ''],
-        heatingType: [this.property?.heatingType ?? ''],
+        heatingType: [this.property?.heatingType ?? '', Validators.required],
         heatingDistribution: [this.property?.heatingDistribution ?? ''],
         energyLabel: [this.property?.energyLabel ?? '']
       }),
