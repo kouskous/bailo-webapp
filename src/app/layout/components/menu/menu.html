@@ -1,0 +1,8 @@
+@if (isOpen){
+  <div
+    #menuRef
+    class="absolute z-50 min-w-[180px] rounded-lg  bg-white p-1 shadow-lg outline-1 outline-gray-100"
+    [ngStyle]="{ top: position.top + 'px', left: position.left + 'px' }">
+    <ng-content></ng-content>
+  </div>
+}
