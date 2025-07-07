@@ -1,11 +1,21 @@
 import {Component, forwardRef, Injector, Input, OnInit} from '@angular/core';
-import {AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  FormsModule,
+  NG_VALUE_ACCESSOR,
+  NgControl,
+  ReactiveFormsModule
+} from '@angular/forms';
 import {DropdownOption} from './dropdown-option';
 
 
 @Component({
   selector: 'app-dropdown',
-  imports: [],
+  imports: [
+    ReactiveFormsModule,
+    FormsModule
+  ],
   templateUrl: './dropdown.html',
   styleUrl: './dropdown.scss',
   providers: [
@@ -32,6 +42,7 @@ export class Dropdown implements ControlValueAccessor, OnInit {
 
 
   ngOnInit(): void {
+
     this.ngControl = this.injector.get(NgControl, null, {self: true});
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;

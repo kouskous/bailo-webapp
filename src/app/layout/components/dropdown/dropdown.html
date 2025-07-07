@@ -8,7 +8,7 @@
   <div class="relative">
     <select
       [id]="label"
-      [value]="value"
+      [(ngModel)]="value"
       (change)="onSelect($event)"
       (blur)="onBlur()"
       [disabled]="isDisabled"
