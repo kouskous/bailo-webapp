@@ -11,9 +11,13 @@ import {
 import {LeaseRepository} from '../../repository/lease-repository';
 import {Lease} from '../../model/lease/lease';
 import {ActivatedRoute, RouterLink} from '@angular/router';
-import {DatePipe, TitleCasePipe} from '@angular/common';
+import {DatePipe, LowerCasePipe, TitleCasePipe} from '@angular/common';
 import {LeaseViewSkeleton} from './lease-view-skeleton/lease-view-skeleton';
 import {combineLatest, take, timer} from 'rxjs';
+import {PropertyTypePipe} from '../../pipe/property-type-pipe';
+import {HeatingTypePipe} from '../../pipe/heating-type-pipe';
+import {PropertyFeature} from '../../model/property/property';
+import {PropertyFeaturePipe} from '../../pipe/property-feature-pipe';
 
 @Component({
   selector: 'app-lease',
@@ -22,7 +26,11 @@ import {combineLatest, take, timer} from 'rxjs';
     RouterLink,
     TitleCasePipe,
     DatePipe,
-    LeaseViewSkeleton
+    LeaseViewSkeleton,
+    PropertyTypePipe,
+    HeatingTypePipe,
+    LowerCasePipe,
+    PropertyFeaturePipe
   ],
   templateUrl: './lease-view.component.html',
   styleUrl: './lease-view.component.scss'
@@ -59,4 +67,9 @@ export class LeaseView implements OnInit {
   protected readonly FlameIcon = FlameIcon;
   protected readonly ArrowLeftIcon = ArrowLeftIcon;
   protected readonly FileTextIcon = FileTextIcon;
+
+  getEnabledFeatures(features?: PropertyFeature): string[] {
+    if (!features) return [];
+    return Object.keys(features).filter((key) => (features as any)[key] === true);
+  }
 }

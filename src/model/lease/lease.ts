@@ -12,6 +12,7 @@ export interface Lease {
   tenants?: Tenant[];
   startDate?: Date;
   endDate?: Date;
+  furnished?: boolean;
   rentAmount?: number;
   rentCurrency?: Currency;
   paymentFrequency?: PaymentFrequency;

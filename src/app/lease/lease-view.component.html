@@ -33,7 +33,7 @@
         <!-- Type & Surface -->
         <div class="text-sm text-gray-700 flex items-center gap-2">
           <lucide-icon [img]="HomeIcon"></lucide-icon>
-          <span>{{ lease?.property?.type | titlecase }}</span> ·
+          <span>{{ lease?.property?.type| propertyType | titlecase }}</span> ·
           <span>{{ lease?.property?.livingArea }} m²</span>
         </div>
 
@@ -41,26 +41,30 @@
         <div class="text-sm text-gray-700 flex items-center gap-2">
           <lucide-icon [img]="LayoutIcon"></lucide-icon>
           <span>{{ lease?.property?.rooms }} pièces</span>
-          <span>· {{ lease?.property?.bedrooms }} chambres</span>
-          <span>· {{ lease?.property?.bathrooms }} sdb</span>
+          @if (lease?.property?.bedrooms) {
+            <span>· {{ lease?.property?.bedrooms }} chambres</span>
+          }
+          @if (lease?.property?.bathrooms) {
+            <span>· {{ lease?.property?.bathrooms }} sdb</span>
+          }
+
+
         </div>
 
         <!-- Chauffage & DPE -->
         <div class="text-sm text-gray-700 flex items-center gap-2">
           <lucide-icon [img]="FlameIcon"></lucide-icon>
-          <span>Chauffage {{ lease?.property?.heatingType?.toLowerCase() }}</span>
-          <span>· DPE {{ lease?.property?.energyLabel }}</span>
+          <span>Chauffage avec {{ lease?.property?.heatingType | heatingType | lowercase }}</span>
+          @if (lease?.property?.bathrooms) {
+            <span>· DPE {{ lease?.property?.energyLabel }}</span>
+          }
         </div>
 
         <!-- Caractéristiques -->
         <div class="text-xs text-gray-600 flex flex-wrap gap-2 mt-2">
-          <span class="bg-gray-200 px-2 py-1 rounded-full">Balcon</span>
-          <span class="bg-gray-200 px-2 py-1 rounded-full">Terrasse</span>
-          <span class="bg-gray-200 px-2 py-1 rounded-full">Jardin</span>
-          <span class="bg-gray-200 px-2 py-1 rounded-full">Garage</span>
-          <span class="bg-gray-200 px-2 py-1 rounded-full">Cheminée</span>
-          <span class="bg-gray-200 px-2 py-1 rounded-full">Piscine</span>
-          <!-- ajoute ce que tu veux ici -->
+          @for (feature of getEnabledFeatures(lease?.property?.features); track feature) {
+            <span class="bg-gray-200 px-2 py-1 rounded-full">{{ feature | propertyFeature | titlecase }}</span>
+          }
         </div>
       </div>
       <div
