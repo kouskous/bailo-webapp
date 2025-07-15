@@ -12,8 +12,7 @@ export class LeaseRepository {
   findAll(): Observable<Lease[]> {
     return from(supabase.from('lease')
       .select(`*,
-        property:property (*, address:address (*)),
-        tenants: tenant (*, address:address (*))
+        property:property (*, address:address (*))
       `)
     ).pipe(
       map((response: any) => {
@@ -26,8 +25,7 @@ export class LeaseRepository {
   findById(id: string): Observable<Lease> {
     return from(supabase.from('lease')
       .select(`*,
-        property:property (*, address:address (*)),
-        tenants: tenant (*, address:address (*))
+        property:property (*, address:address (*))
       `).eq('id', id).single()
     ).pipe(
       map((response: any) => {

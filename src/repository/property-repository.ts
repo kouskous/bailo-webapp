@@ -18,12 +18,6 @@ export class PropertyRepository {
   create(property: Property): Observable<Property> {
     return from(supabase.from('property').insert(convertKeysToSnakeCase(property)).select().single()).pipe(
       map(response => {
-        from(supabase.from('landlord').insert(convertKeysToSnakeCase({
-          firstName: this.user?.given_name,
-          lastName: this.user?.family_name,
-          email: this.user?.email,
-          propertyId: response.data?.id
-        })).select().single()).subscribe()
         if (response.error) throw response.error;
         return response.data as Property;
       })

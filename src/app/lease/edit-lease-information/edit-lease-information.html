@@ -1,1 +1,16 @@
-<p>edit-lease-information works!</p>
+@if (loading) {
+  <app-edit-property-skeleton></app-edit-property-skeleton>
+} @else {
+  <div class="p-2 md:px-48 py-4 md:py-8">
+    <!-- Header -->
+    <div class="flex items-center gap-4 mb-4 md:mb-8">
+      <a
+        [routerLink]="leaseId ? '/lease/' + leaseId : '/home'"
+        class="w-10 h-10 flex items-center justify-center bg-white bg-opacity-30 backdrop-blur-md rounded-full shadow-md hover:bg-opacity-40 transition"
+      >
+        <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-red-500"></lucide-icon>
+      </a>
+      <div class="text-3xl font-bold text-gray-800">Details de la location</div>
+    </div>
+  </div>
+}

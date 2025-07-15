@@ -15,14 +15,6 @@ export interface PropertyFeature {
   fireplace?: boolean;
 }
 
-export interface Landlord {
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phoneNumber?: string;
-  address?: Address;
-}
-
 export interface Property {
   id: string
   name: string;
@@ -52,8 +44,6 @@ export interface Property {
   // heating
   heatingType: 'ELECTRIC' | 'GAS' | 'FUEL' | 'HEAT_PUMP' | 'DISTRICT' | 'WOOD' | 'SOLAR' | 'OTHER';
   heatingDistribution: 'RADIATOR' | 'UNDERFLOOR' | 'AIR' | 'OTHER';
-
-  landlords: Landlord[];
 
   // timestamps
   createdAt: Date;
