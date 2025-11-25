@@ -12,5 +12,134 @@
       </a>
       <div class="text-3xl font-bold text-gray-800">Les parties du bail</div>
     </div>
+
+    <div>
+      <div class="text-2xl font-bold text-gray-800 mb-4">Locataires</div>
+
+      <div
+        class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-6 shadow-lg text-gray-800"
+        formGroupName="contractor"
+      >
+        <!-- Colonne gauche : Infos générales -->
+        <div class="space-y-3">
+          <app-text-input
+            [label]="'Prénom'"
+            [placeholder]="'Exemple: Sophie'"
+            formControlName="firstName">
+          </app-text-input>
+
+          <app-text-input
+            [label]="'Nom'"
+            [placeholder]="'Exemple: Müller'"
+            formControlName="lastName">
+          </app-text-input>
+
+          <app-text-input
+            [label]="'Email'"
+            [placeholder]="'Exemple: s.mueller@email.com'"
+            type="email"
+            formControlName="email">
+          </app-text-input>
+
+          <app-text-input
+            [label]="'Téléphone'"
+            [placeholder]="'Exemple: +41 78 123 45 67'"
+            formControlName="phoneNumber">
+          </app-text-input>
+        </div>
+      </div>
+
+    </div>
+
+    <div>
+      <div class="text-2xl font-bold text-gray-800 mb-4  mt-8">Proprietaires</div>
+
+      <div
+        class="w-full bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-6 shadow-lg text-gray-800"
+        formGroupName="contractor"
+      >
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- Colonne gauche : Infos générales -->
+          <div class="space-y-3">
+            <app-text-input
+              [label]="'Prénom'"
+              [placeholder]="'Exemple: Sophie'"
+              formControlName="firstName">
+            </app-text-input>
+
+            <app-text-input
+              [label]="'Nom'"
+              [placeholder]="'Exemple: Müller'"
+              formControlName="lastName">
+            </app-text-input>
+
+            <app-text-input
+              [label]="'Email'"
+              [placeholder]="'Exemple: s.mueller@email.com'"
+              type="email"
+              formControlName="email">
+            </app-text-input>
+
+            <app-text-input
+              [label]="'Téléphone'"
+              [placeholder]="'Exemple: +41 78 123 45 67'"
+              formControlName="phoneNumber">
+            </app-text-input>
+          </div>
+
+          <!-- Colonne droite : Adresse -->
+          <div formGroupName="address" class="space-y-3">
+            <app-text-input
+              [label]="'Adresse'"
+              [placeholder]="'Exemple: Rue de Lausanne 10'"
+              formControlName="street">
+            </app-text-input>
+
+            <app-text-input
+              [label]="'Complément d\'adresse'"
+              [placeholder]="'Bâtiment B, Appt. 12'"
+              formControlName="additional">
+            </app-text-input>
+
+            <div class="grid grid-cols-2 gap-3">
+              <app-text-input
+                [label]="'Bâtiment'"
+                [placeholder]="'Exemple: A'"
+                formControlName="building">
+              </app-text-input>
+
+              <app-text-input
+                [label]="'Étage'"
+                [placeholder]="'Exemple: 2ème'"
+                formControlName="floor">
+              </app-text-input>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+              <app-text-input
+                [label]="'Code postal'"
+                [placeholder]="'1000'"
+                formControlName="zipCode">
+              </app-text-input>
+
+              <app-text-input
+                [label]="'Ville'"
+                [placeholder]="'Exemple: Lausanne'"
+                formControlName="city">
+              </app-text-input>
+              <app-text-input
+                [label]="'Canton / État'"
+                [placeholder]="'Exemple: Vaud'"
+                formControlName="state">
+              </app-text-input>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
   </div>
 }

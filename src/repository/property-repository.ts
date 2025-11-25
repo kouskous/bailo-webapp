@@ -1,36 +1,25 @@
-import {from, map, Observable} from 'rxjs';
-import {supabase} from './supabase.client';
+import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {Property} from '../model/property/property';
-import {convertKeysToSnakeCase} from './mapper';
-import {AuthService, User} from '@auth0/auth0-angular';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PropertyRepository {
-  private user: User | null | undefined;
 
-  constructor(private readonly auth: AuthService) {
-    auth.user$.subscribe(user => this.user = user);
+  constructor(private readonly httpClient: HttpClient) {
   }
 
   create(property: Property): Observable<Property> {
-    return from(supabase.from('property').insert(convertKeysToSnakeCase(property)).select().single()).pipe(
-      map(response => {
-        if (response.error) throw response.error;
-        return response.data as Property;
-      })
-    );
+    return this.httpClient.post<Property>('https://api.bailo.ch/property-management/properties', property);
   }
 
   update(property: Property): Observable<Property> {
-    return from(supabase.from('property').update(convertKeysToSnakeCase(property)).eq('id', property.id).select().single()).pipe(
-      map(response => {
-        if (response.error) throw response.error;
-        return response.data as Property;
-      })
-    );
+    return this.httpClient.put<Property>('https://api.bailo.ch/property-management/properties/' + property.id, property);
   }
 
+  findAll(accountId: string) {
+    return this.httpClient.get<Property[]>('https://api.bailo.ch/property-management/properties?accountId=' + encodeURI(accountId));
+  }
 }

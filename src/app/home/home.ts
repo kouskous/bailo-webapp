@@ -1,16 +1,14 @@
 import {Component, OnInit} from '@angular/core';
-import {Lease} from '../../model/lease/lease';
-import {LeaseRepository} from '../../repository/lease-repository';
-import {LeaseCard} from './lease-card/lease-card';
 import {RouterLink} from '@angular/router';
 import {LucideAngularModule, PlusCircleIcon} from 'lucide-angular';
 import {LeaseSkeletonCard} from './lease-skeleton-card/lease-skeleton-card';
-import {combineLatest, take, timer} from 'rxjs';
+import {PropertyRepository} from '../../repository/property-repository';
+import {Property} from '../../model/property/property';
+import {AuthService} from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-home',
   imports: [
-    LeaseCard,
     RouterLink,
     LucideAngularModule,
     LeaseSkeletonCard
@@ -21,22 +19,24 @@ import {combineLatest, take, timer} from 'rxjs';
 export class Home implements OnInit {
 
 
-  leases: Lease[] = [];
+  properties: Property[] = [];
   loading = true;
 
-  constructor(private readonly leaseRepository: LeaseRepository) {
+  constructor(private readonly propertyRepository: PropertyRepository,
+              private readonly auth: AuthService) {
   }
 
   ngOnInit(): void {
-    this.loadLeases();
+    this.auth.user$.subscribe(user => {
+      if (user) {
+        this.loadProperties(user.sub?? '');
+      }
+    })
   }
 
-  private loadLeases() {
-    combineLatest([
-      this.leaseRepository.findAll(),
-      timer(500)
-    ]).pipe(take(1)).subscribe(([leases]) => {
-      this.leases = leases;
+  private loadProperties(accountId: string): void {
+    this.propertyRepository.findAll(accountId).subscribe((properties) => {
+      this.properties = properties;
       this.loading = false;
     });
   }

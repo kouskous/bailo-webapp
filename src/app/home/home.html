@@ -1,5 +1,5 @@
 <div class="px-2 md:px-48 py-4 md:py-8">
-  <div class="text-3xl font-bold mb-4 md:mb-8 text-gray-800 gap-2">Mes locations</div>
+  <div class="text-3xl font-bold mb-4 md:mb-8 text-gray-800 gap-2">Mes biens</div>
   <div class="flex flex-row flex-wrap gap-4">
     @if (loading) {
       @for (i of [1, 2, 3]; track i) {
@@ -8,9 +8,9 @@
         </div>
       }
     } @else {
-      @for (lease of leases; track lease.id) {
+      @for (property of properties; track property.id) {
         <div class="w-full md:w-80">
-          <app-lease-card [lease]="lease"></app-lease-card>
+
         </div>
 
       }

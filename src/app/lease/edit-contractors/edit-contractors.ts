@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 import {EditPropertySkeleton} from "../edit-property/edit-property-skeleton/edit-property-skeleton";
-import {ArrowLeftIcon, LucideAngularModule} from "lucide-angular";
+import {ArrowLeftIcon, LucideAngularModule, UserIcon} from "lucide-angular";
 import {RouterLink} from '@angular/router';
+import {TextInput} from '../../layout/components/text-input/text-input';
 
 @Component({
   selector: 'app-edit-contractors',
   imports: [
     EditPropertySkeleton,
     LucideAngularModule,
-    RouterLink
+    RouterLink,
+    TextInput
   ],
   templateUrl: './edit-contractors.html',
   styleUrl: './edit-contractors.scss'
@@ -18,4 +20,5 @@ export class EditContractors {
 
   protected readonly ArrowLeftIcon = ArrowLeftIcon;
   leaseId: string | null = null;
+  protected readonly UserIcon = UserIcon;
 }
