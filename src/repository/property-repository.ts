@@ -22,4 +22,8 @@ export class PropertyRepository {
   findAll(accountId: string) {
     return this.httpClient.get<Property[]>('https://api.bailo.ch/property-management/properties?accountId=' + encodeURI(accountId));
   }
+
+  findById(propertyId: string) {
+    return this.httpClient.get<Property>('https://api.bailo.ch/property-management/properties/' + propertyId);
+  }
 }

@@ -12,14 +12,12 @@ import {
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Property} from '../../../model/property/property';
-import {Lease} from '../../../model/lease/lease';
 import {LeaseRepository} from '../../../repository/lease-repository';
 import {TextInput} from '../../layout/components/text-input/text-input';
 import {Dropdown} from '../../layout/components/dropdown/dropdown';
 import {Checkbox} from '../../layout/components/checkbox/checkbox';
 import {TextArea} from '../../layout/components/text-area/text-area';
 import {Address} from '../../../model/shared/address';
-import {AddressRepository} from '../../../repository/address-repository';
 import {PropertyRepository} from '../../../repository/property-repository';
 import {NgClass} from '@angular/common';
 import {EditPropertySkeleton} from './edit-property-skeleton/edit-property-skeleton';
@@ -129,7 +127,7 @@ export class EditProperty implements OnInit {
   ];
 
 
-  leaseId: string | null = null;
+  propertyId: string | null = null;
   loading = true;
 
   protected readonly ArrowLeftIcon = ArrowLeftIcon;
@@ -138,8 +136,7 @@ export class EditProperty implements OnInit {
               private readonly route: ActivatedRoute,
               private readonly router: Router,
               private readonly leaseRepository: LeaseRepository,
-              private readonly propertyRepository: PropertyRepository,
-              private readonly addressRepository: AddressRepository) {
+              private readonly propertyRepository: PropertyRepository) {
     this.initForm();
   }
 
@@ -152,24 +149,24 @@ export class EditProperty implements OnInit {
   protected readonly InfoIcon = InfoIcon;
 
   ngOnInit(): void {
-    this.leaseId = this.route.snapshot.paramMap.get('id')
-    if (this.leaseId) {
+    this.propertyId = this.route.snapshot.paramMap.get('id')
+    if (this.propertyId) {
       combineLatest([
-        this.leaseRepository.findById(this.leaseId),
+        this.propertyRepository.findById(this.propertyId),
         timer(500)
       ]).pipe(take(1))
-      .subscribe(([lease]) => {
-        this.property = lease.property;
-        this.loading = false;
-        this.initForm();
-      })
+        .subscribe(([property]) => {
+          this.property = property;
+          this.loading = false;
+          this.initForm();
+        })
     } else {
       this.loading = false;
     }
   }
 
   save(): void {
-    if (this.leaseId) {
+    if (this.propertyId) {
       this.update();
     } else {
       this.create()
@@ -233,31 +230,18 @@ export class EditProperty implements OnInit {
 
 
   private create() {
-    this.addressRepository.create(this.buildAddressFromForm())
-      .subscribe((address: Address) => {
-        const property: Property = this.buildPropertyFromForm();
-        property.addressId = address.id;
-        this.propertyRepository.create(property).subscribe((property: Property) => {
-          this.leaseRepository.create({
-            id: this.leaseId ?? crypto.randomUUID(),
-            propertyId: property.id,
-          } as Lease).subscribe((lease: Lease) => {
-            this.router.navigate(['/lease', lease.id]).then();
-          });
-        })
-      });
+    const property: Property = this.buildPropertyFromForm();
+    this.propertyRepository.create(property).subscribe(() => {
+      this.router.navigate(['/home']).then();
+    });
   }
 
   private update() {
-    this.addressRepository.update(this.buildAddressFromForm())
-      .subscribe((address: Address) => {
-        const property: Property = this.buildPropertyFromForm();
-        property.addressId = address.id;
-        property.id = this.property?.id ?? '';
-        this.propertyRepository.update(property).subscribe((property: Property) => {
-          this.router.navigate(['/lease', this.leaseId]).then();
-        })
-      });
+    const property: Property = this.buildPropertyFromForm();
+    property.id = this.property?.id ?? '';
+    this.propertyRepository.update(property).subscribe(() => {
+      this.router.navigate(['/home']).then();
+    });
   }
 
   private buildAddressFromForm(): Address {
