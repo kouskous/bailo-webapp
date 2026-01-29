@@ -14,8 +14,10 @@ export const appConfig: ApplicationConfig = {
     provideAuth0({
       domain: 'bailo.eu.auth0.com',
       clientId: 'pArbEhROiWpOaHFCprb8hm8FJrszoJyX',
+      useRefreshTokens: true,
       authorizationParams: {
-        redirect_uri: window.location.origin
+        redirect_uri: window.location.origin,
+        ui_locales: 'fr'
       }
     }),
   ]
