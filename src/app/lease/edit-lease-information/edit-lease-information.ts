@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import {EditPropertySkeleton} from "../edit-property/edit-property-skeleton/edit-property-skeleton";
 import {ArrowLeftIcon, LucideAngularModule} from "lucide-angular";
 import {RouterLink} from '@angular/router';
+import {EditPropertySkeleton} from '../../properties/edit-property/edit-property-skeleton/edit-property-skeleton';
 
 @Component({
   selector: 'app-edit-lease-information',

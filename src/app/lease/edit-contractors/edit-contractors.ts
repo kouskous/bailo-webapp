@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import {EditPropertySkeleton} from "../edit-property/edit-property-skeleton/edit-property-skeleton";
 import {ArrowLeftIcon, LucideAngularModule, UserIcon} from "lucide-angular";
 import {RouterLink} from '@angular/router';
 import {TextInput} from '../../layout/components/text-input/text-input';
+import {EditPropertySkeleton} from '../../properties/edit-property/edit-property-skeleton/edit-property-skeleton';
 
 @Component({
   selector: 'app-edit-contractors',

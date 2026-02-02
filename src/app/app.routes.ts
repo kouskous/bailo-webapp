@@ -1,10 +1,11 @@
 import {Routes} from '@angular/router';
 import {AuthGuard} from '@auth0/auth0-angular';
 import {LeaseView} from './lease/lease-view.component';
-import {EditProperty} from './lease/edit-property/edit-property';
 import {EditContractors} from './lease/edit-contractors/edit-contractors';
 import {EditLeaseInformation} from './lease/edit-lease-information/edit-lease-information';
 import { Properties } from './properties/properties.component';
+import {PropertyView} from './properties/property-view/property-view';
+import {EditProperty} from './properties/edit-property/edit-property';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,11 @@ export const routes: Routes = [
     path: 'properties/new',
     component: EditProperty,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'properties/:id',
+    component: PropertyView,
+    canActivate: [AuthGuard]
   },
   {
     path: 'lease/:id',
