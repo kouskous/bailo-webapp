@@ -1,22 +1,22 @@
 import {Component, Input} from '@angular/core';
-import {Lease} from '../../../model/lease/lease';
-import {DatePipe} from '@angular/common';
 import {Banknote, CalendarIcon, LucideAngularModule, MapPinIcon} from 'lucide-angular';
 import {RouterLink} from '@angular/router';
+import {Property} from '../../../model/property/property';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
-  selector: 'app-lease-card',
+  selector: 'app-property-card',
   imports: [
-    DatePipe,
     LucideAngularModule,
-    RouterLink
+    RouterLink,
+    NgOptimizedImage
   ],
-  templateUrl: './lease-card.html',
-  styleUrl: './lease-card.scss'
+  templateUrl: './property-card.html',
+  styleUrl: './property-card.scss'
 })
-export class LeaseCard {
+export class PropertyCard {
   @Input()
-  lease: Lease | undefined;
+  property: Property | undefined;
   protected readonly MapPinIcon = MapPinIcon;
   protected readonly CalendarIcon = CalendarIcon;
   protected readonly Banknote = Banknote;

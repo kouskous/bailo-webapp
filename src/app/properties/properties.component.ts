@@ -1,22 +1,25 @@
 import {Component, OnInit} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {LucideAngularModule, PlusCircleIcon} from 'lucide-angular';
-import {LeaseSkeletonCard} from './lease-skeleton-card/lease-skeleton-card';
+import {PropertySkeletonCard} from './property-skeleton-card/property-skeleton-card';
 import {PropertyRepository} from '../../repository/property-repository';
 import {Property} from '../../model/property/property';
 import {AuthService} from '@auth0/auth0-angular';
+import {PropertyCard} from './property-card/property-card';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
   imports: [
     RouterLink,
     LucideAngularModule,
-    LeaseSkeletonCard
+    PropertySkeletonCard,
+    PropertyCard
   ],
-  templateUrl: './home.html',
-  styleUrl: './home.scss'
+  templateUrl: './properties.component.html',
+  styleUrls: ['./properties.component.scss']
 })
-export class Home implements OnInit {
+export class Properties implements OnInit {
 
 
   properties: Property[] = [];
@@ -25,6 +28,7 @@ export class Home implements OnInit {
   constructor(private readonly propertyRepository: PropertyRepository,
               private readonly auth: AuthService) {
   }
+
 
   ngOnInit(): void {
     this.auth.user$.subscribe(user => {

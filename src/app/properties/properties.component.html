@@ -4,29 +4,29 @@
     @if (loading) {
       @for (i of [1, 2, 3]; track i) {
         <div class="w-full md:w-80">
-          <app-lease-skeleton-card></app-lease-skeleton-card>
+          <app-property-skeleton-card></app-property-skeleton-card>
         </div>
       }
     } @else {
       @for (property of properties; track property.id) {
         <div class="w-full md:w-80">
-
+            <app-property-card [property]="property"></app-property-card>
         </div>
 
       }
       <div
         class="w-full md:w-80 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 cursor-pointer space-y-4 hover:bg-opacity-40 transition"
-        [routerLink]="['/lease', 'new']">
+        [routerLink]="['/properties', 'new']">
         <div class="h-32 flex justify-center items-center">
           <lucide-icon [img]="PlusCircleIcon" class="w-12 h-12 text-red-500"></lucide-icon>
         </div>
 
         <h2 class="text-2xl font-bold leading-tight text-center">
-          Nouveau bail
+          Nouveau bien
         </h2>
 
         <p class="text-sm text-gray-600 text-center">
-          Créez un nouveau contrat de location
+          Ajouter ici votre bien immobilier à louer.
         </p>
       </div>
     }

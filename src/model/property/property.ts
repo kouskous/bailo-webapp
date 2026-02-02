@@ -16,7 +16,8 @@ export interface PropertyFeature {
 }
 
 export interface Property {
-  id: string
+  accountId: 'auth0|697b6378eaa7c759f984bbc1';
+  id: string;
   name: string;
   type: 'APARTMENT' | 'HOUSE' | 'STUDIO' | 'DUPLEX' | 'VILLA' | 'ROOM' | 'COMMERCIAL' | 'LAND' | 'OTHER';
   addressId?: string;
@@ -43,7 +44,7 @@ export interface Property {
 
   // heating
   heatingType: 'ELECTRIC' | 'GAS' | 'FUEL' | 'HEAT_PUMP' | 'DISTRICT' | 'WOOD' | 'SOLAR' | 'OTHER';
-  heatingDistribution: 'RADIATOR' | 'UNDERFLOOR' | 'AIR' | 'OTHER';
+  heatingDistribution:  'RADIATORS' | 'UNDERFLOOR' | 'AIR_BLOWER' | 'WALL_HEATING'| 'CEILING'| 'STOVES'| 'INDIVIDUAL_UNITS'| 'OTHER';
 
   // timestamps
   createdAt: Date;
