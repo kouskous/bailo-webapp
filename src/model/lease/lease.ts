@@ -1,23 +1,18 @@
-import {LeaseStatus} from './lease-status';
-import {PaymentFrequency} from './payment-frequency';
-import {Currency} from '../shared/currency';
-import {Property} from '../property/property';
-import {Contractor} from '../contractor/contractor';
-
+import {Contractor} from './contractor';
 
 export interface Lease {
   id: string;
   propertyId: string;
-  property?: Property;
-  contractors: Contractor[]
-  startDate?: Date;
+  startDate: Date;
   endDate?: Date;
-  furnished?: boolean;
-  rentAmount?: number;
-  rentCurrency?: Currency;
-  paymentFrequency?: PaymentFrequency;
+  tenants: Contractor[],
+  landlords: Contractor[];
+  furnished: boolean;
+  rentAmount: number;
+  rentCurrency: 'EUR' | 'CHF';
+  paymentFrequency?: 'MONTHLY' | 'WEEKLY' | 'QUARTERLY' | 'YEARLY';
   securityDeposit?: number;
-  status?: LeaseStatus;
+  status?: 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
   createdAt?: Date;
   updatedAt?: Date;
 }

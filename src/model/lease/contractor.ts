@@ -7,7 +7,4 @@ export interface Contractor {
   email: string;
   phoneNumber: string;
   address?: Address;
-  type: 'TENANT' | 'LANDLORD' ;
-  createdAt: Date;
-  updatedAt: Date;
 }

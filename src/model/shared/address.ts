@@ -6,6 +6,6 @@ export interface Address {
   city: string;
   state: string;
   country: string;
-  building?: string
+  building?: string;
   floor?: string;
 }
