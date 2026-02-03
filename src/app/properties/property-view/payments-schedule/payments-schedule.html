@@ -1,0 +1,69 @@
+<div class="space-y-4">
+
+  <h2 class="text-xl font-bold text-gray-800">
+    Échéances & paiements
+  </h2>
+
+  <!-- Échéances -->
+  <div class="space-y-2">
+
+    <!-- Payée -->
+    <div
+      class="flex items-center justify-between px-4 py-3 rounded-xl bg-white bg-opacity-30 backdrop-blur-md shadow-sm text-gray-800 cursor-pointer hover:bg-opacity-40 transition"
+    >
+      <div class="flex items-center gap-2">
+        <lucide-icon [img]="CheckCircleIcon" class="w-5 h-5 text-green-600"></lucide-icon>
+        <div>
+          <div class="font-medium">Janvier 2025</div>
+          <div class="text-sm text-gray-700">Montant : 1 200 CHF</div>
+        </div>
+      </div>
+      <span class="text-green-600 text-sm font-semibold">Payé</span>
+    </div>
+
+    <!-- À payer -->
+    <div
+      class="flex items-center justify-between px-4 py-3 rounded-xl bg-white bg-opacity-30 backdrop-blur-md shadow-sm text-gray-800 cursor-pointer hover:bg-opacity-40 transition"
+    >
+      <div class="flex items-center gap-2">
+        <lucide-icon [img]="AlertCircleIcon" class="w-5 h-5 text-orange-500"></lucide-icon>
+        <div>
+          <div class="font-medium">Février 2025</div>
+          <div class="text-sm text-gray-700">Montant : 1 200 CHF</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-orange-600 text-sm font-semibold">À payer</span>
+        <div
+          class="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500 text-white text-sm hover:bg-red-600 transition cursor-pointer"
+        >
+          <lucide-icon [img]="CreditCardIcon" class="w-4 h-4"></lucide-icon>
+          Paiement
+        </div>
+      </div>
+    </div>
+
+    <!-- En retard -->
+    <div
+      class="flex items-center justify-between px-4 py-3 rounded-xl bg-white bg-opacity-30 backdrop-blur-md shadow-sm text-gray-800 cursor-pointer hover:bg-opacity-40 transition"
+    >
+      <div class="flex items-center gap-2">
+        <lucide-icon [img]="XCircleIcon" class="w-5 h-5 text-red-600"></lucide-icon>
+        <div>
+          <div class="font-medium">Décembre 2024</div>
+          <div class="text-sm text-gray-700">Montant : 1 200 CHF</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-red-600 text-sm font-semibold">En retard</span>
+        <div
+          class="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500 text-white text-sm hover:bg-red-600 transition cursor-pointer"
+        >
+          <lucide-icon [img]="CreditCardIcon" class="w-4 h-4"></lucide-icon>
+          Paiement
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

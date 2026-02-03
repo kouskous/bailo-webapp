@@ -10,12 +10,16 @@ import {
   PlusCircleIcon, PrinterIcon, UserMinusIcon, XCircleIcon
 } from 'lucide-angular';
 import {RouterLink} from '@angular/router';
+import {PaymentsSchedule} from './payments-schedule/payments-schedule';
+import {LeaseSummary} from './lease-summary/lease-summary';
 
 @Component({
   selector: 'app-property-view',
   imports: [
     LucideAngularModule,
-    RouterLink
+    RouterLink,
+    PaymentsSchedule,
+    LeaseSummary
   ],
   templateUrl: './property-view.html',
   styleUrl: './property-view.scss'
