@@ -11,6 +11,18 @@ interface PortalSessionResponse {
   url: string;
 }
 
+interface SubscriptionResponse {
+  id: string;
+  accountId: string;
+  providerCustomerId: string;
+  providerSubscriptionId: string;
+  priceId: string;
+  status: 'ACTIVE' | 'PAST_DUE' | 'CANCELED' | 'INCOMPLETE' | 'INCOMPLETE_EXPIRED' | 'TRIALING' | 'UNPAID' | 'PAUSED' | 'UNKNOWN';
+  currentPeriodEnd: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -33,5 +45,9 @@ export class SubscriptionService {
       accountId,
       returnUrl
     });
+  }
+
+  getSubscription(accountId: string): Observable<SubscriptionResponse> {
+    return this.httpClient.get<SubscriptionResponse>(`${this.baseUrl}?accountId=${encodeURIComponent(accountId)}`);
   }
 }
