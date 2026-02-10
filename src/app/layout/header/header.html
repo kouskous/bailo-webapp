@@ -20,12 +20,18 @@
 
 <!-- Menu attaché -->
 <app-menu #menu="appMenu">
-  <button appMenuItem>
+  <button appMenuItem (click)="goPremium()">
+    <lucide-icon [img]="FlameIcon"></lucide-icon>
+    Passer a Premium
+  </button>
+  <button appMenuItem (click)="openCustomerPortal()">
     <lucide-icon [img]="UserIcon"></lucide-icon>
-    Profil
+    Customer portal
   </button>
   <button appMenuItem (click)="logout()">
     <lucide-icon [img]="LogOutIcon"></lucide-icon>
     Déconnexion
   </button>
 </app-menu>
+
+

@@ -1,14 +1,14 @@
 export interface Payment {
-  id: string;
-  leaseId: string;
-  paymentDate: Date;
-  amount: number;
-  currency: 'EUR' | 'CHF';
-  method?: 'BANK_TRANSFER' | 'CASH' | 'CARD' | 'OTHER';
+  id?: string;
+  leaseId?: string;
+  paymentDate?: string;
+  amount?: number;
+  currency?: 'EUR' | 'CHF';
+  method?: string;
   note?: string;
   reconciled?: boolean;
   reconciledScheduleIds?: string[];
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 }
 

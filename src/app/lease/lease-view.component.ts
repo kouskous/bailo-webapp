@@ -1,6 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {
-  ArrowLeftIcon, FileTextIcon,
+  ArrowLeftIcon,
+  FileTextIcon,
   FlameIcon,
   HomeIcon,
   LayoutIcon,
@@ -8,29 +9,21 @@ import {
   MapPinIcon,
   RulerIcon
 } from 'lucide-angular';
-import {LeaseRepository} from '../../repository/lease-repository';
+import {LeaseService} from '../../service/lease.service';
 import {Lease} from '../../model/lease/lease';
 import {ActivatedRoute, RouterLink} from '@angular/router';
-import {DatePipe, LowerCasePipe, TitleCasePipe} from '@angular/common';
+import {DatePipe} from '@angular/common';
 import {LeaseViewSkeleton} from './lease-view-skeleton/lease-view-skeleton';
 import {combineLatest, take, timer} from 'rxjs';
-import {PropertyTypePipe} from '../../pipe/property-type-pipe';
-import {HeatingTypePipe} from '../../pipe/heating-type-pipe';
 import {PropertyFeature} from '../../model/property/property';
-import {PropertyFeaturePipe} from '../../pipe/property-feature-pipe';
 
 @Component({
   selector: 'app-lease',
   imports: [
     LucideAngularModule,
     RouterLink,
-    TitleCasePipe,
     DatePipe,
-    LeaseViewSkeleton,
-    PropertyTypePipe,
-    HeatingTypePipe,
-    LowerCasePipe,
-    PropertyFeaturePipe
+    LeaseViewSkeleton
   ],
   templateUrl: './lease-view.component.html',
   styleUrl: './lease-view.component.scss'
@@ -42,7 +35,7 @@ export class LeaseView implements OnInit {
   private readonly route = inject(ActivatedRoute);
   protected readonly RulerIcon = RulerIcon;
 
-  constructor(private readonly leaseRepository: LeaseRepository) {
+  constructor(private readonly leaseRepository: LeaseService) {
   }
 
   ngOnInit(): void {

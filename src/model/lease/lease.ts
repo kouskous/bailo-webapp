@@ -1,18 +1,20 @@
 import {Contractor} from './contractor';
+import {Address} from '../shared/address';
 
 export interface Lease {
-  id: string;
-  propertyId: string;
-  startDate: Date;
-  endDate?: Date;
-  tenants: Contractor[],
-  landlords: Contractor[];
-  furnished: boolean;
-  rentAmount: number;
-  rentCurrency: 'EUR' | 'CHF';
-  paymentFrequency?: 'MONTHLY' | 'WEEKLY' | 'QUARTERLY' | 'YEARLY';
+  id?: string;
+  propertyId?: string;
+  tenants?: Contractor[];
+  landlords?: Contractor[];
+  startDate?: string;
+  endDate?: string;
+  furnished?: boolean;
+  rentAmount?: number;
+  rentCurrency?: string;
+  paymentFrequency?: string;
   securityDeposit?: number;
-  status?: 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
-  createdAt?: Date;
-  updatedAt?: Date;
+  status?: string;
+  address?: Address;
+  createdAt?: string;
+  updatedAt?: string;
 }

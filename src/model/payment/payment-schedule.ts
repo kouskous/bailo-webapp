@@ -1,14 +1,14 @@
 export interface PaymentSchedule {
-  id: string;
-  leaseId: string;
-  dueDate: Date;
-  period: string;
-  amount: number;
-  currency: 'EUR' | 'CHF';
-  type: 'RENT' | 'SECURITY_DEPOSIT' | 'OTHER';
-  status?: 'PENDING' | 'PAID' | 'PARTIAL';
+  id?: string;
+  leaseId?: string;
+  dueDate?: string;
+  period?: string;
+  amount?: number;
+  currency?: 'EUR' | 'CHF';
+  type?: 'RENT' | 'SECURITY_DEPOSIT' | 'RENT_PRORATA' | 'OTHER';
+  status?: string;
   paidAmount?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 }
 

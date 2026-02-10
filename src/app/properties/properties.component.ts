@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {LucideAngularModule, PlusCircleIcon} from 'lucide-angular';
 import {PropertySkeletonCard} from './property-skeleton-card/property-skeleton-card';
-import {PropertyRepository} from '../../repository/property-repository';
+import {PropertyService} from '../../service/property-service';
 import {Property} from '../../model/property/property';
 import {AuthService} from '@auth0/auth0-angular';
 import {PropertyCard} from './property-card/property-card';
@@ -25,7 +25,7 @@ export class Properties implements OnInit {
   properties: Property[] = [];
   loading = true;
 
-  constructor(private readonly propertyRepository: PropertyRepository,
+  constructor(private readonly propertyRepository: PropertyService,
               private readonly auth: AuthService) {
   }
 

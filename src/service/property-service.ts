@@ -6,7 +6,7 @@ import {HttpClient} from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class PropertyRepository {
+export class PropertyService {
 
   constructor(private readonly httpClient: HttpClient) {
   }
@@ -16,7 +16,7 @@ export class PropertyRepository {
   }
 
   update(property: Property): Observable<Property> {
-    return this.httpClient.put<Property>('https://api.bailo.ch/property-management/properties/' + property.id, property);
+    return this.httpClient.put<Property>('https://api.bailo.ch/property-management/properties', property);
   }
 
   findAll(accountId: string) {

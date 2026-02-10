@@ -1,72 +1,103 @@
-<div class="px-2 md:px-8 py-4 md:py-8 space-y-10">
-
-  <!-- ========================= -->
-  <!-- Header propriété -->
-  <!-- ========================= -->
-  <div class="flex items-center gap-4">
-    <div
-      class="w-10 h-10 flex items-center justify-center bg-white bg-opacity-30 backdrop-blur-md rounded-full shadow-md hover:bg-opacity-40 transition cursor-pointer"
-      [routerLink]="'/properties'">
-      <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-red-500"></lucide-icon>
-    </div>
-
-    <div>
-      <div class="text-3xl font-bold text-gray-800">
-        Maison Machilly
-      </div>
-      <div class="text-gray-700">
-        244 route de Bussioz, 74140 Saint-Cergues
-      </div>
+@if (loading) {
+  <div class="px-2 md:px-8 py-4 md:py-8">
+    <div class="bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-6 shadow-lg text-gray-800">
+      Chargement du bien...
     </div>
   </div>
-
-
-  <div>
-    <div class="flex items-center justify-between">
-      <h2 class="text-xl font-bold text-gray-800">
-        Baux
-      </h2>
-
-      <div
-        class="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500 text-white shadow-md hover:bg-red-600 transition text-sm cursor-pointer"
-      >
-        <lucide-icon [img]="FilePlusIcon" class="w-5 h-5"></lucide-icon>
-        Nouveau bail
+} @else {
+  @if (!property) {
+    <div class="px-2 md:px-8 py-4 md:py-8">
+      <div class="bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-6 shadow-lg text-gray-800">
+        <div class="text-xl font-bold">Bien introuvable</div>
+        <div class="text-sm text-gray-700 mt-2">Ce bien n'existe plus ou vous n'y avez pas acces.</div>
+        <a
+          class="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-xl bg-red-500 text-white shadow-md hover:bg-red-600 transition"
+          [routerLink]="'/properties'">
+          <lucide-icon [img]="ArrowLeftIcon" class="w-4 h-4"></lucide-icon>
+          Retour aux biens
+        </a>
       </div>
     </div>
-    <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+  } @else {
+    <div class="px-2 md:px-8 py-4 md:py-8 space-y-10">
+      <div class="flex items-center gap-4">
+        <div
+          class="w-10 h-10 flex items-center justify-center bg-white bg-opacity-30 backdrop-blur-md rounded-full shadow-md hover:bg-opacity-40 transition cursor-pointer"
+          [routerLink]="'/properties'">
+          <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-red-500"></lucide-icon>
+        </div>
 
-      <!-- Bail actif -->
-      <div
-        class="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500 text-white text-sm shadow-md whitespace-nowrap cursor-pointer"
-      >
-        <lucide-icon [img]="HomeIcon" class="w-4 h-4"></lucide-icon>
-        Jean Dupont
+        <div>
+          <div class="text-3xl font-bold text-gray-800">
+            {{ property?.name || 'Bien' }}
+          </div>
+          <div class="text-gray-700">
+            {{ property?.address?.label }}
+            @if (property?.address?.zipCode || property?.address?.city) {
+              <span> - {{ property?.address?.zipCode }} {{ property?.address?.city }}</span>
+            }
+          </div>
+        </div>
       </div>
 
-      <!-- Autre bail actif (colocation) -->
-      <div
-        class="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500 text-white text-sm shadow-md whitespace-nowrap cursor-pointer"
-      >
-        <lucide-icon [img]="HomeIcon" class="w-4 h-4"></lucide-icon>
-        Wilfried Le Blanc
+      <div class="flex flex-wrap gap-2">
+        @if (property?.type) {
+          <div class="px-3 py-1 rounded-full bg-white bg-opacity-40 backdrop-blur-md text-sm text-gray-700">
+            {{ property?.type | titlecase }}
+          </div>
+        }
+        @if (property?.livingArea) {
+          <div class="px-3 py-1 rounded-full bg-white bg-opacity-40 backdrop-blur-md text-sm text-gray-700">
+            {{ property?.livingArea }} m2 habitables
+          </div>
+        }
+        @if (property?.rooms) {
+          <div class="px-3 py-1 rounded-full bg-white bg-opacity-40 backdrop-blur-md text-sm text-gray-700">
+            {{ property?.rooms }} pieces
+          </div>
+        }
       </div>
 
-      <!-- Bail terminé -->
-      <div
-        class="flex items-center gap-2 px-4 py-2 rounded-xl bg-white bg-opacity-30 backdrop-blur-md text-gray-700 text-sm hover:bg-opacity-40 transition whitespace-nowrap cursor-pointer"
-      >
-        <lucide-icon [img]="ArchiveIcon" class="w-4 h-4"></lucide-icon>
-        Marie Martin
+      <div>
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-bold text-gray-800">
+            Baux
+          </h2>
+
+          <div
+            class="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500 text-white shadow-md hover:bg-red-600 transition text-sm cursor-pointer"
+          >
+            <lucide-icon [img]="FilePlusIcon" class="w-5 h-5"></lucide-icon>
+            Nouveau bail
+          </div>
+        </div>
+
+        @if (leases?.length) {
+          <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            @for (lease of leases; track lease.id) {
+              <div
+                class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm shadow-md whitespace-nowrap cursor-pointer"
+                [ngClass]="{
+                  'bg-red-500 text-white': selectedLease?.id === lease.id,
+                  'bg-white bg-opacity-30 backdrop-blur-md text-gray-700 hover:bg-opacity-40 transition': selectedLease?.id !== lease.id
+                }"
+                (click)="selectLease(lease)">
+                <lucide-icon [img]="HomeIcon" class="w-4 h-4"></lucide-icon>
+                {{ getLeaseLabel(lease) }}
+              </div>
+            }
+          </div>
+          <app-lease-summary [lease]="selectedLease"></app-lease-summary>
+        } @else {
+          <div class="bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 mt-4">
+            <div class="font-medium">Aucun bail pour ce bien.</div>
+            <div class="text-sm text-gray-700 mt-1">Creez un bail pour commencer le suivi des loyers.</div>
+          </div>
+        }
       </div>
 
+      <app-payments-schedule [schedules]="paymentSchedules"></app-payments-schedule>
     </div>
-    <app-lease-summary></app-lease-summary>
-  </div>
+  }
+}
 
-
-
-
-  <app-payments-schedule></app-payments-schedule>
-
-</div>

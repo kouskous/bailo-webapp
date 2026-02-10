@@ -16,37 +16,28 @@ export interface PropertyFeature {
 }
 
 export interface Property {
-  accountId: 'auth0|697b6378eaa7c759f984bbc1';
-  id: string;
-  name: string;
-  type: 'APARTMENT' | 'HOUSE' | 'STUDIO' | 'DUPLEX' | 'VILLA' | 'ROOM' | 'COMMERCIAL' | 'LAND' | 'OTHER';
-  addressId?: string;
-  address: Address;
+  accountId?: string;
+  id?: string;
+  name?: string;
+  type?: string;
+  address?: Address;
   yearOfConstruction?: number;
-  yearOfRenovation?: string;
-  energyLabel?: string; // DPE par ex. : A, B, C, ...
+  yearOfRenovation?: number;
+  energyLabel?: string;
   features?: PropertyFeature;
   description?: string;
-
-  //surfaces
-  livingArea: string;
-  totalArea?: string;
-  landArea?: string;
-  balconyArea?: string;
-  terraceArea?: string;
-  gardenArea?: string;
-
-  //room details
-  rooms: string;
-  bedrooms: string;
-  bathrooms: string;
-  toilets: string;
-
-  // heating
-  heatingType: 'ELECTRIC' | 'GAS' | 'FUEL' | 'HEAT_PUMP' | 'DISTRICT' | 'WOOD' | 'SOLAR' | 'OTHER';
-  heatingDistribution:  'RADIATORS' | 'UNDERFLOOR' | 'AIR_BLOWER' | 'WALL_HEATING'| 'CEILING'| 'STOVES'| 'INDIVIDUAL_UNITS'| 'OTHER';
-
-  // timestamps
-  createdAt: Date;
-  updatedAt: Date;
+  livingArea?: number;
+  totalArea?: number;
+  landArea?: number;
+  balconyArea?: number;
+  terraceArea?: number;
+  gardenArea?: number;
+  rooms?: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  toilets?: number;
+  heatingType?: string;
+  heatingDistribution?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }

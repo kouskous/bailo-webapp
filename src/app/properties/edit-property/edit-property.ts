@@ -12,13 +12,13 @@ import {
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Property} from '../../../model/property/property';
-import {LeaseRepository} from '../../../repository/lease-repository';
+import {LeaseService} from '../../../service/lease.service';
 import {TextInput} from '../../layout/components/text-input/text-input';
 import {Dropdown} from '../../layout/components/dropdown/dropdown';
 import {Checkbox} from '../../layout/components/checkbox/checkbox';
 import {TextArea} from '../../layout/components/text-area/text-area';
 import {Address} from '../../../model/shared/address';
-import {PropertyRepository} from '../../../repository/property-repository';
+import {PropertyService} from '../../../service/property-service';
 import {NgClass} from '@angular/common';
 import {EditPropertySkeleton} from './edit-property-skeleton/edit-property-skeleton';
 import {combineLatest, take, timer} from 'rxjs';
@@ -136,8 +136,8 @@ export class EditProperty implements OnInit {
   constructor(private readonly fb: FormBuilder,
               private readonly route: ActivatedRoute,
               private readonly router: Router,
-              private readonly leaseRepository: LeaseRepository,
-              private readonly propertyRepository: PropertyRepository) {
+              private readonly leaseRepository: LeaseService,
+              private readonly propertyRepository: PropertyService) {
     this.initForm();
   }
 
@@ -185,13 +185,13 @@ export class EditProperty implements OnInit {
         toilets: [this.property?.toilets ?? ''],
       }),
       address: this.fb.group({
-        street: [this.property?.address?.street ?? '', Validators.required],
-        additional: [this.property?.address?.additional ?? ''],
-        building: [this.property?.address?.building ?? ''],
-        floor: [this.property?.address?.floor ?? ''],
+        street: [this.property?.address?.label ?? '', Validators.required],
+        additional: [''],
+        building: [''],
+        floor: [''],
         zipCode: [this.property?.address?.zipCode ?? '', Validators.required],
         city: [this.property?.address?.city ?? '', Validators.required],
-        state: [this.property?.address?.state ?? '', Validators.required],
+        state: [''],
         country: [this.property?.address?.country ?? 'CH']
       }),
       surface: this.fb.group({
@@ -246,15 +246,17 @@ export class EditProperty implements OnInit {
   }
 
   private buildAddressFromForm(): Address {
+    const street = this.propertyForm.get('address.street')?.value;
+    const additional = this.propertyForm.get('address.additional')?.value;
+    const building = this.propertyForm.get('address.building')?.value;
+    const floor = this.propertyForm.get('address.floor')?.value;
+    const state = this.propertyForm.get('address.state')?.value;
+    const labelParts = [street, additional, building, floor, state].filter((value) => !!value);
     return {
-      street: this.propertyForm.get('address.street')?.value,
-      additional: this.propertyForm.get('address.additional')?.value,
-      building: this.propertyForm.get('address.building')?.value,
-      floor: this.propertyForm.get('address.floor')?.value,
+      label: labelParts.length ? labelParts.join(', ') : undefined,
       zipCode: this.propertyForm.get('address.zipCode')?.value,
       city: this.propertyForm.get('address.city')?.value,
-      state: this.propertyForm.get('address.state')?.value,
-      country: "CH"
+      country: 'CH'
     } as Address;
   }
 

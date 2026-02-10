@@ -20,75 +20,76 @@
         [routerLink]="['/lease', lease?.id, 'property']"
       >
         <!-- Nom du bien -->
-        <h2 class="text-2xl font-bold">{{ lease?.property?.name }}</h2>
+        <h2 class="text-2xl font-bold">{{ lease?.address?.label || ('Bien ' + (lease?.propertyId ?? '')) }}</h2>
 
         <!-- Adresse -->
         <p class="text-sm text-gray-700 flex items-center gap-1">
           <lucide-icon [img]="MapPinIcon"></lucide-icon>
-          {{ lease?.property?.address?.street }}, {{ lease?.property?.address?.city }}
+          {{ lease?.address?.label }}
+          @if (lease?.address?.zipCode || lease?.address?.city) {
+            <span> - {{ lease?.address?.zipCode }} {{ lease?.address?.city }}</span>
+          }
         </p>
 
         <hr class="border-t border-gray-300/50 my-2"/>
 
-        <!-- Type & Surface -->
+        <!-- Loyer -->
         <div class="text-sm text-gray-700 flex items-center gap-2">
           <lucide-icon [img]="HomeIcon"></lucide-icon>
-          <span>{{ lease?.property?.type| propertyType | titlecase }}</span> ·
-          <span>{{ lease?.property?.livingArea }} m²</span>
+          <span>{{ lease?.rentAmount }} {{ lease?.rentCurrency }}</span>
+          @if (lease?.paymentFrequency) {
+            <span>· {{ lease?.paymentFrequency }}</span>
+          }
         </div>
 
-        <!-- Pièces -->
+        <!-- Conditions -->
         <div class="text-sm text-gray-700 flex items-center gap-2">
           <lucide-icon [img]="LayoutIcon"></lucide-icon>
-          <span>{{ lease?.property?.rooms }} pièces</span>
-          @if (lease?.property?.bedrooms) {
-            <span>· {{ lease?.property?.bedrooms }} chambres</span>
-          }
-          @if (lease?.property?.bathrooms) {
-            <span>· {{ lease?.property?.bathrooms }} sdb</span>
-          }
-
-
-        </div>
-
-        <!-- Chauffage & DPE -->
-        <div class="text-sm text-gray-700 flex items-center gap-2">
-          <lucide-icon [img]="FlameIcon"></lucide-icon>
-          <span>Chauffage avec {{ lease?.property?.heatingType | heatingType | lowercase }}</span>
-          @if (lease?.property?.bathrooms) {
-            <span>· DPE {{ lease?.property?.energyLabel }}</span>
-          }
-        </div>
-
-        <!-- Caractéristiques -->
-        <div class="text-xs text-gray-600 flex flex-wrap gap-2 mt-2">
-          @for (feature of getEnabledFeatures(lease?.property?.features); track feature) {
-            <span class="bg-gray-200 px-2 py-1 rounded-full">{{ feature | propertyFeature | titlecase }}</span>
+          <span>{{ lease?.furnished ? 'Meuble' : 'Non meuble' }}</span>
+          @if (lease?.securityDeposit) {
+            <span>· Depot {{ lease?.securityDeposit }} {{ lease?.rentCurrency }}</span>
           }
         </div>
       </div>
       <div
         class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2  cursor-pointer"
         [routerLink]="['/lease', lease?.id, 'contractors']">
-        <h3 class="text-xl font-bold">Propriétaires</h3>
-        <div class="border-t border-gray-300/40 pt-2">
-          <div class="text-gray-800 font-medium">
-            Koussila ZEKRI
+        <h3 class="text-xl font-bold">Proprietaires</h3>
+        @if (lease?.landlords?.length) {
+          @for (landlord of lease?.landlords; track landlord.id ?? landlord.email) {
+            <div class="border-t border-gray-300/40 pt-2">
+              <div class="text-gray-800 font-medium">
+                {{ landlord.firstName }} {{ landlord.lastName }}
+              </div>
+              <div class="text-xs text-gray-600">
+                {{ landlord.email }}<br/>
+                {{ landlord.phoneNumber }}
+              </div>
+            </div>
+          }
+        } @else {
+          <div class="border-t border-gray-300/40 pt-2 text-xs text-gray-600">
+            Aucun proprietaire.
           </div>
-          <div class="text-xs text-gray-600">
-            koussila zekri&#64;gmail.com<br/>
-            +33123456789
-          </div>
-        </div>
+        }
         <h3 class="text-xl font-bold mt-8">Locataires</h3>
-        <div class="border-t border-gray-300/40 pt-2">
-          <div class="text-gray-800 font-medium">
-            Koussila ZEKRI
+        @if (lease?.tenants?.length) {
+          @for (tenant of lease?.tenants; track tenant.id ?? tenant.email) {
+            <div class="border-t border-gray-300/40 pt-2">
+              <div class="text-gray-800 font-medium">
+                {{ tenant.firstName }} {{ tenant.lastName }}
+              </div>
+              <div class="text-xs text-gray-600">
+                {{ tenant.email }}<br/>
+                {{ tenant.phoneNumber }}
+              </div>
+            </div>
+          }
+        } @else {
+          <div class="border-t border-gray-300/40 pt-2 text-xs text-gray-600">
+            Aucun locataire.
           </div>
-          <div class="text-xs text-gray-600">
-            koussila zekri&#64;gmail.com<br/>
-            +33123456789
-          </div>
+        }
         </div>
       </div>
       <div
@@ -129,7 +130,6 @@
         </div>
       </div>
     </div>
-
-
-  </div>
 }
+
+
