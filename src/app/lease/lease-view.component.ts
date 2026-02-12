@@ -16,6 +16,7 @@ import {LeaseViewSkeleton} from './lease-view-skeleton/lease-view-skeleton';
 import {combineLatest, take, timer} from 'rxjs';
 import {PropertyFeature} from '../../model/property/property';
 import {LeaseStatusPipe} from '../../pipe/lease-status-pipe';
+import {PaymentFrequencyPipe} from '../../pipe/payment-frequency-pipe';
 
 @Component({
   selector: 'app-lease',
@@ -24,6 +25,7 @@ import {LeaseStatusPipe} from '../../pipe/lease-status-pipe';
     RouterLink,
     DatePipe,
     LeaseStatusPipe,
+    PaymentFrequencyPipe,
     LeaseViewSkeleton
   ],
   templateUrl: './lease-view.component.html',

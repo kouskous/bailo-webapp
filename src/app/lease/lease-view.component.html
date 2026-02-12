@@ -35,7 +35,7 @@
           <lucide-icon [img]="HomeIcon"></lucide-icon>
           <span>{{ lease?.rentAmount }} {{ lease?.rentCurrency }}</span>
           @if (lease?.paymentFrequency) {
-            <span>· {{ lease?.paymentFrequency }}</span>
+            <span>· {{ lease?.paymentFrequency | paymentFrequency }}</span>
           }
         </div>
 
@@ -107,7 +107,7 @@
 
           <div class="flex justify-between">
             <span class="font-medium text-gray-800">Fréquence</span>
-            <span>{{ lease?.paymentFrequency || 'Mensuel' }}</span>
+            <span>{{ lease?.paymentFrequency | paymentFrequency }}</span>
           </div>
 
           <div class="flex justify-between">
@@ -129,5 +129,6 @@
       </div>
     </div>
 }
+
 
 

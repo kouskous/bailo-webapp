@@ -3,6 +3,7 @@ import {LucideAngularModule} from 'lucide-angular';
 import {Lease} from '../../../../model/lease/lease';
 import {DatePipe, NgClass} from '@angular/common';
 import {LeaseStatusPipe} from '../../../../pipe/lease-status-pipe';
+import {PaymentFrequencyPipe} from '../../../../pipe/payment-frequency-pipe';
 
 @Component({
   selector: 'app-lease-summary',
@@ -10,7 +11,8 @@ import {LeaseStatusPipe} from '../../../../pipe/lease-status-pipe';
     LucideAngularModule,
     DatePipe,
     NgClass,
-    LeaseStatusPipe
+    LeaseStatusPipe,
+    PaymentFrequencyPipe
   ],
   templateUrl: './lease-summary.html',
   styleUrl: './lease-summary.scss'

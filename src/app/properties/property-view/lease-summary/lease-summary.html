@@ -12,7 +12,7 @@
           Loyer : <span class="font-medium">{{ lease.rentAmount }} {{ lease.rentCurrency }}</span>
         </div>
         <div class="text-sm text-slate-600">
-          Frequence : <span class="font-medium">{{ lease.paymentFrequency || 'Mensuel' }}</span>
+          Frequence : <span class="font-medium">{{ lease.paymentFrequency | paymentFrequency }}</span>
         </div>
       </div>
       <span class="self-start rounded-full px-3 py-1 text-sm font-semibold whitespace-nowrap"
