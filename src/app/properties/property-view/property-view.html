@@ -27,7 +27,7 @@
           <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5 text-red-500"></lucide-icon>
         </div>
 
-        <div>
+        <div class="flex-1">
           <div class="text-3xl font-bold text-gray-800">
             {{ property.name || 'Bien' }}
           </div>
@@ -38,6 +38,15 @@
             }
           </div>
         </div>
+
+        @if (property.id) {
+          <a
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500 text-white shadow-md hover:bg-red-600 transition text-sm"
+            [routerLink]="['/properties', property.id, 'edit']">
+            <lucide-icon [img]="FileTextIcon" class="w-4 h-4"></lucide-icon>
+            Modifier le bien
+          </a>
+        }
       </div>
 
       <div class="flex flex-wrap gap-2">
@@ -100,4 +109,3 @@
     </div>
   }
 }
-

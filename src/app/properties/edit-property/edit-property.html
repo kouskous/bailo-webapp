@@ -1,224 +1,123 @@
 @if (loading) {
   <app-edit-property-skeleton></app-edit-property-skeleton>
 } @else {
-  <form class="property-wizard" [formGroup]="propertyForm" (ngSubmit)="onPrimaryAction()">
-    <header class="wizard-header">
+  <form class="min-h-[calc(100vh-4rem)] bg-slate-50 p-3 md:p-6" [formGroup]="propertyForm" (ngSubmit)="onPrimaryAction()">
+    <header class="mx-auto mb-4 flex max-w-6xl items-start gap-3">
       <a
         [routerLink]="'/properties'"
-        class="back-link"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-red-600 shadow-sm hover:bg-red-50"
       >
-        <lucide-icon [img]="ArrowLeftIcon" class="w-5 h-5"></lucide-icon>
+        <lucide-icon [img]="ArrowLeftIcon" class="h-5 w-5"></lucide-icon>
       </a>
       <div>
-        <p class="wizard-eyebrow">Configuration du bien</p>
-        <h1 class="wizard-title">{{ propertyId ? 'Modifier le bien' : 'Nouveau bien immobilier' }}</h1>
+        <p class="m-0 text-xs font-bold uppercase tracking-wider text-red-700">Configuration du bien</p>
+        <h1 class="m-0.5 text-2xl font-extrabold text-slate-900">{{ propertyId ? 'Modifier le bien' : 'Nouveau bien immobilier' }}</h1>
       </div>
     </header>
 
-    <section class="wizard-progress">
-      <div class="wizard-progress__bar">
-        <div class="wizard-progress__bar-fill" [style.width.%]="progressPercentage"></div>
+    <section class="mx-auto mb-4 max-w-6xl rounded-2xl border border-slate-200 bg-white/90 p-3 shadow-sm">
+      <div class="mb-3 h-1.5 overflow-hidden rounded-full bg-slate-200">
+        <div class="h-full rounded-full bg-gradient-to-r from-red-600 to-red-500 transition-all" [style.width.%]="progressPercentage"></div>
       </div>
 
-      <div class="wizard-steps">
+      <div class="grid grid-cols-1 gap-2 md:grid-cols-4">
         @for (step of steps; let index = $index; track step.key) {
           <button
             type="button"
-            class="wizard-step"
             [disabled]="!isStepAccessible(index)"
+            (click)="selectStep(index)"
+            class="flex items-center gap-2 rounded-xl border px-3 py-2 text-left"
             [ngClass]="{
-              'wizard-step--active': index === currentStepIndex,
-              'wizard-step--completed': isStepCompleted(index),
-              'wizard-step--disabled': !isStepAccessible(index)
-            }"
-            (click)="selectStep(index)">
-            <span class="wizard-step__index">{{ index + 1 }}</span>
-            <span class="wizard-step__text">
-              <span class="wizard-step__title">{{ step.title }}</span>
-            </span>
+              'border-red-600 bg-red-50 shadow-sm': index === currentStepIndex,
+              'border-red-200 bg-red-50': isStepCompleted(index) && index !== currentStepIndex,
+              'border-slate-200 bg-white': !isStepCompleted(index) && index !== currentStepIndex,
+              'opacity-50': !isStepAccessible(index)
+            }">
+            <span
+              class="inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold"
+              [ngClass]="{
+                'bg-red-600 text-white': index === currentStepIndex || isStepCompleted(index),
+                'bg-slate-100 text-slate-700': index !== currentStepIndex && !isStepCompleted(index)
+              }">{{ index + 1 }}</span>
+            <span class="truncate text-sm font-semibold text-slate-900">{{ step.title }}</span>
           </button>
         }
       </div>
     </section>
 
-    <section class="wizard-card">
-      <div class="wizard-card__head">
-        <h2>{{ currentStep.title }}</h2>
-      </div>
+    <section class="mx-auto max-w-6xl rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-sm md:p-5">
+      <h2 class="mb-4 text-xl font-extrabold text-slate-900">{{ currentStep.title }}</h2>
 
       @if (currentStep.key === 'basics') {
-        <div class="wizard-grid" formGroupName="general">
-          <app-text-input [label]="'Nom du bien'"
-                          [placeholder]="'Ex: Appartement Lausanne centre'"
-                          formControlName="name"></app-text-input>
-
-          <app-dropdown [label]="'Type du bien'"
-                        [options]="propertyTypes"
-                        formControlName="type"></app-dropdown>
-
-          <app-text-input [label]="'Nombre de pieces'"
-                          [placeholder]="'Ex: 4.5'"
-                          type="number"
-                          formControlName="rooms"></app-text-input>
-
-          <app-text-input [label]="'Chambres'"
-                          [placeholder]="'Ex: 3'"
-                          type="number"
-                          formControlName="bedrooms"></app-text-input>
-
-          <app-text-input [label]="'Salles de bain'"
-                          [placeholder]="'Ex: 2'"
-                          type="number"
-                          formControlName="bathrooms"></app-text-input>
-
-          <app-text-input [label]="'Toilettes'"
-                          [placeholder]="'Ex: 2'"
-                          type="number"
-                          formControlName="toilets"></app-text-input>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2" formGroupName="general">
+          <app-text-input [label]="'Nom du bien'" [placeholder]="'Ex: Appartement Lausanne centre'" formControlName="name"></app-text-input>
+          <app-dropdown [label]="'Type du bien'" [options]="propertyTypes" formControlName="type"></app-dropdown>
+          <app-text-input [label]="'Nombre de pieces'" [placeholder]="'Ex: 4.5'" type="number" formControlName="rooms"></app-text-input>
+          <app-text-input [label]="'Chambres'" [placeholder]="'Ex: 3'" type="number" formControlName="bedrooms"></app-text-input>
+          <app-text-input [label]="'Salles de bain'" [placeholder]="'Ex: 2'" type="number" formControlName="bathrooms"></app-text-input>
+          <app-text-input [label]="'Toilettes'" [placeholder]="'Ex: 2'" type="number" formControlName="toilets"></app-text-input>
         </div>
       }
 
       @if (currentStep.key === 'address') {
-        <div class="wizard-grid" formGroupName="address">
-          <div class="wizard-span-2">
-            <app-text-input [label]="'Adresse'"
-                            [placeholder]="'Ex: Rue Centrale 21'"
-                            formControlName="street"></app-text-input>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2" formGroupName="address">
+          <div class="md:col-span-2">
+            <app-text-input [label]="'Adresse'" [placeholder]="'Ex: Rue Centrale 21'" formControlName="street"></app-text-input>
           </div>
-
-          <div class="wizard-span-2">
-            <app-text-input [label]="'Complement'"
-                            [placeholder]="'Ex: Residence des Alpes'"
-                            formControlName="additional"></app-text-input>
+          <div class="md:col-span-2">
+            <app-text-input [label]="'Complement'" [placeholder]="'Ex: Residence des Alpes'" formControlName="additional"></app-text-input>
           </div>
-
-          <app-text-input [label]="'Batiment'"
-                          [placeholder]="'Ex: B'"
-                          formControlName="building"></app-text-input>
-
-          <app-text-input [label]="'Etage'"
-                          [placeholder]="'Ex: 3'"
-                          formControlName="floor"></app-text-input>
-
-          <app-text-input
-            [label]="'Code postal'"
-            [placeholder]="'Ex: 1005'"
-            formControlName="zipCode">
-          </app-text-input>
-
-          <app-text-input
-            [label]="'Ville'"
-            [placeholder]="'Ex: Lausanne'"
-            formControlName="city">
-          </app-text-input>
-
-          <div class="wizard-span-2">
-            <app-dropdown
-              [label]="'Canton'"
-              [options]="cantons"
-              formControlName="state">
-            </app-dropdown>
+          <app-text-input [label]="'Batiment'" [placeholder]="'Ex: B'" formControlName="building"></app-text-input>
+          <app-text-input [label]="'Etage'" [placeholder]="'Ex: 3'" formControlName="floor"></app-text-input>
+          <app-text-input [label]="'Code postal'" [placeholder]="'Ex: 1005'" formControlName="zipCode"></app-text-input>
+          <app-text-input [label]="'Ville'" [placeholder]="'Ex: Lausanne'" formControlName="city"></app-text-input>
+          <div class="md:col-span-2">
+            <app-dropdown [label]="'Canton'" [options]="cantons" formControlName="state"></app-dropdown>
           </div>
         </div>
       }
 
       @if (currentStep.key === 'surfaces') {
-        <div class="wizard-grid" formGroupName="surface">
-          <app-text-input [label]="'Surface habitable (m2)'"
-                          [placeholder]="'Ex: 85'"
-                          type="number"
-                          formControlName="livingArea"></app-text-input>
-
-          <app-text-input [label]="'Surface totale (m2)'"
-                          [placeholder]="'Ex: 102'"
-                          formControlName="totalArea"
-                          type="number"></app-text-input>
-
-          <app-text-input [label]="'Surface terrain (m2)'"
-                          [placeholder]="'Ex: 300'"
-                          formControlName="landArea"
-                          type="number"></app-text-input>
-
-          <app-text-input [label]="'Balcon (m2)'"
-                          [placeholder]="'Ex: 8'"
-                          formControlName="balconyArea"
-                          type="number"></app-text-input>
-
-          <app-text-input [label]="'Terrasse (m2)'"
-                          [placeholder]="'Ex: 18'"
-                          formControlName="terraceArea"
-                          type="number"></app-text-input>
-
-          <app-text-input [label]="'Jardin (m2)'"
-                          [placeholder]="'Ex: 60'"
-                          formControlName="gardenArea"
-                          type="number"></app-text-input>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2" formGroupName="surface">
+          <app-text-input [label]="'Surface habitable (m2)'" [placeholder]="'Ex: 85'" type="number" formControlName="livingArea"></app-text-input>
+          <app-text-input [label]="'Surface totale (m2)'" [placeholder]="'Ex: 102'" type="number" formControlName="totalArea"></app-text-input>
+          <app-text-input [label]="'Surface terrain (m2)'" [placeholder]="'Ex: 300'" type="number" formControlName="landArea"></app-text-input>
+          <app-text-input [label]="'Balcon (m2)'" [placeholder]="'Ex: 8'" type="number" formControlName="balconyArea"></app-text-input>
+          <app-text-input [label]="'Terrasse (m2)'" [placeholder]="'Ex: 18'" type="number" formControlName="terraceArea"></app-text-input>
+          <app-text-input [label]="'Jardin (m2)'" [placeholder]="'Ex: 60'" type="number" formControlName="gardenArea"></app-text-input>
         </div>
       }
 
       @if (currentStep.key === 'energy') {
-        <div class="wizard-grid" formGroupName="energy">
-          <app-text-input
-            [label]="'Annee de construction'"
-            [placeholder]="'Ex: 2008'"
-            formControlName="yearOfConstruction"
-            type="number">
-          </app-text-input>
-
-          <app-text-input
-            [label]="'Annee de renovation'"
-            [placeholder]="'Ex: 2022'"
-            formControlName="yearOfRenovation"
-            type="number">
-          </app-text-input>
-
-          <app-dropdown
-            [label]="'Chauffage'"
-            formControlName="heatingType"
-            [options]="heatingOptions">
-          </app-dropdown>
-
-          <app-dropdown
-            [label]="'Distribution chaleur'"
-            formControlName="heatingDistribution"
-            [options]="heatingDistributions">
-          </app-dropdown>
-
-          <div class="wizard-span-2">
-            <app-dropdown
-              [label]="'Etiquette energetique'"
-              formControlName="energyLabel"
-              [options]="energyLabels">
-            </app-dropdown>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2" formGroupName="energy">
+          <app-text-input [label]="'Annee de construction'" [placeholder]="'Ex: 2008'" type="number" formControlName="yearOfConstruction"></app-text-input>
+          <app-text-input [label]="'Annee de renovation'" [placeholder]="'Ex: 2022'" type="number" formControlName="yearOfRenovation"></app-text-input>
+          <app-dropdown [label]="'Chauffage'" formControlName="heatingType" [options]="heatingOptions"></app-dropdown>
+          <app-dropdown [label]="'Distribution chaleur'" formControlName="heatingDistribution" [options]="heatingDistributions"></app-dropdown>
+          <div class="md:col-span-2">
+            <app-dropdown [label]="'Etiquette energetique'" formControlName="energyLabel" [options]="energyLabels"></app-dropdown>
           </div>
         </div>
 
-        <div class="features-card" formGroupName="features">
-          <h3>Equipements</h3>
-          <div class="features-grid">
+        <div class="mt-4 rounded-2xl border border-red-200 bg-red-50 p-4" formGroupName="features">
+          <h3 class="mb-3 text-sm font-bold uppercase tracking-wide text-red-700">Equipements</h3>
+          <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
             @for (feature of featuresOptions; track feature.key) {
-              <app-checkbox
-                [formControlName]="feature.key"
-                [label]="feature.label">
-              </app-checkbox>
+              <app-checkbox [formControlName]="feature.key" [label]="feature.label"></app-checkbox>
             }
           </div>
         </div>
 
-        <div formGroupName="additionalInformation" class="wizard-stack">
-          <app-text-area
-            [label]="'Description'"
-            formControlName="description"
-            [placeholder]="'Ex: Appartement lumineux, proche transports, ideal pour un couple.'">
-          </app-text-area>
+        <div class="mt-4" formGroupName="additionalInformation">
+          <app-text-area [label]="'Description'" formControlName="description" [placeholder]="'Ex: Appartement lumineux, proche transports, ideal pour un couple.'"></app-text-area>
         </div>
       }
     </section>
 
-    <footer class="wizard-footer">
+    <footer class="sticky bottom-3 mx-auto mt-4 flex max-w-6xl gap-3 rounded-2xl border border-slate-200 bg-white/90 p-3 backdrop-blur">
       <button
         type="button"
-        class="secondary-btn"
+        class="min-h-11 flex-1 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 disabled:opacity-40"
         [disabled]="currentStepIndex === 0"
         (click)="previousStep()">
         Retour
@@ -226,7 +125,7 @@
 
       <button
         type="submit"
-        class="primary-btn"
+        class="min-h-11 flex-1 rounded-xl border border-red-600 bg-red-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
         [disabled]="isLastStep() ? !propertyForm.valid : !isStepCompleted(currentStepIndex)">
         @if (isLastStep()) {
           {{ saveButtonLabel }}

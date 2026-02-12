@@ -24,6 +24,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'properties/:id/edit',
+    component: EditProperty,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'properties/:id',
     component: PropertyView,
     canActivate: [AuthGuard]

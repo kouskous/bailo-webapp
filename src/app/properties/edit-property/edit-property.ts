@@ -53,7 +53,6 @@ interface FormStep {
     EditPropertySkeleton
   ],
   templateUrl: './edit-property.html',
-  styleUrl: './edit-property.scss'
 })
 export class EditProperty implements OnInit {
   propertyForm!: FormGroup;
