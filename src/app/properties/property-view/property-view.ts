@@ -3,9 +3,10 @@ import {
   AlertCircleIcon,
   ArchiveIcon,
   ArrowLeftIcon,
-  CheckCircleIcon,
+  CheckIcon,
   EllipsisIcon,
   CreditCardIcon,
+  PencilIcon,
   Trash2Icon,
   FilePlusIcon,
   FileTextIcon,
@@ -128,6 +129,29 @@ export class PropertyView implements OnInit {
       });
   }
 
+  terminateLease(lease: Lease, menu: Menu): void {
+    const leaseId = lease.id;
+    if (!leaseId) {
+      menu.close();
+      return;
+    }
+
+    const confirmed = window.confirm('Resilier ce bail ? Cette action est irreversible.');
+    if (!confirmed) {
+      menu.close();
+      return;
+    }
+
+    this.leaseRepository.terminate(leaseId)
+      .pipe(
+        take(1),
+        finalize(() => menu.close())
+      )
+      .subscribe((updatedLease) => {
+        this.replaceLeaseInList(updatedLease);
+      });
+  }
+
   deleteLease(lease: Lease, menu: Menu): void {
     const leaseId = lease.id;
     if (!leaseId) {
@@ -159,6 +183,26 @@ export class PropertyView implements OnInit {
     const tenant = lease.tenants?.[0];
     const fullName = [tenant?.firstName, tenant?.lastName].filter(Boolean).join(' ').trim();
     return fullName || 'Bail';
+  }
+
+  canConfirmLease(lease: Lease): boolean {
+    return lease.status === 'DRAFT';
+  }
+
+  canArchiveLease(lease: Lease): boolean {
+    return lease.status === 'ACTIVE';
+  }
+
+  canTerminateLease(lease: Lease): boolean {
+    return lease.status === 'ACTIVE';
+  }
+
+  canDeleteLease(lease: Lease): boolean {
+    return lease.status === 'DRAFT';
+  }
+
+  canEditLease(lease: Lease): boolean {
+    return lease.status !== 'ARCHIVED';
   }
 
   private loadSchedulesForSelectedLease(): void {
@@ -209,7 +253,8 @@ export class PropertyView implements OnInit {
   protected readonly PrinterIcon = PrinterIcon;
   protected readonly XCircleIcon = XCircleIcon;
   protected readonly AlertCircleIcon = AlertCircleIcon;
-  protected readonly CheckCircleIcon = CheckCircleIcon;
+  protected readonly CheckIcon = CheckIcon;
+  protected readonly PencilIcon = PencilIcon;
   protected readonly EllipsisIcon = EllipsisIcon;
   protected readonly Trash2Icon = Trash2Icon;
 }

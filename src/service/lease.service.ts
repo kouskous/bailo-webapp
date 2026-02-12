@@ -36,6 +36,10 @@ export class LeaseService {
     return this.httpClient.put<Lease>(`${this.baseUrl}/${leaseId}/archive`, {});
   }
 
+  terminate(leaseId: string): Observable<Lease> {
+    return this.httpClient.put<Lease>(`${this.baseUrl}/${leaseId}/terminate`, {});
+  }
+
   delete(id: string): Observable<void> {
     return of(undefined);
   }
