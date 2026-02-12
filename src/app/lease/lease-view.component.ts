@@ -15,6 +15,7 @@ import {DatePipe} from '@angular/common';
 import {LeaseViewSkeleton} from './lease-view-skeleton/lease-view-skeleton';
 import {combineLatest, take, timer} from 'rxjs';
 import {PropertyFeature} from '../../model/property/property';
+import {LeaseStatusPipe} from '../../pipe/lease-status-pipe';
 
 @Component({
   selector: 'app-lease',
@@ -22,6 +23,7 @@ import {PropertyFeature} from '../../model/property/property';
     LucideAngularModule,
     RouterLink,
     DatePipe,
+    LeaseStatusPipe,
     LeaseViewSkeleton
   ],
   templateUrl: './lease-view.component.html',

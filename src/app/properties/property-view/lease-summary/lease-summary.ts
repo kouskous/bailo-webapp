@@ -1,13 +1,16 @@
 import {Component, Input} from '@angular/core';
-import {FileTextIcon, LucideAngularModule, UserMinusIcon} from 'lucide-angular';
+import {LucideAngularModule} from 'lucide-angular';
 import {Lease} from '../../../../model/lease/lease';
-import {DatePipe} from '@angular/common';
+import {DatePipe, NgClass} from '@angular/common';
+import {LeaseStatusPipe} from '../../../../pipe/lease-status-pipe';
 
 @Component({
   selector: 'app-lease-summary',
   imports: [
     LucideAngularModule,
-    DatePipe
+    DatePipe,
+    NgClass,
+    LeaseStatusPipe
   ],
   templateUrl: './lease-summary.html',
   styleUrl: './lease-summary.scss'
@@ -26,6 +29,4 @@ export class LeaseSummary {
       .join(', ');
   }
 
-  protected readonly UserMinusIcon = UserMinusIcon;
-  protected readonly FileTextIcon = FileTextIcon;
 }

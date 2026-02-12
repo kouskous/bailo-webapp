@@ -4,6 +4,7 @@ import {
   ArchiveIcon,
   ArrowLeftIcon,
   CheckCircleIcon,
+  EllipsisIcon,
   CreditCardIcon,
   FilePlusIcon,
   FileTextIcon,
@@ -23,9 +24,13 @@ import {LeaseService} from '../../../service/lease.service';
 import {Property} from '../../../model/property/property';
 import {Lease} from '../../../model/lease/lease';
 import {PaymentSchedule} from '../../../model/payment/payment-schedule';
-import {combineLatest, take} from 'rxjs';
-import {NgClass, TitleCasePipe} from '@angular/common';
+import {combineLatest, finalize, take} from 'rxjs';
+import {DatePipe, NgClass, TitleCasePipe} from '@angular/common';
 import {PaymentService} from '../../../service/payment.service';
+import {Menu} from '../../layout/components/menu/menu';
+import {MenuTrigger} from '../../layout/components/menu/menu-trigger';
+import {MenuItem} from '../../layout/components/menu/menu-item';
+import {LeaseStatusPipe} from '../../../pipe/lease-status-pipe';
 
 @Component({
   selector: 'app-property-view',
@@ -34,7 +39,12 @@ import {PaymentService} from '../../../service/payment.service';
     RouterLink,
     PaymentsSchedule,
     LeaseSummary,
+    Menu,
+    MenuItem,
+    MenuTrigger,
+    LeaseStatusPipe,
     NgClass,
+    DatePipe,
     TitleCasePipe
   ],
   templateUrl: './property-view.html',
@@ -86,6 +96,38 @@ export class PropertyView implements OnInit {
     this.loadSchedulesForSelectedLease();
   }
 
+  confirmLease(lease: Lease, menu: Menu): void {
+    const leaseId = lease.id;
+    if (!leaseId) {
+      menu.close();
+      return;
+    }
+    this.leaseRepository.confirm(leaseId)
+      .pipe(
+        take(1),
+        finalize(() => menu.close())
+      )
+      .subscribe((updatedLease) => {
+        this.replaceLeaseInList(updatedLease);
+      });
+  }
+
+  archiveLease(lease: Lease, menu: Menu): void {
+    const leaseId = lease.id;
+    if (!leaseId) {
+      menu.close();
+      return;
+    }
+    this.leaseRepository.archive(leaseId)
+      .pipe(
+        take(1),
+        finalize(() => menu.close())
+      )
+      .subscribe((updatedLease) => {
+        this.replaceLeaseInList(updatedLease);
+      });
+  }
+
   getLeaseLabel(lease: Lease): string {
     const tenant = lease.tenants?.[0];
     const fullName = [tenant?.firstName, tenant?.lastName].filter(Boolean).join(' ').trim();
@@ -111,6 +153,13 @@ export class PropertyView implements OnInit {
       });
   }
 
+  private replaceLeaseInList(updatedLease: Lease): void {
+    this.leases = this.leases.map((lease) => lease.id === updatedLease.id ? updatedLease : lease);
+    if (this.selectedLease?.id === updatedLease.id) {
+      this.selectedLease = updatedLease;
+    }
+  }
+
   protected readonly MapPinIcon = MapPinIcon;
   protected readonly ArrowLeftIcon = ArrowLeftIcon;
   protected readonly PlusCircleIcon = PlusCircleIcon;
@@ -124,4 +173,5 @@ export class PropertyView implements OnInit {
   protected readonly XCircleIcon = XCircleIcon;
   protected readonly AlertCircleIcon = AlertCircleIcon;
   protected readonly CheckCircleIcon = CheckCircleIcon;
+  protected readonly EllipsisIcon = EllipsisIcon;
 }

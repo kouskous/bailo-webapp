@@ -1,19 +1,19 @@
 <div class="space-y-4">
 
-  <h2 class="text-xl font-bold text-gray-800">
+  <h2 class="text-xl font-bold text-slate-900">
     Echeances & paiements
   </h2>
 
   @if (!schedules.length) {
-    <div class="bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800">
+    <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm text-slate-800">
       <div class="font-medium">Aucune echeance pour le moment.</div>
-      <div class="text-sm text-gray-700 mt-1">Les echeances apparaitront des qu'un bail est actif.</div>
+      <div class="text-sm text-slate-600 mt-1">Les echeances apparaitront des qu'un bail est actif.</div>
     </div>
   } @else {
     <div class="space-y-2">
       @for (schedule of schedules; track schedule.id) {
         <div
-          class="flex items-center justify-between px-4 py-3 rounded-xl bg-white bg-opacity-30 backdrop-blur-md shadow-sm text-gray-800 cursor-pointer hover:bg-opacity-40 transition"
+          class="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm text-slate-800"
         >
           <div class="flex items-center gap-2">
             @if (isPaid(schedule)) {
@@ -29,10 +29,10 @@
               <div class="font-medium">
                 {{ schedule.dueDate | date:'MMMM yyyy' }}
               </div>
-              <div class="text-sm text-gray-700">Montant : {{ schedule.amount }} {{ schedule.currency }}</div>
+              <div class="text-sm text-slate-600">Montant : {{ schedule.amount }} {{ schedule.currency }}</div>
             </div>
           </div>
-          <div class="flex items-center gap-4">
+          <div class="flex items-center">
             @if (isPaid(schedule)) {
               <span class="text-green-600 text-sm font-semibold">{{ getStatusLabel(schedule) }}</span>
             } @else if (isOverdue(schedule)) {
@@ -41,15 +41,6 @@
               <span class="text-yellow-600 text-sm font-semibold">{{ getStatusLabel(schedule) }}</span>
             } @else {
               <span class="text-orange-600 text-sm font-semibold">{{ getStatusLabel(schedule) }}</span>
-            }
-
-            @if (!isPaid(schedule)) {
-              <div
-                class="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500 text-white text-sm hover:bg-red-600 transition cursor-pointer"
-              >
-                <lucide-icon [img]="CreditCardIcon" class="w-4 h-4"></lucide-icon>
-                Paiement
-              </div>
             }
           </div>
         </div>

@@ -2,7 +2,6 @@ import {Component, Input} from '@angular/core';
 import {
   AlertCircleIcon,
   CheckCircleIcon,
-  CreditCardIcon,
   LucideAngularModule,
   XCircleIcon
 } from 'lucide-angular';
@@ -48,7 +47,6 @@ export class PaymentsSchedule {
   }
 
   protected readonly AlertCircleIcon = AlertCircleIcon;
-  protected readonly CreditCardIcon = CreditCardIcon;
   protected readonly XCircleIcon = XCircleIcon;
   protected readonly CheckCircleIcon = CheckCircleIcon;
 }
