@@ -1,5 +1,4 @@
 import {Contractor} from './contractor';
-import {Address} from '../shared/address';
 
 export interface Lease {
   id?: string;
@@ -14,7 +13,6 @@ export interface Lease {
   paymentFrequency?: string;
   securityDeposit?: number;
   status?: string;
-  address?: Address;
   createdAt?: string;
   updatedAt?: string;
 }

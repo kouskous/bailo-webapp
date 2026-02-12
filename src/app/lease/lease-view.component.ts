@@ -6,7 +6,6 @@ import {
   HomeIcon,
   LayoutIcon,
   LucideAngularModule,
-  MapPinIcon,
   RulerIcon
 } from 'lucide-angular';
 import {LeaseService} from '../../service/lease.service';
@@ -30,6 +29,7 @@ import {PropertyFeature} from '../../model/property/property';
 })
 export class LeaseView implements OnInit {
   leaseId: string | null = null;
+  propertyId: string | null = null;
   lease: Lease | undefined;
   loading = true;
   private readonly route = inject(ActivatedRoute);
@@ -39,7 +39,8 @@ export class LeaseView implements OnInit {
   }
 
   ngOnInit(): void {
-    this.leaseId = this.route.snapshot.paramMap.get('id')
+    this.propertyId = this.route.snapshot.paramMap.get('propertyId');
+    this.leaseId = this.route.snapshot.paramMap.get('leaseId');
     if (this.leaseId) {
       combineLatest([
         this.leaseRepository.findById(this.leaseId),
@@ -55,7 +56,6 @@ export class LeaseView implements OnInit {
   }
 
   protected readonly LayoutIcon = LayoutIcon;
-  protected readonly MapPinIcon = MapPinIcon;
   protected readonly HomeIcon = HomeIcon;
   protected readonly FlameIcon = FlameIcon;
   protected readonly ArrowLeftIcon = ArrowLeftIcon;

@@ -34,22 +34,27 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'lease/:id',
+    path: 'properties/:propertyId/lease/:leaseId',
     component: LeaseView,
     canActivate: [AuthGuard],
   },
   {
-    path: 'lease/:id/property',
+    path: 'properties/:propertyId/lease/:leaseId/property',
     component: EditProperty,
     canActivate: [AuthGuard],
   },
   {
-    path: 'lease/:id/contractors',
+    path: 'properties/:propertyId/lease/:leaseId/contractors',
     component: EditContractors,
     canActivate: [AuthGuard],
   },
   {
-    path: 'lease/:id/information',
+    path: 'properties/:propertyId/lease/new/information',
+    component: EditLeaseInformation,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'properties/:propertyId/lease/:leaseId/information',
     component: EditLeaseInformation,
     canActivate: [AuthGuard],
   }
