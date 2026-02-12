@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {
   ArrowLeftIcon,
+  CheckCircle2Icon,
   FlameIcon,
+  HomeIcon,
   InfoIcon,
   LucideAngularModule,
   MapPinIcon,
@@ -10,9 +12,15 @@ import {
   TagIcon
 } from 'lucide-angular';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import {Property} from '../../../model/property/property';
-import {LeaseService} from '../../../service/lease.service';
 import {TextInput} from '../../layout/components/text-input/text-input';
 import {Dropdown} from '../../layout/components/dropdown/dropdown';
 import {Checkbox} from '../../layout/components/checkbox/checkbox';
@@ -22,6 +30,13 @@ import {PropertyService} from '../../../service/property-service';
 import {NgClass} from '@angular/common';
 import {EditPropertySkeleton} from './edit-property-skeleton/edit-property-skeleton';
 import {combineLatest, take, timer} from 'rxjs';
+
+interface FormStep {
+  key: string;
+  title: string;
+  subtitle: string;
+  groups: string[];
+}
 
 @Component({
   selector: 'app-edit-property',
@@ -41,27 +56,57 @@ import {combineLatest, take, timer} from 'rxjs';
   styleUrl: './edit-property.scss'
 })
 export class EditProperty implements OnInit {
-
   propertyForm!: FormGroup;
   property: Property | undefined = undefined;
+
+  readonly steps: FormStep[] = [
+    {
+      key: 'basics',
+      title: 'Infos principales',
+      subtitle: '',
+      groups: ['general']
+    },
+    {
+      key: 'address',
+      title: 'Adresse',
+      subtitle: '',
+      groups: ['address']
+    },
+    {
+      key: 'surfaces',
+      title: 'Surfaces',
+      subtitle: '',
+      groups: ['surface']
+    },
+    {
+      key: 'energy',
+      title: 'Energie',
+      subtitle: '',
+      groups: ['energy', 'features', 'additionalInformation']
+    }
+  ];
+
+  currentStepIndex = 0;
+  furthestReachedStepIndex = 0;
+
   heatingOptions = [
     {key: 'GAS', label: 'Gaz'},
     {key: 'FUEL', label: 'Fioul'},
-    {key: 'ELECTRIC', label: 'Électrique'},
-    {key: 'HEAT_PUMP', label: 'Pompe à chaleur'},
+    {key: 'ELECTRIC', label: 'Electrique'},
+    {key: 'HEAT_PUMP', label: 'Pompe a chaleur'},
     {key: 'WOOD', label: 'Bois'},
-    {key: 'DISTRICT', label: 'Réseau urbain'},
+    {key: 'DISTRICT', label: 'Reseau urbain'},
     {key: 'SOLAR', label: 'Solaire'},
     {key: 'OTHER', label: 'Autre'}
   ];
   heatingDistributions = [
     {key: 'RADIATORS', label: 'Radiateurs'},
     {key: 'UNDERFLOOR', label: 'Plancher chauffant'},
-    {key: 'AIR_BLOWER', label: 'Soufflage d’air chaud'},
+    {key: 'AIR_BLOWER', label: 'Soufflage air chaud'},
     {key: 'WALL_HEATING', label: 'Chauffage mural'},
     {key: 'CEILING', label: 'Plafond chauffant'},
-    {key: 'STOVES', label: 'Poêles'},
-    {key: 'INDIVIDUAL_UNITS', label: 'Unités individuelles'},
+    {key: 'STOVES', label: 'Poeles'},
+    {key: 'INDIVIDUAL_UNITS', label: 'Unites individuelles'},
     {key: 'OTHER', label: 'Autre'}
   ];
   propertyTypes = [
@@ -76,13 +121,13 @@ export class EditProperty implements OnInit {
     {key: 'OTHER', label: 'Autre'},
   ];
   energyLabels = [
-    {key: 'A', label: 'A - Très performant'},
+    {key: 'A', label: 'A - Tres performant'},
     {key: 'B', label: 'B - Performant'},
     {key: 'C', label: 'C - Correct'},
     {key: 'D', label: 'D - Passable'},
     {key: 'E', label: 'E - Faible'},
-    {key: 'F', label: 'F - Très faible'},
-    {key: 'G', label: 'G - Extrêmement faible'}
+    {key: 'F', label: 'F - Tres faible'},
+    {key: 'G', label: 'G - Extremement faible'}
   ];
   featuresOptions = [
     {key: 'elevator', label: 'Ascenseur'},
@@ -96,22 +141,22 @@ export class EditProperty implements OnInit {
     {key: 'accessible', label: 'Accessible PMR'},
     {key: 'intercom', label: 'Interphone'},
     {key: 'swimmingPool', label: 'Piscine'},
-    {key: 'fireplace', label: 'Cheminée'}
+    {key: 'fireplace', label: 'Cheminee'}
   ];
   cantons = [
     {key: 'AG', label: 'Argovie'},
-    {key: 'AI', label: 'Appenzell Rhodes-Intérieures'},
-    {key: 'AR', label: 'Appenzell Rhodes-Extérieures'},
+    {key: 'AI', label: 'Appenzell Rhodes-Interieures'},
+    {key: 'AR', label: 'Appenzell Rhodes-Exterieures'},
     {key: 'BE', label: 'Berne'},
-    {key: 'BL', label: 'Bâle-Campagne'},
-    {key: 'BS', label: 'Bâle-Ville'},
+    {key: 'BL', label: 'Bale-Campagne'},
+    {key: 'BS', label: 'Bale-Ville'},
     {key: 'FR', label: 'Fribourg'},
-    {key: 'GE', label: 'Genève'},
+    {key: 'GE', label: 'Geneve'},
     {key: 'GL', label: 'Glaris'},
     {key: 'GR', label: 'Grisons'},
     {key: 'JU', label: 'Jura'},
     {key: 'LU', label: 'Lucerne'},
-    {key: 'NE', label: 'Neuchâtel'},
+    {key: 'NE', label: 'Neuchatel'},
     {key: 'NW', label: 'Nidwald'},
     {key: 'OW', label: 'Obwald'},
     {key: 'SG', label: 'Saint-Gall'},
@@ -127,30 +172,30 @@ export class EditProperty implements OnInit {
     {key: 'ZH', label: 'Zurich'}
   ];
 
-
   propertyId: string | null = null;
   loading = true;
 
   protected readonly ArrowLeftIcon = ArrowLeftIcon;
-
-  constructor(private readonly fb: FormBuilder,
-              private readonly route: ActivatedRoute,
-              private readonly router: Router,
-              private readonly leaseRepository: LeaseService,
-              private readonly propertyRepository: PropertyService) {
-    this.initForm();
-  }
-
-
   protected readonly MapPinIcon = MapPinIcon;
   protected readonly RulerIcon = RulerIcon;
   protected readonly TagIcon = TagIcon;
   protected readonly SettingsIcon = SettingsIcon;
   protected readonly FlameIcon = FlameIcon;
   protected readonly InfoIcon = InfoIcon;
+  protected readonly HomeIcon = HomeIcon;
+  protected readonly CheckCircle2Icon = CheckCircle2Icon;
+
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly propertyRepository: PropertyService
+  ) {
+    this.initForm();
+  }
 
   ngOnInit(): void {
-    this.propertyId = this.route.snapshot.paramMap.get('id')
+    this.propertyId = this.route.snapshot.paramMap.get('id');
     if (this.propertyId) {
       combineLatest([
         this.propertyRepository.findById(this.propertyId),
@@ -160,18 +205,141 @@ export class EditProperty implements OnInit {
           this.property = property;
           this.loading = false;
           this.initForm();
-        })
+        });
     } else {
       this.loading = false;
     }
   }
 
+  get currentStep(): FormStep {
+    return this.steps[this.currentStepIndex];
+  }
+
+  get progressPercentage(): number {
+    if (this.steps.length <= 1) {
+      return 100;
+    }
+    return (this.currentStepIndex / (this.steps.length - 1)) * 100;
+  }
+
+  get saveButtonLabel(): string {
+    return this.propertyId ? 'Enregistrer les modifications' : 'Creer le bien';
+  }
+
+  get reviewAddressLabel(): string {
+    const address = this.buildAddressFromForm();
+    return [address.label, address.zipCode, address.city].filter(Boolean).join(' - ');
+  }
+
+  isLastStep(): boolean {
+    return this.currentStepIndex === this.steps.length - 1;
+  }
+
+  isStepCompleted(index: number): boolean {
+    return this.getStepGroups(index).every((groupName) => this.propertyForm.get(groupName)?.valid);
+  }
+
+  isStepAccessible(index: number): boolean {
+    return index <= this.furthestReachedStepIndex;
+  }
+
+  selectStep(index: number): void {
+    if (!this.isStepAccessible(index)) {
+      return;
+    }
+    this.currentStepIndex = index;
+  }
+
+  previousStep(): void {
+    if (this.currentStepIndex === 0) {
+      return;
+    }
+    this.currentStepIndex--;
+  }
+
+  nextStep(): void {
+    if (!this.isCurrentStepValid()) {
+      this.markCurrentStepAsTouched();
+      return;
+    }
+    if (!this.isLastStep()) {
+      this.currentStepIndex++;
+      this.furthestReachedStepIndex = Math.max(this.furthestReachedStepIndex, this.currentStepIndex);
+    }
+  }
+
+  onPrimaryAction(): void {
+    if (this.isLastStep()) {
+      this.save();
+      return;
+    }
+    this.nextStep();
+  }
+
   save(): void {
+    if (!this.propertyForm.valid) {
+      this.propertyForm.markAllAsTouched();
+      this.goToFirstInvalidStep();
+      return;
+    }
+
     if (this.propertyId) {
       this.update();
     } else {
-      this.create()
+      this.create();
     }
+  }
+
+  private goToFirstInvalidStep(): void {
+    const firstInvalidStep = this.steps.findIndex((step) =>
+      step.groups.some((groupName) => this.propertyForm.get(groupName)?.invalid)
+    );
+
+    if (firstInvalidStep >= 0) {
+      this.currentStepIndex = firstInvalidStep;
+      this.furthestReachedStepIndex = Math.max(this.furthestReachedStepIndex, firstInvalidStep);
+    }
+  }
+
+  private isCurrentStepValid(): boolean {
+    return this.getStepGroups(this.currentStepIndex).every((groupName) => this.propertyForm.get(groupName)?.valid);
+  }
+
+  private markCurrentStepAsTouched(): void {
+    this.getStepGroups(this.currentStepIndex)
+      .forEach((groupName) => this.markControlTreeAsTouched(this.propertyForm.get(groupName)));
+  }
+
+  private markControlTreeAsTouched(control: AbstractControl | null): void {
+    if (!control) {
+      return;
+    }
+    control.markAsTouched();
+    const childControls = (control as FormGroup).controls;
+    if (!childControls) {
+      return;
+    }
+    Object.values(childControls).forEach((child) => this.markControlTreeAsTouched(child));
+  }
+
+  private getStepGroups(index: number): string[] {
+    return this.steps[index]?.groups ?? [];
+  }
+
+  getOptionLabel(options: { key: string; label: string }[], key: string): string {
+    const option = options.find((item) => item.key === key);
+    return option?.label ?? key;
+  }
+
+  getSelectedFeaturesLabels(): string[] {
+    const features = this.propertyForm.get('features')?.value;
+    if (!features) {
+      return [];
+    }
+
+    return this.featuresOptions
+      .filter((feature) => features[feature.key])
+      .map((feature) => feature.label);
   }
 
   private initForm(): void {
@@ -229,15 +397,14 @@ export class EditProperty implements OnInit {
     });
   }
 
-
-  private create() {
+  private create(): void {
     const property: Property = this.buildPropertyFromForm();
     this.propertyRepository.create(property).subscribe(() => {
       this.router.navigate(['/properties']).then();
     });
   }
 
-  private update() {
+  private update(): void {
     const property: Property = this.buildPropertyFromForm();
     property.id = this.property?.id ?? '';
     this.propertyRepository.update(property).subscribe(() => {
@@ -252,6 +419,7 @@ export class EditProperty implements OnInit {
     const floor = this.propertyForm.get('address.floor')?.value;
     const state = this.propertyForm.get('address.state')?.value;
     const labelParts = [street, additional, building, floor, state].filter((value) => !!value);
+
     return {
       label: labelParts.length ? labelParts.join(', ') : undefined,
       zipCode: this.propertyForm.get('address.zipCode')?.value,
@@ -266,6 +434,7 @@ export class EditProperty implements OnInit {
     const energy = this.propertyForm.get('energy')?.value;
     const features = this.propertyForm.get('features')?.value;
     const additionalInfo = this.propertyForm.get('additionalInformation')?.value;
+
     return {
       accountId: 'auth0|697b6378eaa7c759f984bbc1',
       name: general.name,
@@ -290,5 +459,4 @@ export class EditProperty implements OnInit {
       description: additionalInfo.description
     } as Property;
   }
-
 }
