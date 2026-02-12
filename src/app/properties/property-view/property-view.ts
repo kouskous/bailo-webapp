@@ -6,6 +6,7 @@ import {
   CheckCircleIcon,
   EllipsisIcon,
   CreditCardIcon,
+  Trash2Icon,
   FilePlusIcon,
   FileTextIcon,
   HomeIcon,
@@ -25,7 +26,7 @@ import {Property} from '../../../model/property/property';
 import {Lease} from '../../../model/lease/lease';
 import {PaymentSchedule} from '../../../model/payment/payment-schedule';
 import {combineLatest, finalize, take} from 'rxjs';
-import {DatePipe, NgClass, TitleCasePipe} from '@angular/common';
+import {DatePipe, NgClass} from '@angular/common';
 import {PaymentService} from '../../../service/payment.service';
 import {Menu} from '../../layout/components/menu/menu';
 import {MenuTrigger} from '../../layout/components/menu/menu-trigger';
@@ -44,8 +45,7 @@ import {LeaseStatusPipe} from '../../../pipe/lease-status-pipe';
     MenuTrigger,
     LeaseStatusPipe,
     NgClass,
-    DatePipe,
-    TitleCasePipe
+    DatePipe
   ],
   templateUrl: './property-view.html',
   styleUrl: './property-view.scss'
@@ -80,8 +80,8 @@ export class PropertyView implements OnInit {
       .subscribe({
         next: ([property, leases]) => {
           this.property = property;
-          this.leases = leases;
-          this.selectedLease = leases.find((lease) => lease.status === 'ACTIVE') ?? leases[0];
+          this.leases = leases.filter((lease) => lease.status !== 'ARCHIVED');
+          this.selectedLease = this.leases.find((lease) => lease.status === 'ACTIVE') ?? this.leases[0];
           this.loadSchedulesForSelectedLease();
           this.loading = false;
         },
@@ -128,6 +128,33 @@ export class PropertyView implements OnInit {
       });
   }
 
+  deleteLease(lease: Lease, menu: Menu): void {
+    const leaseId = lease.id;
+    if (!leaseId) {
+      menu.close();
+      return;
+    }
+
+    const confirmed = window.confirm('Supprimer ce bail ? Cette action est irreversible.');
+    if (!confirmed) {
+      menu.close();
+      return;
+    }
+
+    this.leaseRepository.delete(leaseId)
+      .pipe(
+        take(1),
+        finalize(() => menu.close())
+      )
+      .subscribe(() => {
+        this.leases = this.leases.filter((item) => item.id !== leaseId);
+        if (this.selectedLease?.id === leaseId) {
+          this.selectedLease = this.leases.find((item) => item.status === 'ACTIVE') ?? this.leases[0];
+          this.loadSchedulesForSelectedLease();
+        }
+      });
+  }
+
   getLeaseLabel(lease: Lease): string {
     const tenant = lease.tenants?.[0];
     const fullName = [tenant?.firstName, tenant?.lastName].filter(Boolean).join(' ').trim();
@@ -154,9 +181,19 @@ export class PropertyView implements OnInit {
   }
 
   private replaceLeaseInList(updatedLease: Lease): void {
+    if (updatedLease.status === 'ARCHIVED') {
+      this.leases = this.leases.filter((lease) => lease.id !== updatedLease.id);
+      if (this.selectedLease?.id === updatedLease.id) {
+        this.selectedLease = this.leases.find((lease) => lease.status === 'ACTIVE') ?? this.leases[0];
+        this.loadSchedulesForSelectedLease();
+      }
+      return;
+    }
+
     this.leases = this.leases.map((lease) => lease.id === updatedLease.id ? updatedLease : lease);
     if (this.selectedLease?.id === updatedLease.id) {
       this.selectedLease = updatedLease;
+      this.loadSchedulesForSelectedLease();
     }
   }
 
@@ -174,4 +211,5 @@ export class PropertyView implements OnInit {
   protected readonly AlertCircleIcon = AlertCircleIcon;
   protected readonly CheckCircleIcon = CheckCircleIcon;
   protected readonly EllipsisIcon = EllipsisIcon;
+  protected readonly Trash2Icon = Trash2Icon;
 }
