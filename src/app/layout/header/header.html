@@ -1,15 +1,25 @@
 <div
-  class="header flex flex-row h-16 md:h-24 justify-between items-center px-8 bg-white bg-opacity-30 backdrop-blur-md p-6  shadow-lg text-gray-900">
+  class="header flex flex-row h-16 md:h-24 justify-between items-center px-8 bg-white bg-opacity-30 backdrop-blur-md p-6 shadow-lg text-gray-900">
   <div class="text-4xl font-bold flex items-center gap-2"><img class="h-6" src="suisse.png"/>Bailo</div>
-  <div class="flex flex-row items-center gap-4"
-       appMenuTrigger
-       [appMenuTriggerFor]="menu">
+  <div class="flex flex-row items-center gap-4">
     @if (subscriptionStatus) {
-      <div class="px-3 py-1 rounded-full text-xs font-semibold bg-white bg-opacity-60 backdrop-blur-md shadow-sm"
-           [ngClass]="subscriptionStatusClass">
-        Status d'abonnement: {{ subscriptionStatus | subscriptionStatus }}
-      </div>
+      <button type="button"
+              class="subscription-tag"
+              [class.subscription-tag--cta]="isSubscriptionCta()"
+              [class.subscription-tag--clickable]="isSubscriptionCta()"
+              [ngClass]="subscriptionStatusClass"
+              (click)="onSubscriptionTagClick($event)">
+        <span class="subscription-tag__label">Abonnement</span>
+        @if (isSubscriptionCta()) {
+          <span class="subscription-tag__value">Activer Premium</span>
+        } @else {
+          <span class="subscription-tag__value">{{ subscriptionStatus | subscriptionStatus }}</span>
+        }
+      </button>
     }
+    <div class="flex flex-row items-center gap-4"
+         appMenuTrigger
+         [appMenuTriggerFor]="menu">
     @if (user?.picture) {
       <div class="h-10 w-10 rounded-full overflow-hidden flex justify-center items-center bg-gray-200">
         <img [src]="user?.picture" alt="User" class="h-full w-full object-cover"/>
@@ -20,24 +30,31 @@
       </div>
     }
     <div class="font-semibold hidden md:block">{{ user?.given_name }} {{ user?.family_name }}</div>
+    </div>
   </div>
 
 </div>
 
-<!-- Menu attaché -->
+<!-- Menu -->
 <app-menu #menu="appMenu">
-  <button appMenuItem (click)="goPremium()">
-    <lucide-icon [img]="FlameIcon"></lucide-icon>
-    Passer a Premium
-  </button>
-  <button appMenuItem (click)="openCustomerPortal()">
-    <lucide-icon [img]="UserIcon"></lucide-icon>
-    Customer portal
-  </button>
+  @if (shouldShowGoPremium()) {
+    <button appMenuItem (click)="goPremium()" class="premium-menu-item">
+      <lucide-icon [img]="FlameIcon"></lucide-icon>
+      <span class="premium-menu-item__content">
+        <span class="premium-menu-item__title">Passez en Premium</span>
+        <span class="premium-menu-item__hint">Debloquez toutes les fonctions avancees</span>
+      </span>
+      <span class="premium-menu-item__badge">PRO</span>
+    </button>
+  }
+  @if (shouldShowCustomerPortal()) {
+    <button appMenuItem (click)="openCustomerPortal()">
+      <lucide-icon [img]="UserIcon"></lucide-icon>
+      Gerer mon abonnement
+    </button>
+  }
   <button appMenuItem (click)="logout()">
     <lucide-icon [img]="LogOutIcon"></lucide-icon>
-    Déconnexion
+    Deconnexion
   </button>
 </app-menu>
-
-

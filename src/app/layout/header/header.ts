@@ -59,6 +59,18 @@ export class Header {
       });
   }
 
+  isSubscriptionCta(): boolean {
+    return this.subscriptionStatus === 'NONE';
+  }
+
+  onSubscriptionTagClick(event: MouseEvent): void {
+    if (!this.isSubscriptionCta()) {
+      return;
+    }
+    event.stopPropagation();
+    this.goPremium();
+  }
+
   openCustomerPortal(): void {
     const accountId = this.user?.sub;
     if (!accountId) {
@@ -120,7 +132,6 @@ export class Header {
 
   shouldShowGoPremium(): boolean {
     switch (this.subscriptionStatus) {
-      case 'NONE':
       case 'CANCELED':
       case 'INCOMPLETE_EXPIRED':
       case 'UNKNOWN':
