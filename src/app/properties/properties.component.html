@@ -1,34 +1,39 @@
-<div class="px-2 md:px-8 py-4 md:py-8">
-  <div class="text-3xl font-bold mb-4 md:mb-8 text-gray-800 gap-2">Mes biens</div>
-  <div class="flex flex-row flex-wrap gap-4">
-    @if (loading) {
-      @for (i of [1, 2, 3]; track i) {
-        <div class="w-full md:w-80">
-          <app-property-skeleton-card></app-property-skeleton-card>
-        </div>
-      }
-    } @else {
-      @for (property of properties; track property.id) {
-        <div class="w-full md:w-80">
+<div class="px-3 py-5 md:px-8 md:py-8">
+  <div class="mx-auto max-w-7xl space-y-5 md:space-y-6">
+    <header class="space-y-2">
+      <p class="text-xs font-semibold uppercase tracking-[0.18em] text-red-600">Portefeuille</p>
+      <h1 class="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">Mes biens</h1>
+    </header>
+
+    <div class="flex flex-row flex-wrap gap-5">
+      @if (loading) {
+        @for (i of [1, 2, 3]; track i) {
+          <div class="w-full md:w-80">
+            <app-property-skeleton-card></app-property-skeleton-card>
+          </div>
+        }
+      } @else {
+        @for (property of properties; track property.id) {
+          <div class="w-full md:w-80">
             <app-property-card [property]="property"></app-property-card>
-        </div>
+          </div>
+        }
+        <div
+          class="w-full cursor-pointer space-y-4 rounded-2xl border border-slate-200 bg-white p-5 text-slate-800 shadow-sm transition hover:-translate-y-0.5 hover:border-red-200 hover:shadow-md md:w-80"
+          [routerLink]="['/properties', 'new']">
+          <div class="flex h-28 items-center justify-center rounded-xl bg-red-50">
+            <lucide-icon [img]="PlusCircleIcon" class="h-11 w-11 text-red-600"></lucide-icon>
+          </div>
 
+          <h2 class="text-xl font-semibold leading-tight text-slate-900">
+            Nouveau bien
+          </h2>
+
+          <p class="text-sm leading-relaxed text-slate-600">
+            Ajouter ici votre bien immobilier a louer.
+          </p>
+        </div>
       }
-      <div
-        class="w-full md:w-80 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 cursor-pointer space-y-4 hover:bg-opacity-40 transition"
-        [routerLink]="['/properties', 'new']">
-        <div class="h-32 flex justify-center items-center">
-          <lucide-icon [img]="PlusCircleIcon" class="w-12 h-12 text-red-500"></lucide-icon>
-        </div>
-
-        <h2 class="text-xl font-bold leading-tight">
-          Nouveau bien
-        </h2>
-
-        <p class="text-sm text-gray-600">
-          Ajouter ici votre bien immobilier à louer.
-        </p>
-      </div>
-    }
+    </div>
   </div>
 </div>

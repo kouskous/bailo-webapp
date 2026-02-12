@@ -1,8 +1,8 @@
 @if (loading) {
   <app-edit-property-skeleton></app-edit-property-skeleton>
 } @else {
-  <form class="min-h-[calc(100vh-4rem)] bg-slate-50 p-3 md:p-6" [formGroup]="leaseForm" (ngSubmit)="save()">
-    <header class="mx-auto mb-4 flex max-w-5xl items-start gap-3">
+  <form class="min-h-[calc(100vh-4rem)] bg-slate-50 px-3 md:px-8 py-5 md:py-8" [formGroup]="leaseForm" (ngSubmit)="save()">
+    <header class="mx-auto mb-5 flex max-w-6xl items-start gap-3">
       <a
         [routerLink]="propertyId ? ['/properties', propertyId] : '/properties'"
         class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white text-red-600 shadow-sm hover:bg-red-50"
@@ -15,8 +15,8 @@
       </div>
     </header>
 
-    <section class="mx-auto max-w-5xl space-y-4">
-      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <section class="mx-auto max-w-6xl space-y-5">
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm">
         <h2 class="mb-3 text-lg font-bold text-slate-900">Quand commence et se termine la location ?</h2>
         <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
           <div>
@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm">
         <h2 class="mb-3 text-lg font-bold text-slate-900">Quels sont les details financiers du bail ?</h2>
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <app-text-input [label]="'Loyer'" [placeholder]="'Ex: 1800'" type="number" formControlName="rentAmount"></app-text-input>
@@ -51,7 +51,7 @@
         </div>
       </div>
 
-      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm">
         <h2 class="mb-3 text-lg font-bold text-slate-900">Qui sont les personnes concernees par ce bail ?</h2>
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div class="rounded-xl border border-slate-200 p-3 md:col-span-2">
@@ -109,7 +109,7 @@
       </div>
     </section>
 
-    <footer class="sticky bottom-3 mx-auto mt-4 flex max-w-5xl gap-3 rounded-2xl border border-slate-200 bg-white/90 p-3 backdrop-blur">
+    <footer class="sticky bottom-3 mx-auto mt-5 flex max-w-6xl gap-3 rounded-2xl border border-slate-200 bg-white/90 p-3 backdrop-blur">
       <button
         type="submit"
         class="min-h-11 flex-1 cursor-pointer rounded-xl border border-red-600 bg-red-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-40"
