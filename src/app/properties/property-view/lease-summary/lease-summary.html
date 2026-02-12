@@ -8,10 +8,10 @@
           {{ getTenantNames() }}
         </div>
         <div class="text-sm text-gray-700">
-          {{ lease?.startDate | date:'dd MMM yyyy' }} - {{ lease?.endDate | date:'dd MMM yyyy' }}
+          {{ lease.startDate | date:'dd MMM yyyy' }} - {{ lease.endDate | date:'dd MMM yyyy' }}
         </div>
         <div class="text-sm text-gray-700 mt-1">
-          Loyer : <span class="font-medium">{{ lease?.rentAmount }} {{ lease?.rentCurrency }}</span>
+          Loyer : <span class="font-medium">{{ lease.rentAmount }} {{ lease.rentCurrency }}</span>
         </div>
       </div>
 
@@ -33,7 +33,7 @@
 
       <span
         class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm whitespace-nowrap self-start md:self-center">
-          {{ lease?.status || 'DRAFT' }}
+          {{ lease.status || 'DRAFT' }}
         </span>
     </div>
   </div>

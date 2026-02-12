@@ -14,6 +14,7 @@ export class SubscriptionStatusPipe implements PipeTransform {
     TRIALING: 'Periode d essai',
     UNPAID: 'Impaye',
     PAUSED: 'Suspendu',
+    NONE: 'Aucun abonnement',
     UNKNOWN: 'Inconnu'
   };
 

@@ -25,7 +25,7 @@ import {SubscriptionStatusPipe} from '../../../pipe/subscription-status-pipe';
 export class Header {
   user: User | null | undefined;
   subscriptionStatus: string | undefined;
-  subscriptionStatusClass: string | undefined;
+  subscriptionStatusClass = '';
 
   constructor(private readonly auth: AuthService,
               private readonly subscriptionService: SubscriptionService) {
@@ -78,7 +78,7 @@ export class Header {
     const accountId = this.user?.sub;
     if (!accountId) {
       this.subscriptionStatus = undefined;
-      this.subscriptionStatusClass = undefined;
+      this.subscriptionStatusClass = '';
       return;
     }
     this.subscriptionService.getSubscription(accountId)
@@ -91,7 +91,7 @@ export class Header {
         },
         error: () => {
           this.subscriptionStatus = undefined;
-          this.subscriptionStatusClass = undefined;
+          this.subscriptionStatusClass = '';
         }
       });
   }
@@ -99,21 +99,50 @@ export class Header {
   private getStatusClass(status: string): string {
     switch (status) {
       case 'ACTIVE':
-        return 'bg-green-100 text-green-700';
+        return 'subscription-tag--active';
       case 'PAST_DUE':
-        return 'bg-orange-100 text-orange-700';
+        return 'subscription-tag--past-due';
       case 'CANCELED':
       case 'UNPAID':
-        return 'bg-red-100 text-red-700';
+        return 'subscription-tag--critical';
       case 'TRIALING':
-        return 'bg-blue-100 text-blue-700';
+        return 'subscription-tag--trialing';
       case 'INCOMPLETE':
       case 'INCOMPLETE_EXPIRED':
-        return 'bg-yellow-100 text-yellow-700';
+        return 'subscription-tag--warning';
       case 'PAUSED':
-        return 'bg-gray-200 text-gray-700';
+      case 'NONE':
+        return 'subscription-tag--neutral';
       default:
-        return 'bg-gray-100 text-gray-700';
+        return 'subscription-tag--neutral';
+    }
+  }
+
+  shouldShowGoPremium(): boolean {
+    switch (this.subscriptionStatus) {
+      case 'NONE':
+      case 'CANCELED':
+      case 'INCOMPLETE_EXPIRED':
+      case 'UNKNOWN':
+      case 'UNPAID':
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  shouldShowCustomerPortal(): boolean {
+    switch (this.subscriptionStatus) {
+      case 'ACTIVE':
+      case 'TRIALING':
+      case 'PAST_DUE':
+      case 'INCOMPLETE':
+      case 'PAUSED':
+      case 'CANCELED':
+      case 'UNPAID':
+        return true;
+      default:
+        return false;
     }
   }
 }

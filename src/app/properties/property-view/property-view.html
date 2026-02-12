@@ -29,31 +29,31 @@
 
         <div>
           <div class="text-3xl font-bold text-gray-800">
-            {{ property?.name || 'Bien' }}
+            {{ property.name || 'Bien' }}
           </div>
           <div class="text-gray-700">
-            {{ property?.address?.label }}
-            @if (property?.address?.zipCode || property?.address?.city) {
-              <span> - {{ property?.address?.zipCode }} {{ property?.address?.city }}</span>
+            {{ property.address?.label }}
+            @if (property.address?.zipCode || property.address?.city) {
+              <span> - {{ property.address?.zipCode }} {{ property.address?.city }}</span>
             }
           </div>
         </div>
       </div>
 
       <div class="flex flex-wrap gap-2">
-        @if (property?.type) {
+        @if (property.type) {
           <div class="px-3 py-1 rounded-full bg-white bg-opacity-40 backdrop-blur-md text-sm text-gray-700">
-            {{ property?.type | titlecase }}
+            {{ property.type | titlecase }}
           </div>
         }
-        @if (property?.livingArea) {
+        @if (property.livingArea) {
           <div class="px-3 py-1 rounded-full bg-white bg-opacity-40 backdrop-blur-md text-sm text-gray-700">
-            {{ property?.livingArea }} m2 habitables
+            {{ property.livingArea }} m2 habitables
           </div>
         }
-        @if (property?.rooms) {
+        @if (property.rooms) {
           <div class="px-3 py-1 rounded-full bg-white bg-opacity-40 backdrop-blur-md text-sm text-gray-700">
-            {{ property?.rooms }} pieces
+            {{ property.rooms }} pieces
           </div>
         }
       </div>
@@ -72,7 +72,7 @@
           </div>
         </div>
 
-        @if (leases?.length) {
+        @if (leases.length) {
           <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             @for (lease of leases; track lease.id) {
               <div

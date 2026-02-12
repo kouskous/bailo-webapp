@@ -17,7 +17,7 @@ interface SubscriptionResponse {
   providerCustomerId: string;
   providerSubscriptionId: string;
   priceId: string;
-  status: 'ACTIVE' | 'PAST_DUE' | 'CANCELED' | 'INCOMPLETE' | 'INCOMPLETE_EXPIRED' | 'TRIALING' | 'UNPAID' | 'PAUSED' | 'UNKNOWN';
+  status: 'ACTIVE' | 'PAST_DUE' | 'CANCELED' | 'INCOMPLETE' | 'INCOMPLETE_EXPIRED' | 'TRIALING' | 'UNPAID' | 'PAUSED' | 'NONE' | 'UNKNOWN';
   currentPeriodEnd: string;
   createdAt: string;
   updatedAt: string;

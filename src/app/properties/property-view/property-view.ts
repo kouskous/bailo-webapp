@@ -25,6 +25,7 @@ import {Lease} from '../../../model/lease/lease';
 import {PaymentSchedule} from '../../../model/payment/payment-schedule';
 import {combineLatest, take} from 'rxjs';
 import {NgClass, TitleCasePipe} from '@angular/common';
+import {PaymentService} from '../../../service/payment.service';
 
 @Component({
   selector: 'app-property-view',
@@ -50,7 +51,8 @@ export class PropertyView implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly propertyRepository: PropertyService,
-    private readonly leaseRepository: LeaseService
+    private readonly leaseRepository: LeaseService,
+    private readonly paymentRepository: PaymentService
   ) {
   }
 
@@ -70,6 +72,7 @@ export class PropertyView implements OnInit {
           this.property = property;
           this.leases = leases;
           this.selectedLease = leases.find((lease) => lease.status === 'ACTIVE') ?? leases[0];
+          this.loadSchedulesForSelectedLease();
           this.loading = false;
         },
         error: () => {
@@ -80,13 +83,32 @@ export class PropertyView implements OnInit {
 
   selectLease(lease: Lease): void {
     this.selectedLease = lease;
-    this.paymentSchedules = [];
+    this.loadSchedulesForSelectedLease();
   }
 
   getLeaseLabel(lease: Lease): string {
     const tenant = lease.tenants?.[0];
     const fullName = [tenant?.firstName, tenant?.lastName].filter(Boolean).join(' ').trim();
     return fullName || 'Bail';
+  }
+
+  private loadSchedulesForSelectedLease(): void {
+    const leaseId = this.selectedLease?.id;
+    if (!leaseId) {
+      this.paymentSchedules = [];
+      return;
+    }
+
+    this.paymentRepository.findSchedulesByLease(leaseId)
+      .pipe(take(1))
+      .subscribe({
+        next: (schedules) => {
+          this.paymentSchedules = schedules;
+        },
+        error: () => {
+          this.paymentSchedules = [];
+        }
+      });
   }
 
   protected readonly MapPinIcon = MapPinIcon;
