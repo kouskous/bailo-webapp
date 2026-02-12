@@ -64,7 +64,7 @@
                 <h2 class="text-lg font-bold text-slate-900">Baux</h2>
                 <a
                   class="inline-flex items-center gap-1 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700 transition"
-                  [routerLink]="['/properties', property.id, 'lease', 'new', 'information']">
+                  [routerLink]="['/properties', property.id, 'lease', 'new']">
                   <lucide-icon [img]="FilePlusIcon" class="w-3.5 h-3.5"></lucide-icon>
                   Nouveau bail
                 </a>
@@ -116,7 +116,7 @@
                             Supprimer le bail
                           </button>
                           @if (lease.id) {
-                            <a appMenuItem [routerLink]="['/properties', property.id, 'lease', lease.id, 'information']">
+                            <a appMenuItem [routerLink]="['/properties', property.id, 'lease', lease.id]">
                               <lucide-icon [img]="FileTextIcon"></lucide-icon>
                               Modifier le bail
                             </a>
@@ -142,7 +142,7 @@
               <p class="mt-2 text-sm text-slate-600">Ajoutez un bail pour afficher ici le resume et les echeances.</p>
               <a
                 class="mt-5 inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition"
-                [routerLink]="['/properties', property.id, 'lease', 'new', 'information']">
+                [routerLink]="['/properties', property.id, 'lease', 'new']">
                 <lucide-icon [img]="FilePlusIcon" class="w-4 h-4"></lucide-icon>
                 Creer un bail
               </a>

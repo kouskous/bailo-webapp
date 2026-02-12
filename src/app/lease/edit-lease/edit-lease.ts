@@ -12,7 +12,7 @@ import {Checkbox} from '../../layout/components/checkbox/checkbox';
 import {combineLatest, take, timer} from 'rxjs';
 
 @Component({
-  selector: 'app-edit-lease-information',
+  selector: 'app-edit-lease',
   imports: [
     EditPropertySkeleton,
     LucideAngularModule,
@@ -22,9 +22,9 @@ import {combineLatest, take, timer} from 'rxjs';
     TextInput,
     Checkbox
   ],
-  templateUrl: './edit-lease-information.html'
+  templateUrl: './edit-lease.html'
 })
-export class EditLeaseInformation implements OnInit {
+export class EditLease implements OnInit {
   leaseForm!: FormGroup;
   lease: Lease | undefined;
   loading = true;
@@ -177,22 +177,21 @@ export class EditLeaseInformation implements OnInit {
     contractors.forEach((contractor) => target.push(this.createContractorGroup(contractor)));
   }
 
-  private toDateInputValue(dateTime?: string | Date | number): string {
-    if (dateTime === undefined || dateTime === null || dateTime === '') {
+  private toDateInputValue(dateTime?: string): string {
+    if (!dateTime) {
       return '';
     }
-    if (typeof dateTime === 'string') {
-      return dateTime.length >= 10 ? dateTime.substring(0, 10) : dateTime;
-    }
+
     const parsedDate = new Date(dateTime);
     if (Number.isNaN(parsedDate.getTime())) {
       return '';
     }
+
     return parsedDate.toISOString().substring(0, 10);
   }
 
   private toIsoDateTime(dateInput: string): string {
-    return `${dateInput}T00:00:00.000Z`;
+    return new Date(`${dateInput}T00:00:00.000Z`).toISOString();
   }
 
   private buildContractors(kind: 'tenants' | 'landlords'): Contractor[] {

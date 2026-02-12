@@ -1,11 +1,10 @@
 import {Routes} from '@angular/router';
 import {AuthGuard} from '@auth0/auth0-angular';
-import {LeaseView} from './lease/lease-view.component';
 import {EditContractors} from './lease/edit-contractors/edit-contractors';
-import {EditLeaseInformation} from './lease/edit-lease-information/edit-lease-information';
-import { Properties } from './properties/properties.component';
+import {Properties} from './properties/properties.component';
 import {PropertyView} from './properties/property-view/property-view';
 import {EditProperty} from './properties/edit-property/edit-property';
+import {EditLease} from './lease/edit-lease/edit-lease';
 
 export const routes: Routes = [
   {
@@ -34,11 +33,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'properties/:propertyId/lease/:leaseId',
-    component: LeaseView,
-    canActivate: [AuthGuard],
-  },
-  {
     path: 'properties/:propertyId/lease/:leaseId/property',
     component: EditProperty,
     canActivate: [AuthGuard],
@@ -49,13 +43,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'properties/:propertyId/lease/new/information',
-    component: EditLeaseInformation,
+    path: 'properties/:propertyId/lease/new',
+    component: EditLease,
     canActivate: [AuthGuard],
   },
   {
-    path: 'properties/:propertyId/lease/:leaseId/information',
-    component: EditLeaseInformation,
+    path: 'properties/:propertyId/lease/:leaseId',
+    component: EditLease,
     canActivate: [AuthGuard],
   }
 ];

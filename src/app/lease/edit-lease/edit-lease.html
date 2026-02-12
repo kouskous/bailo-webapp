@@ -4,7 +4,7 @@
   <form class="min-h-[calc(100vh-4rem)] bg-slate-50 p-3 md:p-6" [formGroup]="leaseForm" (ngSubmit)="save()">
     <header class="mx-auto mb-4 flex max-w-5xl items-start gap-3">
       <a
-        [routerLink]="leaseId ? ['/properties', propertyId, 'lease', leaseId] : ['/properties', propertyId]"
+        [routerLink]="propertyId ? ['/properties', propertyId] : '/properties'"
         class="inline-flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-slate-200 bg-white text-red-600 shadow-sm hover:bg-red-50"
       >
         <lucide-icon [img]="ArrowLeftIcon" class="h-5 w-5"></lucide-icon>

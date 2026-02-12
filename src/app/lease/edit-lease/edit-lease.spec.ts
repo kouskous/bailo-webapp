@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EditLeaseInformation } from './edit-lease-information';
+import { EditLease } from './edit-lease';
 
-describe('EditLeaseInformation', () => {
-  let component: EditLeaseInformation;
-  let fixture: ComponentFixture<EditLeaseInformation>;
+describe('EditLease', () => {
+  let component: EditLease;
+  let fixture: ComponentFixture<EditLease>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EditLeaseInformation]
+      imports: [EditLease]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EditLeaseInformation);
+    fixture = TestBed.createComponent(EditLease);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
