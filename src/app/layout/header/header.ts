@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {AuthService, User} from '@auth0/auth0-angular';
 import {Menu} from '../components/menu/menu';
-import {FlameIcon, LogOutIcon, LucideAngularModule, UserIcon} from 'lucide-angular';
+import {LogOutIcon, LucideAngularModule, UserIcon, ZapIcon} from 'lucide-angular';
 import {MenuItem} from '../components/menu/menu-item';
 import {MenuTrigger} from '../components/menu/menu-trigger';
 import {take} from 'rxjs';
@@ -25,7 +25,6 @@ import {SubscriptionStatusPipe} from '../../../pipe/subscription-status-pipe';
 export class Header {
   user: User | null | undefined;
   subscriptionStatus: string | undefined;
-  subscriptionStatusClass = '';
 
   constructor(private readonly auth: AuthService,
               private readonly subscriptionService: SubscriptionService) {
@@ -35,7 +34,7 @@ export class Header {
     });
   }
 
-  protected readonly FlameIcon = FlameIcon;
+  protected readonly ZapIcon = ZapIcon;
   protected readonly UserIcon = UserIcon;
   protected readonly LogOutIcon = LogOutIcon;
 
@@ -90,43 +89,58 @@ export class Header {
     const accountId = this.user?.sub;
     if (!accountId) {
       this.subscriptionStatus = undefined;
-      this.subscriptionStatusClass = '';
       return;
     }
     this.subscriptionService.getSubscription(accountId)
       .pipe(take(1))
       .subscribe({
         next: (subscription) => {
-          const status = subscription.status;
-          this.subscriptionStatus = status;
-          this.subscriptionStatusClass = this.getStatusClass(status);
+          this.subscriptionStatus = subscription.status;
         },
         error: () => {
           this.subscriptionStatus = undefined;
-          this.subscriptionStatusClass = '';
         }
       });
   }
 
-  private getStatusClass(status: string): string {
-    switch (status) {
+  getSubscriptionTagClasses(): string {
+    switch (this.subscriptionStatus) {
       case 'ACTIVE':
-        return 'subscription-tag--active';
+        return 'border-green-300 bg-gradient-to-br from-white to-green-50 text-green-800';
       case 'PAST_DUE':
-        return 'subscription-tag--past-due';
-      case 'CANCELED':
-      case 'UNPAID':
-        return 'subscription-tag--critical';
-      case 'TRIALING':
-        return 'subscription-tag--trialing';
       case 'INCOMPLETE':
       case 'INCOMPLETE_EXPIRED':
-        return 'subscription-tag--warning';
-      case 'PAUSED':
+        return 'border-amber-300 bg-gradient-to-br from-amber-50 to-amber-100 text-amber-800';
+      case 'CANCELED':
+      case 'UNPAID':
+        return 'border-red-300 bg-gradient-to-br from-red-50 to-rose-50 text-red-800';
+      case 'TRIALING':
+        return 'border-blue-300 bg-gradient-to-br from-white to-blue-50 text-blue-800';
       case 'NONE':
-        return 'subscription-tag--neutral';
+        return 'cursor-pointer border-amber-300 bg-gradient-to-br from-amber-50 to-amber-100 text-amber-800 hover:from-amber-100 hover:to-amber-200';
+      case 'PAUSED':
       default:
-        return 'subscription-tag--neutral';
+        return 'border-gray-300 bg-gradient-to-br from-white to-slate-100 text-gray-700';
+    }
+  }
+
+  getSubscriptionLabelClasses(): string {
+    switch (this.subscriptionStatus) {
+      case 'ACTIVE':
+        return 'bg-green-100 text-green-800';
+      case 'PAST_DUE':
+      case 'INCOMPLETE':
+      case 'INCOMPLETE_EXPIRED':
+      case 'NONE':
+        return 'bg-amber-100 text-amber-800';
+      case 'CANCELED':
+      case 'UNPAID':
+        return 'bg-red-100 text-red-800';
+      case 'TRIALING':
+        return 'bg-blue-100 text-blue-800';
+      case 'PAUSED':
+      default:
+        return 'bg-gray-100 text-gray-700';
     }
   }
 
@@ -136,6 +150,22 @@ export class Header {
       case 'INCOMPLETE_EXPIRED':
       case 'UNKNOWN':
       case 'UNPAID':
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  shouldShowSubscriptionTag(): boolean {
+    switch (this.subscriptionStatus) {
+      case 'NONE':
+      case 'PAST_DUE':
+      case 'INCOMPLETE':
+      case 'INCOMPLETE_EXPIRED':
+      case 'UNPAID':
+      case 'CANCELED':
+      case 'PAUSED':
+      case 'UNKNOWN':
         return true;
       default:
         return false;

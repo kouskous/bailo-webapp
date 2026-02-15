@@ -2,18 +2,22 @@
   class="header flex flex-row h-16 md:h-24 justify-between items-center px-8 bg-white bg-opacity-30 backdrop-blur-md p-6 shadow-lg text-gray-900">
   <div class="text-4xl font-bold flex items-center gap-2"><img class="h-6" src="suisse.png"/>Bailo</div>
   <div class="flex flex-row items-center gap-4">
-    @if (subscriptionStatus) {
+    @if (shouldShowSubscriptionTag()) {
       <button type="button"
-              class="subscription-tag"
-              [class.subscription-tag--cta]="isSubscriptionCta()"
-              [class.subscription-tag--clickable]="isSubscriptionCta()"
-              [ngClass]="subscriptionStatusClass"
+              class="inline-flex items-center gap-2 rounded-full border px-3 py-1 shadow-[0_6px_20px_rgba(15,23,42,0.08)]"
+              [ngClass]="getSubscriptionTagClasses()"
               (click)="onSubscriptionTagClick($event)">
-        <span class="subscription-tag__label">Abonnement</span>
         @if (isSubscriptionCta()) {
-          <span class="subscription-tag__value">Activer Premium</span>
+          <span class="inline-flex text-amber-600" aria-hidden="true">
+            <lucide-icon [img]="ZapIcon"></lucide-icon>
+          </span>
+          <span class="text-[0.78rem] font-bold tracking-[0.01em]">Passer en Premium</span>
         } @else {
-          <span class="subscription-tag__value">{{ subscriptionStatus | subscriptionStatus }}</span>
+          <span class="rounded-full px-2 py-1 text-[0.68rem] font-bold uppercase tracking-[0.02em]"
+                [ngClass]="getSubscriptionLabelClasses()">
+            Abonnement
+          </span>
+          <span class="text-[0.78rem] font-bold tracking-[0.01em]">{{ subscriptionStatus | subscriptionStatus }}</span>
         }
       </button>
     }
@@ -38,13 +42,15 @@
 <!-- Menu -->
 <app-menu #menu="appMenu">
   @if (shouldShowGoPremium()) {
-    <button appMenuItem (click)="goPremium()" class="premium-menu-item">
-      <lucide-icon [img]="FlameIcon"></lucide-icon>
-      <span class="premium-menu-item__content">
-        <span class="premium-menu-item__title">Passez en Premium</span>
-        <span class="premium-menu-item__hint">Debloquez toutes les fonctions avancees</span>
+    <button appMenuItem
+            (click)="goPremium()"
+            class="border border-amber-300 bg-gradient-to-br from-amber-50 to-amber-100 text-amber-800 hover:from-amber-100 hover:to-amber-200">
+      <lucide-icon [img]="ZapIcon" class="text-amber-600"></lucide-icon>
+      <span class="flex flex-1 flex-col gap-0.5 text-left">
+        <span class="text-[0.84rem] font-bold leading-4 text-amber-800">Passer en Premium</span>
+        <span class="text-[0.72rem] font-medium leading-4 text-amber-700">Debloquez toutes les fonctionnalites</span>
       </span>
-      <span class="premium-menu-item__badge">PRO</span>
+      <span class="rounded-full bg-amber-600 px-2 py-0.5 text-[0.62rem] font-extrabold tracking-[0.04em] text-white">PRO</span>
     </button>
   }
   @if (shouldShowCustomerPortal()) {
