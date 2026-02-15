@@ -76,11 +76,12 @@ export class PropertyView implements OnInit {
 
     combineLatest([
       this.propertyRepository.findById(this.propertyId),
-      this.leaseRepository.findAll(this.propertyId)
+      this.leaseRepository.findAll(this.propertyId, {page: 0, size: 100})
     ]).pipe(take(1))
       .subscribe({
-        next: ([property, leases]) => {
+        next: ([property, leasesPage]) => {
           this.property = property;
+          const leases = leasesPage.content ?? [];
           this.leases = leases.filter((lease) => lease.status !== 'ARCHIVED');
           this.selectedLease = this.leases.find((lease) => lease.status === 'ACTIVE') ?? this.leases[0];
           this.loadSchedulesForSelectedLease();
@@ -212,11 +213,11 @@ export class PropertyView implements OnInit {
       return;
     }
 
-    this.paymentRepository.findSchedulesByLease(leaseId)
+    this.paymentRepository.findSchedulesByLease(leaseId, 0, 100)
       .pipe(take(1))
       .subscribe({
-        next: (schedules) => {
-          this.paymentSchedules = schedules;
+        next: (schedulesPage) => {
+          this.paymentSchedules = schedulesPage.content ?? [];
         },
         error: () => {
           this.paymentSchedules = [];

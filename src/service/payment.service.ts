@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {PaymentSchedule} from '../model/payment/payment-schedule';
 import {Payment} from '../model/payment/payment';
+import {Page} from '../model/shared/page';
 
 @Injectable({
   providedIn: 'root'
@@ -14,24 +15,20 @@ export class PaymentService {
   constructor(private readonly httpClient: HttpClient) {
   }
 
-  findSchedulesByLease(leaseId: string): Observable<PaymentSchedule[]> {
-    return this.httpClient.get<PaymentSchedule[]>(`${this.schedulesUrl}?leaseId=${encodeURIComponent(leaseId)}`);
+  findSchedulesByLease(leaseId: string, page = 0, size = 20): Observable<Page<PaymentSchedule>> {
+    return this.httpClient.get<Page<PaymentSchedule>>(
+      `${this.schedulesUrl}?leaseId=${encodeURIComponent(leaseId)}&page=${page}&size=${size}`
+    );
   }
 
   findScheduleById(id: string): Observable<PaymentSchedule> {
     return this.httpClient.get<PaymentSchedule>(`${this.schedulesUrl}/${id}`);
   }
 
-  createSchedule(schedule: PaymentSchedule): Observable<PaymentSchedule> {
-    return this.httpClient.post<PaymentSchedule>(this.schedulesUrl, schedule);
-  }
-
-  updateSchedule(schedule: PaymentSchedule): Observable<PaymentSchedule> {
-    return this.httpClient.put<PaymentSchedule>(this.schedulesUrl, schedule);
-  }
-
-  findPaymentsByLease(leaseId: string): Observable<Payment[]> {
-    return this.httpClient.get<Payment[]>(`${this.paymentsUrl}?leaseId=${encodeURIComponent(leaseId)}`);
+  findPaymentsByLease(leaseId: string, page = 0, size = 20): Observable<Page<Payment>> {
+    return this.httpClient.get<Page<Payment>>(
+      `${this.paymentsUrl}?leaseId=${encodeURIComponent(leaseId)}&page=${page}&size=${size}`
+    );
   }
 
   findPaymentById(id: string): Observable<Payment> {
