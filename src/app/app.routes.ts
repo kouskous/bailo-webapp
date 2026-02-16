@@ -5,6 +5,8 @@ import {Properties} from './properties/properties.component';
 import {PropertyView} from './properties/property-view/property-view';
 import {EditProperty} from './properties/edit-property/edit-property';
 import {EditLease} from './lease/edit-lease/edit-lease';
+import {PaymentSuccess} from './subscription/payment-success/payment-success';
+import {PaymentFailed} from './subscription/payment-failed/payment-failed';
 
 export const routes: Routes = [
   {
@@ -51,5 +53,13 @@ export const routes: Routes = [
     path: 'properties/:propertyId/lease/:leaseId',
     component: EditLease,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'subscription/payment-success',
+    component: PaymentSuccess
+  },
+  {
+    path: 'subscription/payment-failed',
+    component: PaymentFailed
   }
 ];

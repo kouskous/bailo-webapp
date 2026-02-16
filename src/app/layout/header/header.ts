@@ -48,10 +48,12 @@ export class Header {
       return;
     }
     const origin = window.location.origin;
+    const successUrl = `${origin}/subscription/payment-success`;
+    const cancelUrl = `${origin}/subscription/payment-failed`;
     this.subscriptionService.createCheckoutSession(
       accountId,
-      origin,
-      origin
+      successUrl,
+      cancelUrl
     ).pipe(take(1))
       .subscribe((response) => {
         window.location.href = response.url;
