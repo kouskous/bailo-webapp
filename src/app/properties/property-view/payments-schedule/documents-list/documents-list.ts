@@ -32,15 +32,15 @@ export class DocumentsList {
   }
 
   getTypeLabel(type: string | undefined): string {
-    if (type === 'RENT_NOTICE') return 'Avis d echeance';
+    if (type === 'RENT_NOTICE') return 'Avis d\'échéance';
     if (type === 'RENT_RECEIPT') return 'Quittance de loyer';
     return 'Document';
   }
 
   getStatusLabel(status: string | undefined): string {
     if (status === 'READY') return 'Disponible';
-    if (status === 'PENDING') return 'Generation en cours';
-    if (status === 'FAILED') return 'Echec de generation';
+    if (status === 'PENDING') return 'Génération en cours';
+    if (status === 'FAILED') return 'Échec de génération';
     return 'Disponible';
   }
 

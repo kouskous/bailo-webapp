@@ -114,7 +114,7 @@ export class PropertyView implements OnInit {
       return;
     }
 
-    const confirmed = window.confirm('Resilier ce bail ? Cette action est irreversible.');
+    const confirmed = window.confirm('Résilier ce bail ? Cette action est irréversible.');
     if (!confirmed) {
       return;
     }
@@ -132,7 +132,7 @@ export class PropertyView implements OnInit {
       return;
     }
 
-    const confirmed = window.confirm('Supprimer ce bail ? Cette action est irreversible.');
+    const confirmed = window.confirm('Supprimer ce bail ? Cette action est irréversible.');
     if (!confirmed) {
       return;
     }

@@ -29,11 +29,11 @@ export class SchedulesList {
 
   getStatusLabel(schedule: PaymentSchedule): string {
     const status = schedule.status?.toUpperCase();
-    if (status === 'PAID') return 'Paye';
+    if (status === 'PAID') return 'Payé';
     if (status === 'OVERDUE') return 'En retard';
     if (status === 'PARTIAL') return 'Partiel';
-    if (status === 'PENDING') return 'A payer';
-    return schedule.status ?? 'A traiter';
+    if (status === 'PENDING') return 'À payer';
+    return schedule.status ?? 'À traiter';
   }
 
   protected readonly AlertCircleIcon = AlertCircleIcon;

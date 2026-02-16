@@ -32,7 +32,7 @@ export class LeaseSummary {
 
   getTenantNames(): string {
     if (!this.lease?.tenants?.length) {
-      return 'Locataires non renseignes';
+      return 'Locataires non renseignés';
     }
     return this.lease.tenants
       .map((tenant) => [tenant.firstName, tenant.lastName].filter(Boolean).join(' ').trim())

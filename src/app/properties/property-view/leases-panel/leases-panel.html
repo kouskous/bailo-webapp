@@ -10,7 +10,7 @@
       </a>
     }
   </div>
-  <p class="mt-2 text-sm text-slate-600">Selectionnez un bail pour afficher ses details.</p>
+  <p class="mt-2 text-sm text-slate-600">Sélectionnez un bail pour afficher ses détails.</p>
 
   <div class="mt-5 space-y-3">
     @for (lease of leases; track lease.id) {
@@ -67,7 +67,7 @@
               @if (canTerminateLease(lease)) {
                 <button appMenuItem (click)="onTerminate(lease, leaseRowActionsMenu)">
                   <lucide-icon [img]="XCircleIcon" class="h-4 w-4"></lucide-icon>
-                  Resilier le bail
+                  Résilier le bail
                 </button>
               }
               @if (canDeleteLease(lease)) {

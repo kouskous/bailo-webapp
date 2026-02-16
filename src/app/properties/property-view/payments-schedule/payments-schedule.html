@@ -4,7 +4,7 @@
       <div class="flex items-center gap-3">
         <lucide-icon [img]="CalendarIcon" class="h-7 w-7 text-slate-500"></lucide-icon>
         <div>
-          <div class="text-xs uppercase tracking-wide text-slate-500">Total echeances</div>
+          <div class="text-xs uppercase tracking-wide text-slate-500">Total échéances</div>
           <div class="text-lg font-semibold text-slate-900">{{ totalScheduledAmount | number:'1.2-2' }} {{ displayCurrency }}</div>
         </div>
       </div>
@@ -22,7 +22,7 @@
       <div class="flex items-center gap-3">
         <lucide-icon [img]="AlertCircleIcon" class="h-7 w-7 text-slate-500"></lucide-icon>
         <div>
-          <div class="text-xs uppercase tracking-wide text-slate-500">Reste a payer</div>
+          <div class="text-xs uppercase tracking-wide text-slate-500">Reste à payer</div>
           <div class="text-lg font-semibold" [ngClass]="totalOutstandingAmount > 0 ? 'text-orange-700' : 'text-green-700'">
             {{ totalOutstandingAmount | number:'1.2-2' }} {{ displayCurrency }}
           </div>
@@ -33,7 +33,7 @@
       <div class="flex items-center gap-3">
         <lucide-icon [img]="Banknote" class="h-7 w-7 text-slate-500"></lucide-icon>
         <div>
-          <div class="text-xs uppercase tracking-wide text-slate-500">Credit</div>
+          <div class="text-xs uppercase tracking-wide text-slate-500">Crédit</div>
           <div class="text-lg font-semibold" [ngClass]="totalCreditAmount > 0 ? 'text-emerald-700' : 'text-slate-700'">
             {{ totalCreditAmount | number:'1.2-2' }} {{ displayCurrency }}
           </div>
@@ -49,7 +49,7 @@
       [ngClass]="activeTab === 'schedules' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'"
       (click)="setTab('schedules')">
       <lucide-icon [img]="CalendarIcon" class="w-4 h-4"></lucide-icon>
-      Echeances
+      Échéances
     </button>
     <button
       type="button"

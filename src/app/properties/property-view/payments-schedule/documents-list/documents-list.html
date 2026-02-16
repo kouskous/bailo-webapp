@@ -15,7 +15,7 @@
         [ngClass]="selectedType === 'RENT_NOTICE' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'"
         (click)="selectedType = 'RENT_NOTICE'"
       >
-        Avis d echeance
+        Avis d'échéance
       </button>
       <button
         type="button"
@@ -33,9 +33,9 @@
       Chargement des documents...
     </div>
   } @else if (!filteredDocuments.length) {
-    <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm text-slate-800">
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm text-slate-800">
       <div class="font-medium">Aucun document disponible.</div>
-      <div class="mt-1 text-sm text-slate-600">Les avis sont generalement generes le 20, et les quittances apres paiement complet.</div>
+      <div class="mt-1 text-sm text-slate-600">Les avis sont généralement générés le 20, et les quittances après paiement complet.</div>
     </div>
   } @else {
     <div class="space-y-2 pt-1">
@@ -81,12 +81,12 @@
             </button>
             <button
               type="button"
-              class="cursor-pointer inline-flex items-center gap-1 rounded-md bg-slate-900 px-2 py-1 text-xs font-semibold text-white hover:bg-slate-800 disabled:opacity-50"
+              class="cursor-pointer inline-flex items-center gap-1 rounded-md bg-red-600 px-2 py-1 text-xs font-semibold text-white hover:bg-red-700 disabled:opacity-50"
               [disabled]="document.status === 'PENDING' || document.status === 'FAILED'"
               (click)="downloadDocument(document)"
             >
               <lucide-icon [img]="DownloadIcon" class="h-3.5 w-3.5"></lucide-icon>
-              Telecharger
+              Télécharger
             </button>
           </div>
         </div>

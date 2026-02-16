@@ -9,7 +9,7 @@
     <div class="px-3 md:px-8 py-5 md:py-8">
       <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm text-slate-800">
         <div class="text-xl font-bold">Bien introuvable</div>
-        <div class="text-sm text-slate-600 mt-2">Ce bien n'existe plus ou vous n'y avez pas acces.</div>
+        <div class="text-sm text-slate-600 mt-2">Ce bien n'existe plus ou vous n'y avez pas accès.</div>
         <a
           class="inline-flex items-center gap-2 mt-4 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition"
           [routerLink]="'/properties'">
@@ -85,12 +85,12 @@
                 <lucide-icon [img]="HomeIcon" class="h-6 w-6"></lucide-icon>
               </div>
               <h3 class="text-lg font-bold text-slate-900">Aucun bail actif</h3>
-              <p class="mt-2 text-sm text-slate-600">Ajoutez un bail pour afficher ici le resume et les echeances.</p>
+              <p class="mt-2 text-sm text-slate-600">Ajoutez un bail pour afficher ici le résumé et les échéances.</p>
               <a
                 class="mt-5 inline-flex items-center gap-2 rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition"
                 [routerLink]="['/properties', property.id, 'lease', 'new']">
                 <lucide-icon [img]="FilePlusIcon" class="w-4 h-4"></lucide-icon>
-                Creer un bail
+                Créer un bail
               </a>
             </div>
           }
