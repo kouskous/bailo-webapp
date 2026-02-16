@@ -8,22 +8,38 @@ import {LeaseDocument} from '../model/document/lease-document';
   providedIn: 'root'
 })
 export class DocumentService {
-  private readonly baseUrl = 'https://api.bailo.ch/document-management/documents';
+  private readonly apiRoot = 'https://api.bailo.ch';
+  private readonly basePath = '/document-management';
+  private readonly documentsBaseUrl = `${this.apiRoot}${this.basePath}/documents`;
 
   constructor(private readonly httpClient: HttpClient) {
   }
 
   findByLease(leaseId: string, page = 0, size = 50): Observable<Page<LeaseDocument>> {
     return this.httpClient.get<Page<LeaseDocument>>(
-      `${this.baseUrl}?leaseId=${encodeURIComponent(leaseId)}&page=${page}&size=${size}`
+      `${this.documentsBaseUrl}?leaseId=${encodeURIComponent(leaseId)}&page=${page}&size=${size}`
     );
   }
 
   getViewUrl(documentId: string): string {
-    return `${this.baseUrl}/${encodeURIComponent(documentId)}/view`;
+    return `${this.documentsBaseUrl}/${encodeURIComponent(documentId)}/view`;
   }
 
   getDownloadUrl(documentId: string): string {
-    return `${this.baseUrl}/${encodeURIComponent(documentId)}/download`;
+    return `${this.documentsBaseUrl}/${encodeURIComponent(documentId)}/download`;
+  }
+
+  getLeasePreviewUrl(leaseId: string): string {
+    return `${this.apiRoot}${this.basePath}/leases/${encodeURIComponent(leaseId)}/preview`;
+  }
+
+  resolveUrl(url: string | undefined): string | undefined {
+    if (!url) {
+      return undefined;
+    }
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    return `${this.apiRoot}${url.startsWith('/') ? '' : '/'}${url}`;
   }
 }

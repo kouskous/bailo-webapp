@@ -25,34 +25,42 @@ export class DocumentsList {
   }
 
   get filteredDocuments(): LeaseDocument[] {
+    const scheduleDocuments = this.documents.filter((document) =>
+      document.type === 'RENT_NOTICE' || document.type === 'RENT_RECEIPT'
+    );
     if (this.selectedType === 'ALL') {
-      return this.documents;
+      return scheduleDocuments;
     }
-    return this.documents.filter((document) => document.type === this.selectedType);
+    return scheduleDocuments.filter((document) => document.type === this.selectedType);
   }
 
   getTypeLabel(type: string | undefined): string {
-    if (type === 'RENT_NOTICE') return 'Avis d\'échéance';
+    if (type === 'LEASE_CONTRACT') return 'Bail';
+    if (type === 'RENT_NOTICE') return 'Avis d\'echeance';
     if (type === 'RENT_RECEIPT') return 'Quittance de loyer';
     return 'Document';
   }
 
   getStatusLabel(status: string | undefined): string {
     if (status === 'READY') return 'Disponible';
-    if (status === 'PENDING') return 'Génération en cours';
-    if (status === 'FAILED') return 'Échec de génération';
+    if (status === 'PENDING') return 'Generation en cours';
+    if (status === 'FAILED') return 'Echec de generation';
     return 'Disponible';
   }
 
   openDocument(document: LeaseDocument): void {
-    const url = document.viewUrl ?? (document.id ? this.documentService.getViewUrl(document.id) : undefined);
+    const url = this.documentService.resolveUrl(
+      document.viewUrl ?? (document.id ? this.documentService.getViewUrl(document.id) : undefined)
+    );
     if (url) {
       window.open(url, '_blank');
     }
   }
 
   downloadDocument(document: LeaseDocument): void {
-    const url = document.downloadUrl ?? (document.id ? this.documentService.getDownloadUrl(document.id) : undefined);
+    const url = this.documentService.resolveUrl(
+      document.downloadUrl ?? (document.id ? this.documentService.getDownloadUrl(document.id) : undefined)
+    );
     if (!url) {
       return;
     }

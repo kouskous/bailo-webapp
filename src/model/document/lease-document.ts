@@ -1,4 +1,4 @@
-export type LeaseDocumentType = 'RENT_NOTICE' | 'RENT_RECEIPT' | 'OTHER';
+export type LeaseDocumentType = 'LEASE_CONTRACT' | 'RENT_NOTICE' | 'RENT_RECEIPT' | 'OTHER';
 export type LeaseDocumentStatus = 'PENDING' | 'READY' | 'FAILED';
 
 export interface LeaseDocument {

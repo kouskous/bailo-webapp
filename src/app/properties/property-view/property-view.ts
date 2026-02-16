@@ -12,7 +12,7 @@ import {
   PlusCircleIcon,
   UserMinusIcon
 } from 'lucide-angular';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {PaymentsSchedule} from './payments-schedule/payments-schedule';
 import {LeaseSummary} from './lease-summary/lease-summary';
 import {PropertyService} from '../../../service/property-service';
@@ -23,6 +23,8 @@ import {PaymentSchedule} from '../../../model/payment/payment-schedule';
 import {combineLatest, take} from 'rxjs';
 import {PaymentService} from '../../../service/payment.service';
 import {LeasesPanel} from './leases-panel/leases-panel';
+import {DocumentService} from '../../../service/document.service';
+import {LeaseDocument} from '../../../model/document/lease-document';
 
 @Component({
   selector: 'app-property-view',
@@ -46,10 +48,10 @@ export class PropertyView implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly router: Router,
     private readonly propertyRepository: PropertyService,
     private readonly leaseRepository: LeaseService,
-    private readonly paymentRepository: PaymentService
+    private readonly paymentRepository: PaymentService,
+    private readonly documentService: DocumentService
   ) {
   }
 
@@ -149,30 +151,44 @@ export class PropertyView implements OnInit {
   }
 
   canDownloadLease(lease: Lease): boolean {
-    return lease.status === 'ACTIVE' && !!lease.id && !!this.property?.id;
+    return lease.status === 'ACTIVE' && !!lease.id;
   }
 
   canPreviewLease(lease: Lease): boolean {
-    return lease.status === 'DRAFT' && !!lease.id && !!this.property?.id;
+    return lease.status === 'DRAFT' && !!lease.id;
   }
 
   openLeasePreview(lease: Lease, event?: Event): void {
     event?.stopPropagation();
-    if (!lease.id || !this.property?.id) {
+    if (!lease.id) {
       return;
     }
-    this.router.navigate(['/properties', this.property.id, 'lease', lease.id]);
+    const previewUrl = this.documentService.getLeasePreviewUrl(lease.id);
+    window.open(previewUrl, '_blank');
   }
 
   downloadLease(lease: Lease, event?: Event): void {
     event?.stopPropagation();
-    if (!lease.id || !this.property?.id) {
+    const leaseId = lease.id;
+    if (!leaseId) {
       return;
     }
 
-    const urlTree = this.router.createUrlTree(['/properties', this.property.id, 'lease', lease.id]);
-    const url = `${window.location.origin}${this.router.serializeUrl(urlTree)}`;
-    window.open(url, '_blank');
+    this.documentService.findByLease(leaseId, 0, 100)
+      .pipe(take(1))
+      .subscribe((page) => {
+        const contract = this.findReadyContract(page.content ?? []);
+        if (!contract?.id) {
+          window.open(this.documentService.getLeasePreviewUrl(leaseId), '_blank');
+          return;
+        }
+        const downloadUrl = this.documentService.resolveUrl(
+          contract.downloadUrl ?? this.documentService.getDownloadUrl(contract.id)
+        );
+        if (downloadUrl) {
+          window.open(downloadUrl, '_blank');
+        }
+      });
   }
 
   onLeaseSummaryPreview(): void {
@@ -221,6 +237,10 @@ export class PropertyView implements OnInit {
       this.selectedLease = updatedLease;
       this.loadSchedulesForSelectedLease();
     }
+  }
+
+  private findReadyContract(documents: LeaseDocument[]): LeaseDocument | undefined {
+    return documents.find((document) => document.type === 'LEASE_CONTRACT' && document.status === 'READY');
   }
 
   protected readonly MapPinIcon = MapPinIcon;
