@@ -3,29 +3,25 @@ import {
   AlertCircleIcon,
   Banknote,
   CalendarIcon,
-  CheckCircleIcon,
   CreditCardIcon,
-  PlusIcon,
-  LucideAngularModule,
-  XCircleIcon
+  LucideAngularModule
 } from 'lucide-angular';
 import {PaymentSchedule} from '../../../../model/payment/payment-schedule';
-import {DatePipe, DecimalPipe, NgClass} from '@angular/common';
+import {DecimalPipe, NgClass} from '@angular/common';
 import {Payment} from '../../../../model/payment/payment';
 import {PaymentService} from '../../../../service/payment.service';
-import {FormsModule} from '@angular/forms';
 import {take} from 'rxjs';
-import {PaymentMethodPipe} from '../../../../pipe/payment-method-pipe';
+import {SchedulesList} from './schedules-list/schedules-list';
+import {PaymentsList} from './payments-list/payments-list';
 
 @Component({
   selector: 'app-payments-schedule',
   imports: [
     LucideAngularModule,
-    DatePipe,
     DecimalPipe,
     NgClass,
-    FormsModule,
-    PaymentMethodPipe
+    SchedulesList,
+    PaymentsList
   ],
   templateUrl: './payments-schedule.html',
   styleUrl: './payments-schedule.scss'
@@ -41,23 +37,6 @@ export class PaymentsSchedule implements OnChanges {
   loadingPayments = false;
   creatingPayment = false;
 
-  newPayment: Payment = {
-    paymentDate: this.todayIsoDate(),
-    amount: undefined,
-    currency: 'CHF',
-    method: 'BANK_TRANSFER',
-    note: ''
-  };
-
-  readonly paymentMethodOptions = [
-    'BANK_TRANSFER',
-    'DIRECT_DEBIT',
-    'CREDIT_CARD',
-    'CASH',
-    'CHECK',
-    'OTHER'
-  ];
-
   constructor(private readonly paymentService: PaymentService) {
   }
 
@@ -67,33 +46,8 @@ export class PaymentsSchedule implements OnChanges {
     }
   }
 
-  isPaid(schedule: PaymentSchedule): boolean {
-    return schedule.status?.toUpperCase() === 'PAID';
-  }
-
-  isOverdue(schedule: PaymentSchedule): boolean {
-    return schedule.status?.toUpperCase() === 'OVERDUE';
-  }
-
-  isPending(schedule: PaymentSchedule): boolean {
-    return schedule.status?.toUpperCase() === 'PENDING';
-  }
-
-  isPartial(schedule: PaymentSchedule): boolean {
-    return schedule.status?.toUpperCase() === 'PARTIAL';
-  }
-
-  getStatusLabel(schedule: PaymentSchedule): string {
-    const status = schedule.status?.toUpperCase();
-    if (status === 'PAID') return 'Payé';
-    if (status === 'OVERDUE') return 'En retard';
-    if (status === 'PARTIAL') return 'Partiel';
-    if (status === 'PENDING') return 'A payer';
-    return schedule.status ?? 'A traiter';
-  }
-
   get displayCurrency(): string {
-    return this.schedules[0]?.currency ?? this.payments[0]?.currency ?? this.newPayment.currency ?? 'CHF';
+    return this.schedules[0]?.currency ?? this.payments[0]?.currency ?? 'CHF';
   }
 
   get totalScheduledAmount(): number {
@@ -124,28 +78,21 @@ export class PaymentsSchedule implements OnChanges {
     }
   }
 
-  createPayment(): void {
-    if (!this.leaseId || !this.newPayment.paymentDate || !this.newPayment.amount || this.newPayment.amount <= 0) {
+  createPayment(payment: Payment): void {
+    if (!this.leaseId || !payment.paymentDate || !payment.amount || payment.amount <= 0) {
       return;
     }
 
     this.creatingPayment = true;
     this.paymentService.createPayment({
       leaseId: this.leaseId,
-      paymentDate: new Date(`${this.newPayment.paymentDate}T00:00:00.000Z`).toISOString(),
-      amount: Number(this.newPayment.amount),
-      currency: this.newPayment.currency ?? 'CHF',
-      method: this.newPayment.method ?? 'BANK_TRANSFER',
-      note: this.newPayment.note ?? ''
+      paymentDate: new Date(`${payment.paymentDate}T00:00:00.000Z`).toISOString(),
+      amount: Number(payment.amount),
+      currency: payment.currency ?? 'CHF',
+      method: payment.method ?? 'BANK_TRANSFER',
+      note: payment.note ?? ''
     }).pipe(take(1)).subscribe({
       next: () => {
-        this.newPayment = {
-          paymentDate: this.todayIsoDate(),
-          amount: undefined,
-          currency: this.newPayment.currency ?? 'CHF',
-          method: this.newPayment.method ?? 'BANK_TRANSFER',
-          note: ''
-        };
         this.loadPayments();
         this.loadSchedules();
       },
@@ -195,10 +142,6 @@ export class PaymentsSchedule implements OnChanges {
     });
   }
 
-  private todayIsoDate(): string {
-    return new Date().toISOString().substring(0, 10);
-  }
-
   private asNumber(value: number | undefined): number {
     if (value === undefined || value === null || Number.isNaN(value)) {
       return 0;
@@ -207,9 +150,6 @@ export class PaymentsSchedule implements OnChanges {
   }
 
   protected readonly AlertCircleIcon = AlertCircleIcon;
-  protected readonly XCircleIcon = XCircleIcon;
-  protected readonly CheckCircleIcon = CheckCircleIcon;
-  protected readonly PlusIcon = PlusIcon;
   protected readonly CalendarIcon = CalendarIcon;
   protected readonly CreditCardIcon = CreditCardIcon;
   protected readonly Banknote = Banknote;
