@@ -1,9 +1,9 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import {Payment} from '../../../../../model/payment/payment';
 import {DatePipe, NgClass} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {PaymentMethodPipe} from '../../../../../pipe/payment-method-pipe';
-import {LucideAngularModule, PlusIcon} from 'lucide-angular';
+import {LucideAngularModule, PlusIcon, XIcon} from 'lucide-angular';
 
 @Component({
   selector: 'app-payments-list',
@@ -28,6 +28,8 @@ export class PaymentsList {
 
   @Output()
   paymentCreate = new EventEmitter<Payment>();
+
+  isCreateModalOpen = false;
 
   newPayment: Payment = {
     paymentDate: this.todayIsoDate(),
@@ -66,6 +68,28 @@ export class PaymentsList {
       method: this.newPayment.method ?? 'BANK_TRANSFER',
       note: ''
     };
+    this.isCreateModalOpen = false;
+  }
+
+  openCreateModal(): void {
+    if (!this.leaseId || this.creatingPayment) {
+      return;
+    }
+    this.isCreateModalOpen = true;
+  }
+
+  closeCreateModal(): void {
+    if (this.creatingPayment) {
+      return;
+    }
+    this.isCreateModalOpen = false;
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.isCreateModalOpen) {
+      this.closeCreateModal();
+    }
   }
 
   private todayIsoDate(): string {
@@ -73,4 +97,5 @@ export class PaymentsList {
   }
 
   protected readonly PlusIcon = PlusIcon;
+  protected readonly XIcon = XIcon;
 }
