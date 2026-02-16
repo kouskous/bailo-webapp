@@ -4,6 +4,7 @@ import {
   Banknote,
   CalendarIcon,
   CreditCardIcon,
+  FileTextIcon,
   LucideAngularModule
 } from 'lucide-angular';
 import {PaymentSchedule} from '../../../../model/payment/payment-schedule';
@@ -13,6 +14,9 @@ import {PaymentService} from '../../../../service/payment.service';
 import {take} from 'rxjs';
 import {SchedulesList} from './schedules-list/schedules-list';
 import {PaymentsList} from './payments-list/payments-list';
+import {LeaseDocument} from '../../../../model/document/lease-document';
+import {DocumentService} from '../../../../service/document.service';
+import {DocumentsList} from './documents-list/documents-list';
 
 @Component({
   selector: 'app-payments-schedule',
@@ -21,7 +25,8 @@ import {PaymentsList} from './payments-list/payments-list';
     DecimalPipe,
     NgClass,
     SchedulesList,
-    PaymentsList
+    PaymentsList,
+    DocumentsList
   ],
   templateUrl: './payments-schedule.html',
   styleUrl: './payments-schedule.scss'
@@ -32,17 +37,23 @@ export class PaymentsSchedule implements OnChanges {
   @Input()
   leaseId?: string;
 
-  activeTab: 'schedules' | 'payments' = 'schedules';
+  activeTab: 'schedules' | 'payments' | 'documents' = 'schedules';
   payments: Payment[] = [];
+  documents: LeaseDocument[] = [];
   loadingPayments = false;
+  loadingDocuments = false;
   creatingPayment = false;
 
-  constructor(private readonly paymentService: PaymentService) {
+  constructor(
+    private readonly paymentService: PaymentService,
+    private readonly documentService: DocumentService
+  ) {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['leaseId']) {
       this.loadPayments();
+      this.loadDocuments();
     }
   }
 
@@ -71,10 +82,13 @@ export class PaymentsSchedule implements OnChanges {
     return credit > 0 ? Number(credit.toFixed(2)) : 0;
   }
 
-  setTab(tab: 'schedules' | 'payments'): void {
+  setTab(tab: 'schedules' | 'payments' | 'documents'): void {
     this.activeTab = tab;
     if (tab === 'payments' && !this.payments.length) {
       this.loadPayments();
+    }
+    if (tab === 'documents' && !this.documents.length) {
+      this.loadDocuments();
     }
   }
 
@@ -95,6 +109,7 @@ export class PaymentsSchedule implements OnChanges {
       next: () => {
         this.loadPayments();
         this.loadSchedules();
+        this.loadDocuments();
       },
       error: () => {
         this.creatingPayment = false;
@@ -142,6 +157,27 @@ export class PaymentsSchedule implements OnChanges {
     });
   }
 
+  private loadDocuments(): void {
+    if (!this.leaseId) {
+      this.documents = [];
+      return;
+    }
+
+    this.loadingDocuments = true;
+    this.documentService.findByLease(this.leaseId, 0, 100).pipe(take(1)).subscribe({
+      next: (page) => {
+        this.documents = page.content ?? [];
+      },
+      error: () => {
+        this.documents = [];
+        this.loadingDocuments = false;
+      },
+      complete: () => {
+        this.loadingDocuments = false;
+      }
+    });
+  }
+
   private asNumber(value: number | undefined): number {
     if (value === undefined || value === null || Number.isNaN(value)) {
       return 0;
@@ -152,5 +188,6 @@ export class PaymentsSchedule implements OnChanges {
   protected readonly AlertCircleIcon = AlertCircleIcon;
   protected readonly CalendarIcon = CalendarIcon;
   protected readonly CreditCardIcon = CreditCardIcon;
+  protected readonly FileTextIcon = FileTextIcon;
   protected readonly Banknote = Banknote;
 }

@@ -1,22 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {
   AlertCircleIcon,
-  ArchiveIcon,
   ArrowLeftIcon,
-  CheckIcon,
-  DownloadIcon,
-  EllipsisIcon,
   CreditCardIcon,
-  PencilIcon,
-  Trash2Icon,
   FilePlusIcon,
   FileTextIcon,
   HomeIcon,
   LucideAngularModule,
   MapPinIcon,
   PlusCircleIcon,
-  UserMinusIcon,
-  XCircleIcon
+  UserMinusIcon
 } from 'lucide-angular';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {PaymentsSchedule} from './payments-schedule/payments-schedule';
@@ -26,13 +19,9 @@ import {LeaseService} from '../../../service/lease.service';
 import {Property} from '../../../model/property/property';
 import {Lease} from '../../../model/lease/lease';
 import {PaymentSchedule} from '../../../model/payment/payment-schedule';
-import {combineLatest, finalize, take} from 'rxjs';
-import {DatePipe, NgClass} from '@angular/common';
+import {combineLatest, take} from 'rxjs';
 import {PaymentService} from '../../../service/payment.service';
-import {Menu} from '../../layout/components/menu/menu';
-import {MenuTrigger} from '../../layout/components/menu/menu-trigger';
-import {MenuItem} from '../../layout/components/menu/menu-item';
-import {LeaseStatusPipe} from '../../../pipe/lease-status-pipe';
+import {LeasesPanel} from './leases-panel/leases-panel';
 
 @Component({
   selector: 'app-property-view',
@@ -41,12 +30,7 @@ import {LeaseStatusPipe} from '../../../pipe/lease-status-pipe';
     RouterLink,
     PaymentsSchedule,
     LeaseSummary,
-    Menu,
-    MenuItem,
-    MenuTrigger,
-    LeaseStatusPipe,
-    NgClass,
-    DatePipe
+    LeasesPanel
   ],
   templateUrl: './property-view.html',
   styleUrl: './property-view.scss'
@@ -99,79 +83,61 @@ export class PropertyView implements OnInit {
     this.loadSchedulesForSelectedLease();
   }
 
-  confirmLease(lease: Lease, menu: Menu): void {
+  confirmLease(lease: Lease): void {
     const leaseId = lease.id;
     if (!leaseId) {
-      menu.close();
       return;
     }
     this.leaseRepository.confirm(leaseId)
-      .pipe(
-        take(1),
-        finalize(() => menu.close())
-      )
+      .pipe(take(1))
       .subscribe((updatedLease) => {
         this.replaceLeaseInList(updatedLease);
       });
   }
 
-  archiveLease(lease: Lease, menu: Menu): void {
+  archiveLease(lease: Lease): void {
     const leaseId = lease.id;
     if (!leaseId) {
-      menu.close();
       return;
     }
     this.leaseRepository.archive(leaseId)
-      .pipe(
-        take(1),
-        finalize(() => menu.close())
-      )
+      .pipe(take(1))
       .subscribe((updatedLease) => {
         this.replaceLeaseInList(updatedLease);
       });
   }
 
-  terminateLease(lease: Lease, menu: Menu): void {
+  terminateLease(lease: Lease): void {
     const leaseId = lease.id;
     if (!leaseId) {
-      menu.close();
       return;
     }
 
     const confirmed = window.confirm('Resilier ce bail ? Cette action est irreversible.');
     if (!confirmed) {
-      menu.close();
       return;
     }
 
     this.leaseRepository.terminate(leaseId)
-      .pipe(
-        take(1),
-        finalize(() => menu.close())
-      )
+      .pipe(take(1))
       .subscribe((updatedLease) => {
         this.replaceLeaseInList(updatedLease);
       });
   }
 
-  deleteLease(lease: Lease, menu: Menu): void {
+  deleteLease(lease: Lease): void {
     const leaseId = lease.id;
     if (!leaseId) {
-      menu.close();
       return;
     }
 
     const confirmed = window.confirm('Supprimer ce bail ? Cette action est irreversible.');
     if (!confirmed) {
-      menu.close();
       return;
     }
 
     this.leaseRepository.delete(leaseId)
-      .pipe(
-        take(1),
-        finalize(() => menu.close())
-      )
+      .pipe(take(1))
       .subscribe(() => {
         this.leases = this.leases.filter((item) => item.id !== leaseId);
         if (this.selectedLease?.id === leaseId) {
@@ -179,32 +145,6 @@ export class PropertyView implements OnInit {
           this.loadSchedulesForSelectedLease();
         }
       });
-  }
-
-  getLeaseLabel(lease: Lease): string {
-    const tenant = lease.tenants?.[0];
-    const fullName = [tenant?.firstName, tenant?.lastName].filter(Boolean).join(' ').trim();
-    return fullName || 'Bail';
-  }
-
-  canConfirmLease(lease: Lease): boolean {
-    return lease.status === 'DRAFT';
-  }
-
-  canArchiveLease(lease: Lease): boolean {
-    return lease.status === 'ACTIVE';
-  }
-
-  canTerminateLease(lease: Lease): boolean {
-    return lease.status === 'ACTIVE';
-  }
-
-  canDeleteLease(lease: Lease): boolean {
-    return lease.status === 'DRAFT';
-  }
-
-  canEditLease(lease: Lease): boolean {
-    return lease.status !== 'ARCHIVED';
   }
 
   canDownloadLease(lease: Lease): boolean {
@@ -232,6 +172,18 @@ export class PropertyView implements OnInit {
     const urlTree = this.router.createUrlTree(['/properties', this.property.id, 'lease', lease.id]);
     const url = `${window.location.origin}${this.router.serializeUrl(urlTree)}`;
     window.open(url, '_blank');
+  }
+
+  onLeaseSummaryPreview(): void {
+    if (this.selectedLease) {
+      this.openLeasePreview(this.selectedLease);
+    }
+  }
+
+  onLeaseSummaryDownload(): void {
+    if (this.selectedLease) {
+      this.downloadLease(this.selectedLease);
+    }
   }
 
   private loadSchedulesForSelectedLease(): void {
@@ -274,16 +226,9 @@ export class PropertyView implements OnInit {
   protected readonly ArrowLeftIcon = ArrowLeftIcon;
   protected readonly PlusCircleIcon = PlusCircleIcon;
   protected readonly HomeIcon = HomeIcon;
-  protected readonly ArchiveIcon = ArchiveIcon;
   protected readonly FilePlusIcon = FilePlusIcon;
   protected readonly UserMinusIcon = UserMinusIcon;
   protected readonly FileTextIcon = FileTextIcon;
   protected readonly CreditCardIcon = CreditCardIcon;
-  protected readonly XCircleIcon = XCircleIcon;
   protected readonly AlertCircleIcon = AlertCircleIcon;
-  protected readonly CheckIcon = CheckIcon;
-  protected readonly DownloadIcon = DownloadIcon;
-  protected readonly PencilIcon = PencilIcon;
-  protected readonly EllipsisIcon = EllipsisIcon;
-  protected readonly Trash2Icon = Trash2Icon;
 }

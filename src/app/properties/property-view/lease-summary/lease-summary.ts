@@ -1,5 +1,5 @@
-import {Component, Input} from '@angular/core';
-import {LucideAngularModule} from 'lucide-angular';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {DownloadIcon, FileTextIcon, LucideAngularModule} from 'lucide-angular';
 import {Lease} from '../../../../model/lease/lease';
 import {DatePipe, NgClass} from '@angular/common';
 import {LeaseStatusPipe} from '../../../../pipe/lease-status-pipe';
@@ -20,6 +20,15 @@ import {PaymentFrequencyPipe} from '../../../../pipe/payment-frequency-pipe';
 export class LeaseSummary {
   @Input()
   lease: Lease | undefined;
+  @Input()
+  canPreview = false;
+  @Input()
+  canDownload = false;
+
+  @Output()
+  preview = new EventEmitter<void>();
+  @Output()
+  download = new EventEmitter<void>();
 
   getTenantNames(): string {
     if (!this.lease?.tenants?.length) {
@@ -31,4 +40,14 @@ export class LeaseSummary {
       .join(', ');
   }
 
+  onPreview(): void {
+    this.preview.emit();
+  }
+
+  onDownload(): void {
+    this.download.emit();
+  }
+
+  protected readonly FileTextIcon = FileTextIcon;
+  protected readonly DownloadIcon = DownloadIcon;
 }

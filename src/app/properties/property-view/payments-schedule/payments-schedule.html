@@ -59,11 +59,19 @@
       <lucide-icon [img]="CreditCardIcon" class="w-4 h-4"></lucide-icon>
       Paiements
     </button>
+    <button
+      type="button"
+      class="cursor-pointer inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold transition"
+      [ngClass]="activeTab === 'documents' ? 'bg-slate-900 text-white' : 'text-slate-700 hover:bg-slate-100'"
+      (click)="setTab('documents')">
+      <lucide-icon [img]="FileTextIcon" class="w-4 h-4"></lucide-icon>
+      Documents
+    </button>
   </div>
 
   @if (activeTab === 'schedules') {
     <app-schedules-list [schedules]="schedules"></app-schedules-list>
-  } @else {
+  } @else if (activeTab === 'payments') {
     <app-payments-list
       [payments]="payments"
       [leaseId]="leaseId"
@@ -71,6 +79,11 @@
       [creatingPayment]="creatingPayment"
       (paymentCreate)="createPayment($event)"
     ></app-payments-list>
+  } @else {
+    <app-documents-list
+      [documents]="documents"
+      [loadingDocuments]="loadingDocuments"
+    ></app-documents-list>
   }
 </div>
 

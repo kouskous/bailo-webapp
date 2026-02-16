@@ -1,0 +1,85 @@
+<aside class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+  <div class="flex items-center justify-between gap-2">
+    <h2 class="text-lg font-bold text-slate-900">Baux</h2>
+    @if (propertyId) {
+      <a
+        class="inline-flex items-center gap-1 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700 transition"
+        [routerLink]="['/properties', propertyId, 'lease', 'new']">
+        <lucide-icon [img]="FilePlusIcon" class="h-3.5 w-3.5"></lucide-icon>
+        Nouveau bail
+      </a>
+    }
+  </div>
+  <p class="mt-2 text-sm text-slate-600">Selectionnez un bail pour afficher ses details.</p>
+
+  <div class="mt-5 space-y-3">
+    @for (lease of leases; track lease.id) {
+      <div
+        class="w-full rounded-xl border px-3.5 py-3.5 text-left transition"
+        [ngClass]="{
+          'border-red-200 bg-red-50': selectedLeaseId === lease.id,
+          'border-slate-200 bg-white hover:bg-slate-50': selectedLeaseId !== lease.id
+        }"
+        (click)="selectLease(lease)">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <div class="text-sm font-semibold text-slate-900">{{ getLeaseLabel(lease) }}</div>
+            <div class="text-xs text-slate-500">{{ lease.startDate | date:'dd MMM yyyy' }} - {{ lease.endDate | date:'dd MMM yyyy' }}</div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                  [ngClass]="{
+                    'bg-green-100 text-green-700': lease.status === 'ACTIVE',
+                    'bg-slate-100 text-slate-600': lease.status !== 'ACTIVE'
+                  }">
+              {{ lease.status | leaseStatus }}
+            </span>
+
+            <button
+              type="button"
+              class="inline-flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 hover:bg-slate-100"
+              appMenuTrigger
+              [appMenuTriggerFor]="leaseRowActionsMenu"
+              aria-label="Actions du bail"
+              (click)="$event.stopPropagation()">
+              <lucide-icon [img]="EllipsisIcon" class="h-4 w-4"></lucide-icon>
+            </button>
+            <app-menu #leaseRowActionsMenu="appMenu">
+              @if (canConfirmLease(lease)) {
+                <button appMenuItem (click)="onConfirm(lease, leaseRowActionsMenu)">
+                  <lucide-icon [img]="CheckIcon" class="h-4 w-4"></lucide-icon>
+                  Activer le bail
+                </button>
+              }
+              @if (lease.id && canEditLease(lease) && propertyId) {
+                <a appMenuItem [routerLink]="['/properties', propertyId, 'lease', lease.id]">
+                  <lucide-icon [img]="PencilIcon" class="h-4 w-4"></lucide-icon>
+                  Modifier le bail
+                </a>
+              }
+              @if (canArchiveLease(lease)) {
+                <button appMenuItem (click)="onArchive(lease, leaseRowActionsMenu)">
+                  <lucide-icon [img]="ArchiveIcon" class="h-4 w-4"></lucide-icon>
+                  Archiver le bail
+                </button>
+              }
+              @if (canTerminateLease(lease)) {
+                <button appMenuItem (click)="onTerminate(lease, leaseRowActionsMenu)">
+                  <lucide-icon [img]="XCircleIcon" class="h-4 w-4"></lucide-icon>
+                  Resilier le bail
+                </button>
+              }
+              @if (canDeleteLease(lease)) {
+                <button appMenuItem (click)="onDelete(lease, leaseRowActionsMenu)">
+                  <lucide-icon [img]="Trash2Icon" class="h-4 w-4"></lucide-icon>
+                  Supprimer le bail
+                </button>
+              }
+            </app-menu>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</aside>
