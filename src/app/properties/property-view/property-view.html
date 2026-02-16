@@ -142,6 +142,36 @@
             </aside>
 
             <div class="lg:col-span-8 space-y-4">
+              @if (selectedLease; as lease) {
+                <div class="flex flex-wrap items-center justify-end gap-2">
+                  @if (canEditLease(lease) && property.id && lease.id) {
+                    <a
+                      class="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
+                      [routerLink]="['/properties', property.id, 'lease', lease.id]">
+                      <lucide-icon [img]="PencilIcon" class="w-4 h-4"></lucide-icon>
+                      Modifier le bail
+                    </a>
+                  }
+                  @if (canPreviewLease(lease)) {
+                    <button
+                      type="button"
+                      class="cursor-pointer inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
+                      (click)="openLeasePreview(lease)">
+                      <lucide-icon [img]="FileTextIcon" class="w-4 h-4"></lucide-icon>
+                      Visualiser le bail
+                    </button>
+                  }
+                  @if (canDownloadLease(lease)) {
+                    <button
+                      type="button"
+                      class="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800 transition"
+                      (click)="downloadLease(lease)">
+                      <lucide-icon [img]="DownloadIcon" class="w-4 h-4"></lucide-icon>
+                      Telecharger le bail
+                    </button>
+                  }
+                </div>
+              }
               <app-lease-summary [lease]="selectedLease"></app-lease-summary>
               <app-payments-schedule [schedules]="paymentSchedules" [leaseId]="selectedLease?.id"></app-payments-schedule>
             </div>

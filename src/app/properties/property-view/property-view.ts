@@ -4,6 +4,7 @@ import {
   ArchiveIcon,
   ArrowLeftIcon,
   CheckIcon,
+  DownloadIcon,
   EllipsisIcon,
   CreditCardIcon,
   PencilIcon,
@@ -14,11 +15,10 @@ import {
   LucideAngularModule,
   MapPinIcon,
   PlusCircleIcon,
-  PrinterIcon,
   UserMinusIcon,
   XCircleIcon
 } from 'lucide-angular';
-import {ActivatedRoute, RouterLink} from '@angular/router';
+import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {PaymentsSchedule} from './payments-schedule/payments-schedule';
 import {LeaseSummary} from './lease-summary/lease-summary';
 import {PropertyService} from '../../../service/property-service';
@@ -61,6 +61,7 @@ export class PropertyView implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
+    private readonly router: Router,
     private readonly propertyRepository: PropertyService,
     private readonly leaseRepository: LeaseService,
     private readonly paymentRepository: PaymentService
@@ -206,6 +207,33 @@ export class PropertyView implements OnInit {
     return lease.status !== 'ARCHIVED';
   }
 
+  canDownloadLease(lease: Lease): boolean {
+    return lease.status === 'ACTIVE' && !!lease.id && !!this.property?.id;
+  }
+
+  canPreviewLease(lease: Lease): boolean {
+    return lease.status === 'DRAFT' && !!lease.id && !!this.property?.id;
+  }
+
+  openLeasePreview(lease: Lease, event?: Event): void {
+    event?.stopPropagation();
+    if (!lease.id || !this.property?.id) {
+      return;
+    }
+    this.router.navigate(['/properties', this.property.id, 'lease', lease.id]);
+  }
+
+  downloadLease(lease: Lease, event?: Event): void {
+    event?.stopPropagation();
+    if (!lease.id || !this.property?.id) {
+      return;
+    }
+
+    const urlTree = this.router.createUrlTree(['/properties', this.property.id, 'lease', lease.id]);
+    const url = `${window.location.origin}${this.router.serializeUrl(urlTree)}`;
+    window.open(url, '_blank');
+  }
+
   private loadSchedulesForSelectedLease(): void {
     const leaseId = this.selectedLease?.id;
     if (!leaseId) {
@@ -251,10 +279,10 @@ export class PropertyView implements OnInit {
   protected readonly UserMinusIcon = UserMinusIcon;
   protected readonly FileTextIcon = FileTextIcon;
   protected readonly CreditCardIcon = CreditCardIcon;
-  protected readonly PrinterIcon = PrinterIcon;
   protected readonly XCircleIcon = XCircleIcon;
   protected readonly AlertCircleIcon = AlertCircleIcon;
   protected readonly CheckIcon = CheckIcon;
+  protected readonly DownloadIcon = DownloadIcon;
   protected readonly PencilIcon = PencilIcon;
   protected readonly EllipsisIcon = EllipsisIcon;
   protected readonly Trash2Icon = Trash2Icon;

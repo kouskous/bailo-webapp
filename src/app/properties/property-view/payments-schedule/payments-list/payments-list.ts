@@ -1,6 +1,6 @@
 import {Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import {Payment} from '../../../../../model/payment/payment';
-import {DatePipe, NgClass} from '@angular/common';
+import {DatePipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {PaymentMethodPipe} from '../../../../../pipe/payment-method-pipe';
 import {LucideAngularModule, PlusIcon, XIcon} from 'lucide-angular';
@@ -9,7 +9,6 @@ import {LucideAngularModule, PlusIcon, XIcon} from 'lucide-angular';
   selector: 'app-payments-list',
   imports: [
     DatePipe,
-    NgClass,
     FormsModule,
     PaymentMethodPipe,
     LucideAngularModule
