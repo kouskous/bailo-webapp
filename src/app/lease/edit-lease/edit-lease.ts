@@ -103,14 +103,14 @@ export class EditLease implements OnInit {
     const lease = this.buildLeaseFromForm();
     if (this.leaseId) {
       lease.id = this.leaseId;
-      this.leaseService.update(lease).pipe(take(1)).subscribe((updated) => {
-        this.router.navigate(['/properties', this.propertyId, 'lease', updated.id ?? this.leaseId]).then();
+      this.leaseService.update(lease).pipe(take(1)).subscribe(() => {
+        this.router.navigate(['/properties', this.propertyId]).then();
       });
       return;
     }
 
-    this.leaseService.create(lease).pipe(take(1)).subscribe((created) => {
-      this.router.navigate(['/properties', this.propertyId, 'lease', created.id]).then();
+    this.leaseService.create(lease).pipe(take(1)).subscribe(() => {
+      this.router.navigate(['/properties', this.propertyId]).then();
     });
   }
 
