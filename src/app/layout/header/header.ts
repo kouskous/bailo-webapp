@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
+﻿import {Component} from '@angular/core';
 import {AuthService, User} from '@auth0/auth0-angular';
 import {Menu} from '../components/menu/menu';
-import {LogOutIcon, LucideAngularModule, UserIcon, ZapIcon} from 'lucide-angular';
+import {CircleAlertIcon, LoaderCircleIcon, LogOutIcon, LucideAngularModule, UserIcon, ZapIcon} from 'lucide-angular';
 import {MenuItem} from '../components/menu/menu-item';
 import {MenuTrigger} from '../components/menu/menu-trigger';
 import {take} from 'rxjs';
@@ -25,6 +25,10 @@ import {SubscriptionStatusPipe} from '../../../pipe/subscription-status-pipe';
 export class Header {
   user: User | null | undefined;
   subscriptionStatus: string | undefined;
+  isRedirecting = false;
+  redirectTitle = '';
+  redirectMessage = '';
+  redirectError = '';
 
   constructor(private readonly auth: AuthService,
               private readonly subscriptionService: SubscriptionService) {
@@ -37,16 +41,25 @@ export class Header {
   protected readonly ZapIcon = ZapIcon;
   protected readonly UserIcon = UserIcon;
   protected readonly LogOutIcon = LogOutIcon;
+  protected readonly LoaderCircleIcon = LoaderCircleIcon;
+  protected readonly CircleAlertIcon = CircleAlertIcon;
 
   logout() {
     this.auth.logout();
   }
 
   goPremium(): void {
+    if (this.isRedirecting) {
+      return;
+    }
     const accountId = this.user?.sub;
     if (!accountId) {
       return;
     }
+    this.startRedirect(
+      'Redirection vers le paiement securise',
+      'Preparation de votre session Stripe en cours...'
+    );
     const origin = window.location.origin;
     const successUrl = `${origin}/subscription/payment-success`;
     const cancelUrl = `${origin}/subscription/payment-failed`;
@@ -55,8 +68,14 @@ export class Header {
       successUrl,
       cancelUrl
     ).pipe(take(1))
-      .subscribe((response) => {
-        window.location.href = response.url;
+      .subscribe({
+        next: (response) => {
+          window.location.href = response.url;
+        },
+        error: () => {
+          this.isRedirecting = false;
+          this.redirectError = 'Impossible de lancer le paiement pour le moment. Reessayez dans quelques instants.';
+        }
       });
   }
 
@@ -73,18 +92,42 @@ export class Header {
   }
 
   openCustomerPortal(): void {
+    if (this.isRedirecting) {
+      return;
+    }
     const accountId = this.user?.sub;
     if (!accountId) {
       return;
     }
+    this.startRedirect(
+      'Redirection vers votre espace abonnement',
+      'Ouverture du portail client securise...'
+    );
     const origin = window.location.origin;
     this.subscriptionService.createPortalSession(
       accountId,
       origin
     ).pipe(take(1))
-      .subscribe((response) => {
-        window.location.href = response.url;
+      .subscribe({
+        next: (response) => {
+          window.location.href = response.url;
+        },
+        error: () => {
+          this.isRedirecting = false;
+          this.redirectError = 'Impossible d ouvrir le portail client. Reessayez dans quelques instants.';
+        }
       });
+  }
+
+  closeRedirectError(): void {
+    this.redirectError = '';
+  }
+
+  private startRedirect(title: string, message: string): void {
+    this.redirectTitle = title;
+    this.redirectMessage = message;
+    this.redirectError = '';
+    this.isRedirecting = true;
   }
 
   private loadSubscriptionStatus(): void {
@@ -189,3 +232,4 @@ export class Header {
     }
   }
 }
+

@@ -1,4 +1,4 @@
-<div
+﻿<div
   class="header flex flex-row h-16 md:h-24 justify-between items-center px-8 bg-white bg-opacity-30 backdrop-blur-md p-6 shadow-lg text-gray-900">
   <div class="text-4xl font-bold flex items-center gap-2"><img class="h-6" src="suisse.png"/>Bailo</div>
   <div class="flex flex-row items-center gap-4">
@@ -6,6 +6,7 @@
       <button type="button"
               class="inline-flex items-center gap-2 rounded-full border px-3 py-1 shadow-[0_6px_20px_rgba(15,23,42,0.08)]"
               [ngClass]="getSubscriptionTagClasses()"
+              [disabled]="isRedirecting"
               (click)="onSubscriptionTagClick($event)">
         @if (isSubscriptionCta()) {
           <span class="inline-flex text-amber-600" aria-hidden="true">
@@ -43,6 +44,7 @@
 <app-menu #menu="appMenu">
   @if (shouldShowGoPremium()) {
     <button appMenuItem
+            [disabled]="isRedirecting"
             (click)="goPremium()"
             class="border border-amber-300 bg-gradient-to-br from-amber-50 to-amber-100 text-amber-800 hover:from-amber-100 hover:to-amber-200">
       <lucide-icon [img]="ZapIcon" class="text-amber-600"></lucide-icon>
@@ -54,7 +56,7 @@
     </button>
   }
   @if (shouldShowCustomerPortal()) {
-    <button appMenuItem (click)="openCustomerPortal()">
+    <button appMenuItem [disabled]="isRedirecting" (click)="openCustomerPortal()">
       <lucide-icon [img]="UserIcon"></lucide-icon>
       Gerer mon abonnement
     </button>
@@ -64,3 +66,30 @@
     Deconnexion
   </button>
 </app-menu>
+
+@if (isRedirecting || redirectError) {
+  <div class="fixed inset-0 z-[90] flex items-center justify-center bg-slate-900/35 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl">
+      @if (isRedirecting) {
+        <div class="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-red-50 text-red-600">
+          <lucide-icon [img]="LoaderCircleIcon" class="h-6 w-6 animate-spin"></lucide-icon>
+        </div>
+        <div class="text-lg font-bold text-slate-900">{{ redirectTitle }}</div>
+        <div class="mt-1 text-sm text-slate-600">{{ redirectMessage }}</div>
+      } @else {
+        <div class="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-rose-50 text-rose-600">
+          <lucide-icon [img]="CircleAlertIcon" class="h-6 w-6"></lucide-icon>
+        </div>
+        <div class="text-lg font-bold text-slate-900">Action indisponible</div>
+        <div class="mt-1 text-sm text-slate-600">{{ redirectError }}</div>
+        <button
+          type="button"
+          class="mt-4 inline-flex items-center rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700"
+          (click)="closeRedirectError()">
+          Fermer
+        </button>
+      }
+    </div>
+  </div>
+}
+
