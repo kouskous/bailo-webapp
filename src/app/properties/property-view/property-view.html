@@ -44,16 +44,14 @@
               </div>
             </div>
 
-            <div class="flex flex-wrap gap-2">
-              @if (property.id) {
-                <a
-                  class="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
-                  [routerLink]="['/properties', property.id, 'edit']">
-                  <lucide-icon [img]="FileTextIcon" class="w-4 h-4"></lucide-icon>
-                  Modifier le bien
-                </a>
-              }
-            </div>
+            @if (property.id) {
+              <a
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition"
+                [routerLink]="['/properties', property.id, 'edit']">
+                <lucide-icon [img]="PencilIcon" class="w-4 h-4"></lucide-icon>
+                Modifier le bien
+              </a>
+            }
           </div>
         </section>
 

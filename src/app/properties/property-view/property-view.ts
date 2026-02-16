@@ -8,6 +8,7 @@ import {
   HomeIcon,
   LucideAngularModule,
   MapPinIcon,
+  PencilIcon,
   PlusCircleIcon,
   UserMinusIcon
 } from 'lucide-angular';
@@ -229,6 +230,7 @@ export class PropertyView implements OnInit {
   protected readonly FilePlusIcon = FilePlusIcon;
   protected readonly UserMinusIcon = UserMinusIcon;
   protected readonly FileTextIcon = FileTextIcon;
+  protected readonly PencilIcon = PencilIcon;
   protected readonly CreditCardIcon = CreditCardIcon;
   protected readonly AlertCircleIcon = AlertCircleIcon;
 }
