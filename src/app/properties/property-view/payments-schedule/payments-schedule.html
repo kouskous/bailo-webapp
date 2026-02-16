@@ -1,4 +1,46 @@
 ﻿<div class="space-y-3 mt-4">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+    <div class="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+      <div class="flex items-center gap-3">
+        <lucide-icon [img]="CalendarIcon" class="h-7 w-7 text-slate-500"></lucide-icon>
+        <div>
+          <div class="text-xs uppercase tracking-wide text-slate-500">Total echeances</div>
+          <div class="text-lg font-semibold text-slate-900">{{ totalScheduledAmount | number:'1.2-2' }} {{ displayCurrency }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+      <div class="flex items-center gap-3">
+        <lucide-icon [img]="CreditCardIcon" class="h-7 w-7 text-slate-500"></lucide-icon>
+        <div>
+          <div class="text-xs uppercase tracking-wide text-slate-500">Total paiements</div>
+          <div class="text-lg font-semibold text-slate-900">{{ totalPaidAmount | number:'1.2-2' }} {{ displayCurrency }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+      <div class="flex items-center gap-3">
+        <lucide-icon [img]="AlertCircleIcon" class="h-7 w-7 text-slate-500"></lucide-icon>
+        <div>
+          <div class="text-xs uppercase tracking-wide text-slate-500">Reste a payer</div>
+          <div class="text-lg font-semibold" [ngClass]="totalOutstandingAmount > 0 ? 'text-orange-700' : 'text-green-700'">
+            {{ totalOutstandingAmount | number:'1.2-2' }} {{ displayCurrency }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+      <div class="flex items-center gap-3">
+        <lucide-icon [img]="Banknote" class="h-7 w-7 text-slate-500"></lucide-icon>
+        <div>
+          <div class="text-xs uppercase tracking-wide text-slate-500">Credit</div>
+          <div class="text-lg font-semibold" [ngClass]="totalCreditAmount > 0 ? 'text-emerald-700' : 'text-slate-700'">
+            {{ totalCreditAmount | number:'1.2-2' }} {{ displayCurrency }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="inline-flex rounded-xl border border-slate-200 bg-white p-1">
     <button
@@ -143,3 +185,4 @@
     }
   }
 </div>
+

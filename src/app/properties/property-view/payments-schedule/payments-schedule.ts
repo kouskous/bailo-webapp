@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {
   AlertCircleIcon,
+  Banknote,
   CalendarIcon,
   CheckCircleIcon,
   CreditCardIcon,
@@ -9,7 +10,7 @@ import {
   XCircleIcon
 } from 'lucide-angular';
 import {PaymentSchedule} from '../../../../model/payment/payment-schedule';
-import {DatePipe, NgClass} from '@angular/common';
+import {DatePipe, DecimalPipe, NgClass} from '@angular/common';
 import {Payment} from '../../../../model/payment/payment';
 import {PaymentService} from '../../../../service/payment.service';
 import {FormsModule} from '@angular/forms';
@@ -21,6 +22,7 @@ import {PaymentMethodPipe} from '../../../../pipe/payment-method-pipe';
   imports: [
     LucideAngularModule,
     DatePipe,
+    DecimalPipe,
     NgClass,
     FormsModule,
     PaymentMethodPipe
@@ -88,6 +90,31 @@ export class PaymentsSchedule implements OnChanges {
     if (status === 'PARTIAL') return 'Partiel';
     if (status === 'PENDING') return 'A payer';
     return schedule.status ?? 'A traiter';
+  }
+
+  get displayCurrency(): string {
+    return this.schedules[0]?.currency ?? this.payments[0]?.currency ?? this.newPayment.currency ?? 'CHF';
+  }
+
+  get totalScheduledAmount(): number {
+    return this.schedules.reduce((sum, schedule) => sum + this.asNumber(schedule.amount), 0);
+  }
+
+  get totalPaidAmount(): number {
+    return this.payments.reduce((sum, payment) => sum + this.asNumber(payment.amount), 0);
+  }
+
+  get totalOutstandingAmount(): number {
+    const outstanding = this.schedules.reduce((sum, schedule) => {
+      const remaining = this.asNumber(schedule.amount) - this.asNumber(schedule.paidAmount);
+      return sum + (remaining > 0 ? remaining : 0);
+    }, 0);
+    return Number(outstanding.toFixed(2));
+  }
+
+  get totalCreditAmount(): number {
+    const credit = this.totalPaidAmount - this.totalScheduledAmount;
+    return credit > 0 ? Number(credit.toFixed(2)) : 0;
   }
 
   setTab(tab: 'schedules' | 'payments'): void {
@@ -172,10 +199,18 @@ export class PaymentsSchedule implements OnChanges {
     return new Date().toISOString().substring(0, 10);
   }
 
+  private asNumber(value: number | undefined): number {
+    if (value === undefined || value === null || Number.isNaN(value)) {
+      return 0;
+    }
+    return Number(value);
+  }
+
   protected readonly AlertCircleIcon = AlertCircleIcon;
   protected readonly XCircleIcon = XCircleIcon;
   protected readonly CheckCircleIcon = CheckCircleIcon;
   protected readonly PlusIcon = PlusIcon;
   protected readonly CalendarIcon = CalendarIcon;
   protected readonly CreditCardIcon = CreditCardIcon;
+  protected readonly Banknote = Banknote;
 }
