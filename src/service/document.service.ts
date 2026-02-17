@@ -33,13 +33,32 @@ export class DocumentService {
     return `${this.apiRoot}${this.basePath}/leases/${encodeURIComponent(leaseId)}/preview`;
   }
 
-  resolveUrl(url: string | undefined): string | undefined {
-    if (!url) {
-      return undefined;
-    }
-    if (url.startsWith('http://') || url.startsWith('https://')) {
-      return url;
-    }
-    return `${this.apiRoot}${url.startsWith('/') ? '' : '/'}${url}`;
+  getLeasePreviewBlob(leaseId: string): Observable<Blob> {
+    return this.httpClient.get(this.getLeasePreviewUrl(leaseId), {responseType: 'blob'});
+  }
+
+  getDocumentViewBlob(documentId: string): Observable<Blob> {
+    return this.httpClient.get(this.getViewUrl(documentId), {responseType: 'blob'});
+  }
+
+  getDocumentDownloadBlob(documentId: string): Observable<Blob> {
+    return this.httpClient.get(this.getDownloadUrl(documentId), {responseType: 'blob'});
+  }
+
+  openBlobInNewTab(blob: Blob): void {
+    const objectUrl = URL.createObjectURL(blob);
+    window.open(objectUrl, '_blank', 'noopener,noreferrer');
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
+  }
+
+  triggerBlobDownload(blob: Blob, fileName: string): void {
+    const objectUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = objectUrl;
+    anchor.download = fileName;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
   }
 }

@@ -3,6 +3,7 @@ import {DatePipe, NgClass} from '@angular/common';
 import {LeaseDocument} from '../../../../../model/document/lease-document';
 import {LucideAngularModule, DownloadIcon, EyeIcon, FileTextIcon} from 'lucide-angular';
 import {DocumentService} from '../../../../../service/document.service';
+import {take} from 'rxjs';
 
 @Component({
   selector: 'app-documents-list',
@@ -49,22 +50,21 @@ export class DocumentsList {
   }
 
   openDocument(document: LeaseDocument): void {
-    const url = this.documentService.resolveUrl(
-      document.viewUrl ?? (document.id ? this.documentService.getViewUrl(document.id) : undefined)
-    );
-    if (url) {
-      window.open(url, '_blank');
+    if (!document.id) {
+      return;
     }
+    this.documentService.getDocumentViewBlob(document.id)
+      .pipe(take(1))
+      .subscribe((blob) => this.documentService.openBlobInNewTab(blob));
   }
 
   downloadDocument(document: LeaseDocument): void {
-    const url = this.documentService.resolveUrl(
-      document.downloadUrl ?? (document.id ? this.documentService.getDownloadUrl(document.id) : undefined)
-    );
-    if (!url) {
+    if (!document.id) {
       return;
     }
-    window.open(url, '_blank');
+    this.documentService.getDocumentDownloadBlob(document.id)
+      .pipe(take(1))
+      .subscribe((blob) => this.documentService.triggerBlobDownload(blob, document.fileName ?? 'document.pdf'));
   }
 
   protected readonly EyeIcon = EyeIcon;

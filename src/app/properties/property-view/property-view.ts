@@ -160,11 +160,13 @@ export class PropertyView implements OnInit {
 
   openLeasePreview(lease: Lease, event?: Event): void {
     event?.stopPropagation();
-    if (!lease.id) {
+    const leaseId = lease.id;
+    if (!leaseId) {
       return;
     }
-    const previewUrl = this.documentService.getLeasePreviewUrl(lease.id);
-    window.open(previewUrl, '_blank');
+    this.documentService.getLeasePreviewBlob(leaseId)
+      .pipe(take(1))
+      .subscribe((blob) => this.documentService.openBlobInNewTab(blob));
   }
 
   downloadLease(lease: Lease, event?: Event): void {
@@ -179,15 +181,14 @@ export class PropertyView implements OnInit {
       .subscribe((page) => {
         const contract = this.findReadyContract(page.content ?? []);
         if (!contract?.id) {
-          window.open(this.documentService.getLeasePreviewUrl(leaseId), '_blank');
+          this.documentService.getLeasePreviewBlob(leaseId)
+            .pipe(take(1))
+            .subscribe((blob) => this.documentService.openBlobInNewTab(blob));
           return;
         }
-        const downloadUrl = this.documentService.resolveUrl(
-          contract.downloadUrl ?? this.documentService.getDownloadUrl(contract.id)
-        );
-        if (downloadUrl) {
-          window.open(downloadUrl, '_blank');
-        }
+        this.documentService.getDocumentDownloadBlob(contract.id)
+          .pipe(take(1))
+          .subscribe((blob) => this.documentService.triggerBlobDownload(blob, contract.fileName ?? `bail-${leaseId}.pdf`));
       });
   }
 
