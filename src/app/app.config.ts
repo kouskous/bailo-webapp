@@ -13,7 +13,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     { provide: LOCALE_ID, useValue: 'fr-FR' },
     provideAuth0({
-      domain: 'bailo.eu.auth0.com',
+      domain: 'login.bailo.ch',
       clientId: 'pArbEhROiWpOaHFCprb8hm8FJrszoJyX',
       useRefreshTokens: true,
       authorizationParams: {
