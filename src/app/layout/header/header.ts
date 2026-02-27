@@ -45,7 +45,11 @@ export class Header {
   protected readonly CircleAlertIcon = CircleAlertIcon;
 
   logout() {
-    this.auth.logout();
+    this.auth.logout({
+      logoutParams: {
+        returnTo: window.location.origin
+      }
+    });
   }
 
   goPremium(): void {
