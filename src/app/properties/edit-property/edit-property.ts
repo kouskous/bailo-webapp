@@ -29,6 +29,7 @@ import {Address} from '../../../model/shared/address';
 import {PropertyService} from '../../../service/property-service';
 import {EditPropertySkeleton} from './edit-property-skeleton/edit-property-skeleton';
 import {combineLatest, take, timer} from 'rxjs';
+import {AuthService} from '@auth0/auth0-angular';
 
 interface FormStep {
   key: string;
@@ -197,6 +198,7 @@ export class EditProperty implements OnInit {
 
   propertyId: string | null = null;
   loading = true;
+  accountId = '';
 
   protected readonly ArrowLeftIcon = ArrowLeftIcon;
   protected readonly MapPinIcon = MapPinIcon;
@@ -212,12 +214,17 @@ export class EditProperty implements OnInit {
     private readonly fb: FormBuilder,
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly propertyRepository: PropertyService
+    private readonly propertyRepository: PropertyService,
+    private readonly auth: AuthService
   ) {
     this.initForm();
   }
 
   ngOnInit(): void {
+    this.auth.user$.pipe(take(1)).subscribe((user) => {
+      this.accountId = user?.sub ?? '';
+    });
+
     this.propertyId = this.route.snapshot.paramMap.get('id');
     if (this.propertyId) {
       combineLatest([
@@ -464,7 +471,7 @@ export class EditProperty implements OnInit {
     const additionalInfo = this.propertyForm.get('additionalInformation')?.value;
 
     return {
-      accountId: 'auth0|697b6378eaa7c759f984bbc1',
+      accountId: this.accountId || this.property?.accountId || '',
       name: generalIdentity.name,
       type: generalIdentity.type,
       rooms: generalLayout.rooms,
