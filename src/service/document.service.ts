@@ -15,7 +15,7 @@ export class DocumentService {
   constructor(private readonly httpClient: HttpClient) {
   }
 
-  findByLease(leaseId: string, page = 0, size = 50): Observable<Page<LeaseDocument>> {
+  findByLease(leaseId: string, page = 0, size = 20): Observable<Page<LeaseDocument>> {
     return this.httpClient.get<Page<LeaseDocument>>(
       `${this.documentsBaseUrl}?leaseId=${encodeURIComponent(leaseId)}&page=${page}&size=${size}`
     );
@@ -62,3 +62,4 @@ export class DocumentService {
     setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
   }
 }
+

@@ -48,7 +48,8 @@ export class LeaseService {
   }
 
   terminate(leaseId: string): Observable<Lease> {
-    return this.httpClient.put<Lease>(`${this.baseUrl}/${leaseId}/terminate`, {});
+    // Keep UI compatibility: v3 API exposes archive endpoint, not terminate.
+    return this.archive(leaseId);
   }
 
   delete(id: string): Observable<void> {

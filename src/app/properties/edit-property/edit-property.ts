@@ -27,7 +27,6 @@ import {Checkbox} from '../../layout/components/checkbox/checkbox';
 import {TextArea} from '../../layout/components/text-area/text-area';
 import {Address} from '../../../model/shared/address';
 import {PropertyService} from '../../../service/property-service';
-import {NgClass} from '@angular/common';
 import {EditPropertySkeleton} from './edit-property-skeleton/edit-property-skeleton';
 import {combineLatest, take, timer} from 'rxjs';
 
@@ -36,6 +35,7 @@ interface FormStep {
   title: string;
   subtitle: string;
   groups: string[];
+  icon: 'home' | 'map' | 'ruler' | 'tag' | 'flame' | 'settings' | 'info' | 'check';
 }
 
 @Component({
@@ -49,10 +49,10 @@ interface FormStep {
     Dropdown,
     Checkbox,
     TextArea,
-    NgClass,
     EditPropertySkeleton
   ],
   templateUrl: './edit-property.html',
+  styleUrl: './edit-property.scss'
 })
 export class EditProperty implements OnInit {
   propertyForm!: FormGroup;
@@ -60,33 +60,57 @@ export class EditProperty implements OnInit {
 
   readonly steps: FormStep[] = [
     {
-      key: 'basics',
-      title: 'Infos principales',
-      subtitle: '',
-      groups: ['general']
+      key: 'identity',
+      title: 'Commencons simplement: quel bien voulez-vous ajouter ?',
+      subtitle: 'Donnez-lui un nom clair et choisissez son type.',
+      groups: ['generalIdentity'],
+      icon: 'home'
     },
     {
       key: 'address',
-      title: 'Adresse',
-      subtitle: '',
-      groups: ['address']
+      title: 'Ou se situe ce bien ?',
+      subtitle: 'Une adresse precise permet de mieux organiser vos baux ensuite.',
+      groups: ['address'],
+      icon: 'map'
     },
     {
-      key: 'surfaces',
-      title: 'Surfaces',
-      subtitle: '',
-      groups: ['surface']
+      key: 'layout',
+      title: 'Comment est organise le logement ?',
+      subtitle: 'Quelques chiffres pour decrire les pieces.',
+      groups: ['generalLayout'],
+      icon: 'ruler'
+    },
+    {
+      key: 'surface',
+      title: 'Parlons surfaces',
+      subtitle: 'La surface habitable est obligatoire, le reste est optionnel.',
+      groups: ['surface'],
+      icon: 'tag'
     },
     {
       key: 'energy',
-      title: 'Energie',
-      subtitle: '',
-      groups: ['energy', 'features', 'additionalInformation']
+      title: 'Chauffage et energie',
+      subtitle: 'Ces informations sont utiles pour vos contrats et le suivi.',
+      groups: ['energy'],
+      icon: 'flame'
+    },
+    {
+      key: 'features',
+      title: 'Quels equipements sont disponibles ?',
+      subtitle: 'Selectionnez tout ce qui s applique.',
+      groups: ['features'],
+      icon: 'settings'
+    },
+    {
+      key: 'description',
+      title: 'Derniere touche',
+      subtitle: 'Ajoutez une description libre avant validation.',
+      groups: ['additionalInformation'],
+      icon: 'info'
     }
   ];
 
   currentStepIndex = 0;
-  furthestReachedStepIndex = 0;
 
   heatingOptions = [
     {key: 'GAS', label: 'Gaz'},
@@ -215,10 +239,7 @@ export class EditProperty implements OnInit {
   }
 
   get progressPercentage(): number {
-    if (this.steps.length <= 1) {
-      return 100;
-    }
-    return (this.currentStepIndex / (this.steps.length - 1)) * 100;
+    return ((this.currentStepIndex + 1) / this.steps.length) * 100;
   }
 
   get saveButtonLabel(): string {
@@ -230,23 +251,29 @@ export class EditProperty implements OnInit {
     return [address.label, address.zipCode, address.city].filter(Boolean).join(' - ');
   }
 
+  get currentStepIcon() {
+    switch (this.currentStep.icon) {
+      case 'home':
+        return this.HomeIcon;
+      case 'map':
+        return this.MapPinIcon;
+      case 'ruler':
+        return this.RulerIcon;
+      case 'tag':
+        return this.TagIcon;
+      case 'flame':
+        return this.FlameIcon;
+      case 'settings':
+        return this.SettingsIcon;
+      case 'check':
+        return this.CheckCircle2Icon;
+      default:
+        return this.InfoIcon;
+    }
+  }
+
   isLastStep(): boolean {
     return this.currentStepIndex === this.steps.length - 1;
-  }
-
-  isStepCompleted(index: number): boolean {
-    return this.getStepGroups(index).every((groupName) => this.propertyForm.get(groupName)?.valid);
-  }
-
-  isStepAccessible(index: number): boolean {
-    return index <= this.furthestReachedStepIndex;
-  }
-
-  selectStep(index: number): void {
-    if (!this.isStepAccessible(index)) {
-      return;
-    }
-    this.currentStepIndex = index;
   }
 
   previousStep(): void {
@@ -263,7 +290,6 @@ export class EditProperty implements OnInit {
     }
     if (!this.isLastStep()) {
       this.currentStepIndex++;
-      this.furthestReachedStepIndex = Math.max(this.furthestReachedStepIndex, this.currentStepIndex);
     }
   }
 
@@ -296,11 +322,10 @@ export class EditProperty implements OnInit {
 
     if (firstInvalidStep >= 0) {
       this.currentStepIndex = firstInvalidStep;
-      this.furthestReachedStepIndex = Math.max(this.furthestReachedStepIndex, firstInvalidStep);
     }
   }
 
-  private isCurrentStepValid(): boolean {
+  isCurrentStepValid(): boolean {
     return this.getStepGroups(this.currentStepIndex).every((groupName) => this.propertyForm.get(groupName)?.valid);
   }
 
@@ -343,13 +368,15 @@ export class EditProperty implements OnInit {
 
   private initForm(): void {
     this.propertyForm = this.fb.group({
-      general: this.fb.group({
+      generalIdentity: this.fb.group({
         name: [this.property?.name ?? '', Validators.required],
-        type: [this.property?.type ?? '', Validators.required],
+        type: [this.property?.type ?? '', Validators.required]
+      }),
+      generalLayout: this.fb.group({
         rooms: [this.property?.rooms ?? '', Validators.required],
         bedrooms: [this.property?.bedrooms ?? ''],
         bathrooms: [this.property?.bathrooms ?? ''],
-        toilets: [this.property?.toilets ?? ''],
+        toilets: [this.property?.toilets ?? '']
       }),
       address: this.fb.group({
         street: [this.property?.address?.label ?? '', Validators.required],
@@ -358,7 +385,7 @@ export class EditProperty implements OnInit {
         floor: [''],
         zipCode: [this.property?.address?.zipCode ?? '', Validators.required],
         city: [this.property?.address?.city ?? '', Validators.required],
-        state: [''],
+        state: [this.property?.address?.canton ?? ''],
         country: [this.property?.address?.country ?? 'CH']
       }),
       surface: this.fb.group({
@@ -423,12 +450,14 @@ export class EditProperty implements OnInit {
       label: labelParts.length ? labelParts.join(', ') : undefined,
       zipCode: this.propertyForm.get('address.zipCode')?.value,
       city: this.propertyForm.get('address.city')?.value,
-      country: 'CH'
+      canton: state || undefined,
+      country: this.propertyForm.get('address.country')?.value ?? 'CH'
     } as Address;
   }
 
   private buildPropertyFromForm(): Property {
-    const general = this.propertyForm.get('general')?.value;
+    const generalIdentity = this.propertyForm.get('generalIdentity')?.value;
+    const generalLayout = this.propertyForm.get('generalLayout')?.value;
     const surface = this.propertyForm.get('surface')?.value;
     const energy = this.propertyForm.get('energy')?.value;
     const features = this.propertyForm.get('features')?.value;
@@ -436,12 +465,12 @@ export class EditProperty implements OnInit {
 
     return {
       accountId: 'auth0|697b6378eaa7c759f984bbc1',
-      name: general.name,
-      type: general.type,
-      rooms: general.rooms,
-      bedrooms: general.bedrooms,
-      bathrooms: general.bathrooms,
-      toilets: general.toilets,
+      name: generalIdentity.name,
+      type: generalIdentity.type,
+      rooms: generalLayout.rooms,
+      bedrooms: generalLayout.bedrooms,
+      bathrooms: generalLayout.bathrooms,
+      toilets: generalLayout.toilets,
       address: this.buildAddressFromForm(),
       livingArea: surface.livingArea,
       totalArea: surface.totalArea,
@@ -459,3 +488,4 @@ export class EditProperty implements OnInit {
     } as Property;
   }
 }
+

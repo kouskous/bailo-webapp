@@ -1,27 +1,13 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-
-interface CheckoutSessionResponse {
-  sessionId: string;
-  url: string;
-}
-
-interface PortalSessionResponse {
-  url: string;
-}
-
-interface SubscriptionResponse {
-  id: string;
-  accountId: string;
-  providerCustomerId: string;
-  providerSubscriptionId: string;
-  priceId: string;
-  status: 'ACTIVE' | 'PAST_DUE' | 'CANCELED' | 'INCOMPLETE' | 'INCOMPLETE_EXPIRED' | 'TRIALING' | 'UNPAID' | 'PAUSED' | 'NONE' | 'UNKNOWN';
-  currentPeriodEnd: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import {
+  CheckoutSessionRequest,
+  CheckoutSessionResponse,
+  PortalSessionRequest,
+  PortalSessionResponse,
+  SubscriptionResponse
+} from '../model/subscription/subscription';
 
 @Injectable({
   providedIn: 'root'
@@ -33,18 +19,13 @@ export class SubscriptionService {
   }
 
   createCheckoutSession(accountId: string, successUrl: string, cancelUrl: string): Observable<CheckoutSessionResponse> {
-    return this.httpClient.post<CheckoutSessionResponse>(`${this.baseUrl}/checkout-session`, {
-      accountId,
-      successUrl,
-      cancelUrl
-    });
+    const request: CheckoutSessionRequest = {accountId, successUrl, cancelUrl};
+    return this.httpClient.post<CheckoutSessionResponse>(`${this.baseUrl}/checkout-session`, request);
   }
 
   createPortalSession(accountId: string, returnUrl: string): Observable<PortalSessionResponse> {
-    return this.httpClient.post<PortalSessionResponse>(`${this.baseUrl}/portal-session`, {
-      accountId,
-      returnUrl
-    });
+    const request: PortalSessionRequest = {accountId, returnUrl};
+    return this.httpClient.post<PortalSessionResponse>(`${this.baseUrl}/portal-session`, request);
   }
 
   getSubscription(accountId: string): Observable<SubscriptionResponse> {

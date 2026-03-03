@@ -1,8 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {ArrowLeftIcon, LucideAngularModule} from 'lucide-angular';
+import {
+  ArrowLeftIcon,
+  CalendarDaysIcon,
+  CheckCircle2Icon,
+  CircleDollarSignIcon,
+  LucideAngularModule,
+  UsersIcon
+} from 'lucide-angular';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {EditPropertySkeleton} from '../../properties/edit-property/edit-property-skeleton/edit-property-skeleton';
-import {FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {LeaseService} from '../../../service/lease.service';
 import {Contractor} from '../../../model/lease/contractor';
 import {Lease} from '../../../model/lease/lease';
@@ -10,6 +17,14 @@ import {Dropdown} from '../../layout/components/dropdown/dropdown';
 import {TextInput} from '../../layout/components/text-input/text-input';
 import {Checkbox} from '../../layout/components/checkbox/checkbox';
 import {combineLatest, take, timer} from 'rxjs';
+
+interface LeaseFormStep {
+  key: 'dates' | 'finance' | 'parties' | 'review';
+  title: string;
+  subtitle: string;
+  controls: string[];
+  icon: 'calendar' | 'money' | 'users' | 'check';
+}
 
 @Component({
   selector: 'app-edit-lease',
@@ -30,6 +45,38 @@ export class EditLease implements OnInit {
   loading = true;
   propertyId: string | null = null;
   leaseId: string | null = null;
+  currentStepIndex = 0;
+
+  readonly steps: LeaseFormStep[] = [
+    {
+      key: 'dates',
+      title: 'Quand commence et se termine le bail ?',
+      subtitle: 'Definissez la periode de location.',
+      controls: ['startDate', 'endDate', 'furnished'],
+      icon: 'calendar'
+    },
+    {
+      key: 'finance',
+      title: 'Quels sont les elements financiers ?',
+      subtitle: 'Loyer, devise, frequence et depot de garantie.',
+      controls: ['rentAmount', 'rentCurrency', 'paymentFrequency', 'securityDeposit'],
+      icon: 'money'
+    },
+    {
+      key: 'parties',
+      title: 'Qui est concerne par ce bail ?',
+      subtitle: 'Ajoutez les locataires et les proprietaires.',
+      controls: ['tenants', 'landlords'],
+      icon: 'users'
+    },
+    {
+      key: 'review',
+      title: 'Verification finale',
+      subtitle: 'Relisez puis validez la creation du bail.',
+      controls: [],
+      icon: 'check'
+    }
+  ];
 
   readonly currencyOptions = [
     {key: 'CHF', label: 'CHF'},
@@ -86,13 +133,71 @@ export class EditLease implements OnInit {
       });
   }
 
+  get currentStep(): LeaseFormStep {
+    return this.steps[this.currentStepIndex];
+  }
+
+  get progressPercentage(): number {
+    return ((this.currentStepIndex + 1) / this.steps.length) * 100;
+  }
+
+  get primaryButtonLabel(): string {
+    if (this.isLastStep()) {
+      return this.leaseId ? 'Enregistrer le bail' : 'Creer le bail';
+    }
+    return 'Continuer';
+  }
+
   get title(): string {
-    return this.leaseId ? 'Modifier les informations du bail' : 'Nouveau bail';
+    return this.leaseId ? 'Modifier le bail' : 'Nouveau bail';
+  }
+
+  get currentStepIcon() {
+    switch (this.currentStep.icon) {
+      case 'calendar':
+        return this.CalendarDaysIcon;
+      case 'money':
+        return this.CircleDollarSignIcon;
+      case 'users':
+        return this.UsersIcon;
+      default:
+        return this.CheckCircle2Icon;
+    }
+  }
+
+  isLastStep(): boolean {
+    return this.currentStepIndex === this.steps.length - 1;
+  }
+
+  isCurrentStepValid(): boolean {
+    return this.currentStep.controls.every((controlName) => this.leaseForm.get(controlName)?.valid);
+  }
+
+  previousStep(): void {
+    if (this.currentStepIndex === 0) {
+      return;
+    }
+    this.currentStepIndex--;
+  }
+
+  onPrimaryAction(): void {
+    if (!this.isLastStep() && !this.isCurrentStepValid()) {
+      this.markCurrentStepAsTouched();
+      return;
+    }
+
+    if (!this.isLastStep()) {
+      this.currentStepIndex++;
+      return;
+    }
+
+    this.save();
   }
 
   save(): void {
     if (!this.leaseForm.valid) {
       this.leaseForm.markAllAsTouched();
+      this.goToFirstInvalidStep();
       return;
     }
 
@@ -112,6 +217,35 @@ export class EditLease implements OnInit {
     this.leaseService.create(lease).pipe(take(1)).subscribe(() => {
       this.router.navigate(['/properties', this.propertyId]).then();
     });
+  }
+
+  private goToFirstInvalidStep(): void {
+    const firstInvalidStep = this.steps.findIndex((step) =>
+      step.controls.some((controlName) => this.leaseForm.get(controlName)?.invalid)
+    );
+
+    if (firstInvalidStep >= 0) {
+      this.currentStepIndex = firstInvalidStep;
+      return;
+    }
+
+    this.currentStepIndex = this.steps.length - 1;
+  }
+
+  private markCurrentStepAsTouched(): void {
+    this.currentStep.controls.forEach((controlName) => this.markControlTreeAsTouched(this.leaseForm.get(controlName)));
+  }
+
+  private markControlTreeAsTouched(control: AbstractControl | null): void {
+    if (!control) {
+      return;
+    }
+    control.markAsTouched();
+    const childControls = (control as FormGroup).controls;
+    if (!childControls) {
+      return;
+    }
+    Object.values(childControls).forEach((child) => this.markControlTreeAsTouched(child));
   }
 
   private initForm(): void {
@@ -220,4 +354,8 @@ export class EditLease implements OnInit {
   }
 
   protected readonly ArrowLeftIcon = ArrowLeftIcon;
+  protected readonly CalendarDaysIcon = CalendarDaysIcon;
+  protected readonly CircleDollarSignIcon = CircleDollarSignIcon;
+  protected readonly UsersIcon = UsersIcon;
+  protected readonly CheckCircle2Icon = CheckCircle2Icon;
 }

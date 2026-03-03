@@ -1,11 +1,9 @@
-export type LeaseDocumentType = 'LEASE_CONTRACT' | 'RENT_NOTICE' | 'RENT_RECEIPT' | 'OTHER';
-export type LeaseDocumentStatus = 'PENDING' | 'READY' | 'FAILED';
-
 export interface LeaseDocument {
   id?: string;
   leaseId?: string;
-  type?: LeaseDocumentType | string;
-  status?: LeaseDocumentStatus | string;
+  paymentScheduleId?: string;
+  type?: string;
+  status?: string;
   label?: string;
   period?: string;
   dueDate?: string;
