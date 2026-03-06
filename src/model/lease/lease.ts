@@ -11,9 +11,9 @@ export interface AncillaryChargeItem {
 
 export interface Lease {
   id?: string;
+  publicId?: string;
   propertyId?: string;
   tenants?: Contractor[];
-  landlords?: Contractor[];
   startDate?: string;
   endDate?: string;
   contractType?: string;

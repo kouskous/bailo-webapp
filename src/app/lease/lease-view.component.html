@@ -50,10 +50,10 @@
       </div>
       <div
         class="w-90 bg-white bg-opacity-30 backdrop-blur-md rounded-2xl p-4 shadow-lg text-gray-800 space-y-2  cursor-pointer"
-        [routerLink]="['/properties', propertyId, 'lease', lease?.id, 'contractors']">
+        [routerLink]="propertyId ? ['/properties', propertyId, 'edit'] : '/properties'">
         <h3 class="text-xl font-bold">Proprietaires</h3>
-        @if (lease?.landlords?.length) {
-          @for (landlord of lease?.landlords; track landlord.id ?? landlord.email) {
+        @if (property?.landlords?.length) {
+          @for (landlord of property?.landlords; track landlord.id ?? landlord.email) {
             <div class="border-t border-gray-300/40 pt-2">
               <div class="text-gray-800 font-medium">
                 {{ landlord.firstName }} {{ landlord.lastName }}
@@ -66,7 +66,7 @@
           }
         } @else {
           <div class="border-t border-gray-300/40 pt-2 text-xs text-gray-600">
-            Aucun proprietaire.
+            Aucun proprietaire (a definir sur la fiche bien).
           </div>
         }
         <h3 class="text-xl font-bold mt-8">Locataires</h3>

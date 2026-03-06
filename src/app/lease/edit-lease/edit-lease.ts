@@ -19,7 +19,7 @@ import {Checkbox} from '../../layout/components/checkbox/checkbox';
 import {combineLatest, take, timer} from 'rxjs';
 
 interface LeaseFormStep {
-  key: 'dates' | 'finance' | 'parties' | 'review';
+  key: 'dates' | 'finance' | 'tenants' | 'review';
   title: string;
   subtitle: string;
   controls: string[];
@@ -63,10 +63,10 @@ export class EditLease implements OnInit {
       icon: 'money'
     },
     {
-      key: 'parties',
-      title: 'Qui est concerne par ce bail ?',
-      subtitle: 'Ajoutez les locataires et les proprietaires.',
-      controls: ['tenants', 'landlords'],
+      key: 'tenants',
+      title: 'Qui occupe le logement ?',
+      subtitle: 'Ajoutez les locataires rattaches a ce bail.',
+      controls: ['tenants'],
       icon: 'users'
     },
     {
@@ -124,7 +124,6 @@ export class EditLease implements OnInit {
             securityDeposit: lease.securityDeposit ?? ''
           });
           this.setContractors('tenants', lease.tenants);
-          this.setContractors('landlords', lease.landlords);
           this.loading = false;
         },
         error: () => {
@@ -257,19 +256,13 @@ export class EditLease implements OnInit {
       rentCurrency: ['CHF', Validators.required],
       paymentFrequency: ['MONTHLY', Validators.required],
       securityDeposit: [''],
-      tenants: this.fb.array([]),
-      landlords: this.fb.array([])
+      tenants: this.fb.array([])
     });
     this.addTenant();
-    this.addLandlord();
   }
 
   get tenants(): FormArray<FormGroup> {
     return this.leaseForm.get('tenants') as FormArray<FormGroup>;
-  }
-
-  get landlords(): FormArray<FormGroup> {
-    return this.leaseForm.get('landlords') as FormArray<FormGroup>;
   }
 
   addTenant(): void {
@@ -282,16 +275,6 @@ export class EditLease implements OnInit {
     }
   }
 
-  addLandlord(): void {
-    this.landlords.push(this.createContractorGroup());
-  }
-
-  removeLandlord(index: number): void {
-    if (this.landlords.length > 1) {
-      this.landlords.removeAt(index);
-    }
-  }
-
   private createContractorGroup(contractor?: Contractor): FormGroup {
     return this.fb.group({
       firstName: [contractor?.firstName ?? ''],
@@ -301,8 +284,8 @@ export class EditLease implements OnInit {
     });
   }
 
-  private setContractors(kind: 'tenants' | 'landlords', contractors?: Contractor[]): void {
-    const target = kind === 'tenants' ? this.tenants : this.landlords;
+  private setContractors(kind: 'tenants', contractors?: Contractor[]): void {
+    const target = this.tenants;
     target.clear();
     if (!contractors?.length) {
       target.push(this.createContractorGroup());
@@ -328,8 +311,8 @@ export class EditLease implements OnInit {
     return new Date(`${dateInput}T00:00:00.000Z`).toISOString();
   }
 
-  private buildContractors(kind: 'tenants' | 'landlords'): Contractor[] {
-    const controls = kind === 'tenants' ? this.tenants.controls : this.landlords.controls;
+  private buildContractors(kind: 'tenants'): Contractor[] {
+    const controls = this.tenants.controls;
     return controls
       .map((control) => control.value as Contractor)
       .filter((contractor) => !!contractor.firstName || !!contractor.lastName || !!contractor.email || !!contractor.phoneNumber);
@@ -348,8 +331,7 @@ export class EditLease implements OnInit {
       paymentFrequency: this.leaseForm.get('paymentFrequency')?.value,
       securityDeposit: this.leaseForm.get('securityDeposit')?.value ? Number(this.leaseForm.get('securityDeposit')?.value) : 0,
       status: this.leaseId ? (this.lease?.status ?? 'DRAFT') : 'DRAFT',
-      tenants: this.buildContractors('tenants'),
-      landlords: this.buildContractors('landlords')
+      tenants: this.buildContractors('tenants')
     };
   }
 

@@ -9,11 +9,13 @@ import {
   MapPinIcon,
   RulerIcon,
   SettingsIcon,
-  TagIcon
+  TagIcon,
+  UsersIcon
 } from 'lucide-angular';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {
   AbstractControl,
+  FormArray,
   FormBuilder,
   FormGroup,
   FormsModule,
@@ -21,6 +23,7 @@ import {
   Validators
 } from '@angular/forms';
 import {Property} from '../../../model/property/property';
+import {Contractor} from '../../../model/lease/contractor';
 import {TextInput} from '../../layout/components/text-input/text-input';
 import {Dropdown} from '../../layout/components/dropdown/dropdown';
 import {Checkbox} from '../../layout/components/checkbox/checkbox';
@@ -36,7 +39,7 @@ interface FormStep {
   title: string;
   subtitle: string;
   groups: string[];
-  icon: 'home' | 'map' | 'ruler' | 'tag' | 'flame' | 'settings' | 'info' | 'check';
+  icon: 'home' | 'users' | 'map' | 'ruler' | 'tag' | 'flame' | 'settings' | 'info' | 'check';
 }
 
 @Component({
@@ -66,6 +69,13 @@ export class EditProperty implements OnInit {
       subtitle: 'Donnez-lui un nom clair et choisissez son type.',
       groups: ['generalIdentity'],
       icon: 'home'
+    },
+    {
+      key: 'owners',
+      title: 'Qui sont les proprietaires de ce bien ?',
+      subtitle: 'Ces informations seront reutilisees automatiquement dans les baux et documents.',
+      groups: ['landlords'],
+      icon: 'users'
     },
     {
       key: 'address',
@@ -209,6 +219,7 @@ export class EditProperty implements OnInit {
   protected readonly InfoIcon = InfoIcon;
   protected readonly HomeIcon = HomeIcon;
   protected readonly CheckCircle2Icon = CheckCircle2Icon;
+  protected readonly UsersIcon = UsersIcon;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -264,6 +275,8 @@ export class EditProperty implements OnInit {
         return this.HomeIcon;
       case 'map':
         return this.MapPinIcon;
+      case 'users':
+        return this.UsersIcon;
       case 'ruler':
         return this.RulerIcon;
       case 'tag':
@@ -373,12 +386,27 @@ export class EditProperty implements OnInit {
       .map((feature) => feature.label);
   }
 
+  get landlords(): FormArray<FormGroup> {
+    return this.propertyForm.get('landlords') as FormArray<FormGroup>;
+  }
+
+  addLandlord(): void {
+    this.landlords.push(this.createContractorGroup());
+  }
+
+  removeLandlord(index: number): void {
+    if (this.landlords.length > 1) {
+      this.landlords.removeAt(index);
+    }
+  }
+
   private initForm(): void {
     this.propertyForm = this.fb.group({
       generalIdentity: this.fb.group({
         name: [this.property?.name ?? '', Validators.required],
         type: [this.property?.type ?? '', Validators.required]
       }),
+      landlords: this.fb.array([]),
       generalLayout: this.fb.group({
         rooms: [this.property?.rooms ?? '', Validators.required],
         bedrooms: [this.property?.bedrooms ?? ''],
@@ -428,6 +456,8 @@ export class EditProperty implements OnInit {
         description: [this.property?.description ?? ''],
       })
     });
+
+    this.setLandlords(this.property?.landlords);
   }
 
   private create(): void {
@@ -462,6 +492,31 @@ export class EditProperty implements OnInit {
     } as Address;
   }
 
+  private createContractorGroup(contractor?: Contractor): FormGroup {
+    return this.fb.group({
+      firstName: [contractor?.firstName ?? ''],
+      lastName: [contractor?.lastName ?? ''],
+      email: [contractor?.email ?? ''],
+      phoneNumber: [contractor?.phoneNumber ?? '']
+    });
+  }
+
+  private setLandlords(landlords?: Contractor[]): void {
+    const target = this.landlords;
+    target.clear();
+    if (!landlords?.length) {
+      target.push(this.createContractorGroup());
+      return;
+    }
+    landlords.forEach((contractor) => target.push(this.createContractorGroup(contractor)));
+  }
+
+  private buildLandlords(): Contractor[] {
+    return this.landlords.controls
+      .map((control) => control.value as Contractor)
+      .filter((contractor) => !!contractor.firstName || !!contractor.lastName || !!contractor.email || !!contractor.phoneNumber);
+  }
+
   private buildPropertyFromForm(): Property {
     const generalIdentity = this.propertyForm.get('generalIdentity')?.value;
     const generalLayout = this.propertyForm.get('generalLayout')?.value;
@@ -474,6 +529,7 @@ export class EditProperty implements OnInit {
       accountId: this.accountId || this.property?.accountId || '',
       name: generalIdentity.name,
       type: generalIdentity.type,
+      landlords: this.buildLandlords(),
       rooms: generalLayout.rooms,
       bedrooms: generalLayout.bedrooms,
       bathrooms: generalLayout.bathrooms,

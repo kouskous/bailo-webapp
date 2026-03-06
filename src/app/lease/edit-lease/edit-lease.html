@@ -70,7 +70,7 @@
         </div>
       }
 
-      @if (currentStep.key === 'parties') {
+      @if (currentStep.key === 'tenants') {
         <div class="space-y-4">
           <div class="rounded-xl border border-slate-200 p-3">
             <div class="mb-3 flex items-center justify-between">
@@ -97,32 +97,6 @@
               }
             </div>
           </div>
-
-          <div class="rounded-xl border border-slate-200 p-3">
-            <div class="mb-3 flex items-center justify-between">
-              <h3 class="text-sm font-bold uppercase tracking-wide text-slate-700">Proprietaires</h3>
-              <button type="button" class="cursor-pointer rounded-lg border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700" (click)="addLandlord()">
-                Ajouter
-              </button>
-            </div>
-
-            <div formArrayName="landlords" class="space-y-3">
-              @for (landlord of landlords.controls; let i = $index; track i) {
-                <div [formGroupName]="i" class="rounded-lg border border-slate-200 p-3">
-                  <div class="mb-2 flex items-center justify-between">
-                    <span class="text-xs font-semibold text-slate-500">Proprietaire {{ i + 1 }}</span>
-                    <button type="button" class="cursor-pointer text-xs font-semibold text-red-600" (click)="removeLandlord(i)">Supprimer</button>
-                  </div>
-                  <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-                    <app-text-input [label]="'Prenom'" formControlName="firstName"></app-text-input>
-                    <app-text-input [label]="'Nom'" formControlName="lastName"></app-text-input>
-                    <app-text-input [label]="'Email'" [type]="'email'" formControlName="email"></app-text-input>
-                    <app-text-input [label]="'Telephone'" formControlName="phoneNumber"></app-text-input>
-                  </div>
-                </div>
-              }
-            </div>
-          </div>
         </div>
       }
 
@@ -133,7 +107,7 @@
           <p class="m-0 mt-1"><span class="font-semibold">Frequence:</span> {{ leaseForm.get('paymentFrequency')?.value || '-' }}</p>
           <p class="m-0 mt-1"><span class="font-semibold">Depot:</span> {{ leaseForm.get('securityDeposit')?.value || '0' }}</p>
           <p class="m-0 mt-1"><span class="font-semibold">Locataires:</span> {{ tenants.length }}</p>
-          <p class="m-0 mt-1"><span class="font-semibold">Proprietaires:</span> {{ landlords.length }}</p>
+          <p class="m-0 mt-1 text-slate-500"><span class="font-semibold">Proprietaires:</span> geres sur la fiche bien.</p>
         </div>
       }
     </section>

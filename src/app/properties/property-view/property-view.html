@@ -41,6 +41,14 @@
                     <span> - {{ property.address?.zipCode }} {{ property.address?.city }}</span>
                   }
                 </div>
+                <div class="text-sm text-slate-600 mt-1">
+                  Proprietaires:
+                  @if (property.landlords?.length) {
+                    {{ property.landlords?.length }}
+                  } @else {
+                    Non renseignes
+                  }
+                </div>
               </div>
             </div>
 

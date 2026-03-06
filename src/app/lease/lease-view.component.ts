@@ -15,8 +15,10 @@ import {DatePipe} from '@angular/common';
 import {LeaseViewSkeleton} from './lease-view-skeleton/lease-view-skeleton';
 import {combineLatest, take, timer} from 'rxjs';
 import {PropertyFeature} from '../../model/property/property';
+import {Property} from '../../model/property/property';
 import {LeaseStatusPipe} from '../../pipe/lease-status-pipe';
 import {PaymentFrequencyPipe} from '../../pipe/payment-frequency-pipe';
+import {PropertyService} from '../../service/property-service';
 
 @Component({
   selector: 'app-lease',
@@ -35,17 +37,32 @@ export class LeaseView implements OnInit {
   leaseId: string | null = null;
   propertyId: string | null = null;
   lease: Lease | undefined;
+  property: Property | undefined;
   loading = true;
   private readonly route = inject(ActivatedRoute);
   protected readonly RulerIcon = RulerIcon;
 
-  constructor(private readonly leaseRepository: LeaseService) {
+  constructor(
+    private readonly leaseRepository: LeaseService,
+    private readonly propertyRepository: PropertyService
+  ) {
   }
 
   ngOnInit(): void {
     this.propertyId = this.route.snapshot.paramMap.get('propertyId');
     this.leaseId = this.route.snapshot.paramMap.get('leaseId');
-    if (this.leaseId) {
+    if (this.leaseId && this.propertyId) {
+      combineLatest([
+        this.leaseRepository.findById(this.leaseId),
+        this.propertyRepository.findById(this.propertyId),
+        timer(500)
+      ]).pipe(take(1))
+        .subscribe(([lease, property]) => {
+          this.lease = lease;
+          this.property = property;
+          this.loading = false;
+        });
+    } else if (this.leaseId) {
       combineLatest([
         this.leaseRepository.findById(this.leaseId),
         timer(500)

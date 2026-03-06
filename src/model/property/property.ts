@@ -1,4 +1,5 @@
 import {Address} from '../shared/address';
+import {Contractor} from '../lease/contractor';
 
 export interface PropertyFeature {
   elevator?: boolean;
@@ -18,7 +19,9 @@ export interface PropertyFeature {
 export interface Property {
   accountId?: string;
   id?: string;
+  publicId?: string;
   name?: string;
+  landlords?: Contractor[];
   type?: string;
   address?: Address;
   yearOfConstruction?: number;
