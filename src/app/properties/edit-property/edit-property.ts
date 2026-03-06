@@ -33,6 +33,8 @@ import {PropertyService} from '../../../service/property-service';
 import {EditPropertySkeleton} from './edit-property-skeleton/edit-property-skeleton';
 import {combineLatest, take, timer} from 'rxjs';
 import {AuthService} from '@auth0/auth0-angular';
+import {AddressAutocompleteService} from '../../../service/address-autocomplete.service';
+import {AddressAutocompleteSuggestion} from '../../../model/shared/address-autocomplete';
 
 interface FormStep {
   key: string;
@@ -209,6 +211,13 @@ export class EditProperty implements OnInit {
   propertyId: string | null = null;
   loading = true;
   accountId = '';
+  addressSearch = '';
+  addressSuggestions: AddressAutocompleteSuggestion[] = [];
+  addressLookupLoading = false;
+  addressDetailsLoading = false;
+  addressLookupError = '';
+  showAddressForm = false;
+  private addressAutocompleteDebounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   protected readonly ArrowLeftIcon = ArrowLeftIcon;
   protected readonly MapPinIcon = MapPinIcon;
@@ -226,7 +235,8 @@ export class EditProperty implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly propertyRepository: PropertyService,
-    private readonly auth: AuthService
+    private readonly auth: AuthService,
+    private readonly addressAutocompleteService: AddressAutocompleteService
   ) {
     this.initForm();
   }
@@ -421,7 +431,9 @@ export class EditProperty implements OnInit {
         zipCode: [this.property?.address?.zipCode ?? '', Validators.required],
         city: [this.property?.address?.city ?? '', Validators.required],
         state: [this.property?.address?.canton ?? ''],
-        country: [this.property?.address?.country ?? 'CH']
+        country: [this.property?.address?.country ?? 'CH'],
+        latitude: [this.property?.address?.latitude ?? ''],
+        longitude: [this.property?.address?.longitude ?? '']
       }),
       surface: this.fb.group({
         livingArea: [this.property?.livingArea ?? '', Validators.required],
@@ -457,7 +469,82 @@ export class EditProperty implements OnInit {
       })
     });
 
+    this.addressSearch = this.property?.address?.label ?? '';
+    this.showAddressForm = !!(this.property?.address?.label || this.property?.address?.zipCode || this.property?.address?.city);
+    this.addressLookupError = '';
+    this.addressSuggestions = [];
     this.setLandlords(this.property?.landlords);
+  }
+
+  onAddressSearchInput(event: Event): void {
+    const input = (event.target as HTMLInputElement).value ?? '';
+    this.addressSearch = input;
+    this.addressLookupError = '';
+    this.addressSuggestions = [];
+    this.showAddressForm = false;
+    this.addressLookupLoading = false;
+
+    if (this.addressAutocompleteDebounceTimer) {
+      clearTimeout(this.addressAutocompleteDebounceTimer);
+      this.addressAutocompleteDebounceTimer = null;
+    }
+
+    const query = input.trim();
+    if (query.length < 3) {
+      return;
+    }
+
+    this.addressLookupLoading = true;
+    this.addressAutocompleteDebounceTimer = setTimeout(() => {
+      this.addressAutocompleteService.autocomplete(query).pipe(take(1)).subscribe({
+        next: (suggestions) => {
+          this.addressSuggestions = suggestions ?? [];
+          this.addressLookupLoading = false;
+        },
+        error: () => {
+          this.addressSuggestions = [];
+          this.addressLookupLoading = false;
+          this.addressLookupError = 'Impossible de recuperer les suggestions pour le moment.';
+        }
+      });
+    }, 300);
+  }
+
+  selectAddressSuggestion(suggestion: AddressAutocompleteSuggestion): void {
+    if (!suggestion?.placeId) {
+      return;
+    }
+    this.addressSearch = suggestion.description ?? '';
+    this.addressSuggestions = [];
+    this.addressLookupError = '';
+    this.addressDetailsLoading = true;
+
+    this.addressAutocompleteService.getDetails(suggestion.placeId).pipe(take(1)).subscribe({
+      next: (address) => {
+        this.patchAddressForm(address, suggestion);
+        this.addressDetailsLoading = false;
+        this.showAddressForm = true;
+      },
+      error: () => {
+        this.addressDetailsLoading = false;
+        this.addressLookupError = 'Adresse non resolue. Vous pouvez la saisir manuellement.';
+        this.showAddressForm = true;
+        this.patchAddressForm(undefined, suggestion);
+      }
+    });
+  }
+
+  enableManualAddressEntry(): void {
+    this.addressSuggestions = [];
+    this.addressLookupError = '';
+    this.showAddressForm = true;
+    if (!this.propertyForm.get('address.street')?.value && this.addressSearch.trim()) {
+      this.propertyForm.patchValue({
+        address: {
+          street: this.addressSearch.trim()
+        }
+      });
+    }
   }
 
   private create(): void {
@@ -488,8 +575,33 @@ export class EditProperty implements OnInit {
       zipCode: this.propertyForm.get('address.zipCode')?.value,
       city: this.propertyForm.get('address.city')?.value,
       canton: state || undefined,
-      country: this.propertyForm.get('address.country')?.value ?? 'CH'
+      country: this.propertyForm.get('address.country')?.value ?? 'CH',
+      latitude: this.toOptionalNumber(this.propertyForm.get('address.latitude')?.value),
+      longitude: this.toOptionalNumber(this.propertyForm.get('address.longitude')?.value)
     } as Address;
+  }
+
+  private patchAddressForm(address: Address | undefined, suggestion?: AddressAutocompleteSuggestion): void {
+    const fallbackStreet = suggestion?.mainText || suggestion?.description || this.addressSearch;
+    this.propertyForm.patchValue({
+      address: {
+        street: address?.label ?? fallbackStreet ?? '',
+        zipCode: address?.zipCode ?? '',
+        city: address?.city ?? '',
+        state: address?.canton ?? '',
+        country: address?.country ?? 'CH',
+        latitude: address?.latitude ?? '',
+        longitude: address?.longitude ?? ''
+      }
+    });
+  }
+
+  private toOptionalNumber(value: unknown): number | undefined {
+    if (value === null || value === undefined || value === '') {
+      return undefined;
+    }
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
   }
 
   private createContractorGroup(contractor?: Contractor): FormGroup {

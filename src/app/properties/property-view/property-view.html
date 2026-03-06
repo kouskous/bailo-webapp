@@ -41,6 +41,11 @@
                     <span> - {{ property.address?.zipCode }} {{ property.address?.city }}</span>
                   }
                 </div>
+                @if (property.address?.latitude != null && property.address?.longitude != null) {
+                  <div class="text-sm text-slate-600 mt-1">
+                    GPS: {{ property.address?.latitude }}, {{ property.address?.longitude }}
+                  </div>
+                }
                 <div class="text-sm text-slate-600 mt-1">
                   Proprietaires:
                   @if (property.landlords?.length) {
