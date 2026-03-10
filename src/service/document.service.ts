@@ -1,23 +1,26 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Page} from '../model/shared/page';
-import {LeaseDocument} from '../model/document/lease-document';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Page } from '../model/shared/page';
+import { LeaseDocument } from '../model/document/lease-document';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DocumentService {
   private readonly apiRoot = 'https://api.bailo.ch';
   private readonly basePath = '/document-management';
   private readonly documentsBaseUrl = `${this.apiRoot}${this.basePath}/documents`;
 
-  constructor(private readonly httpClient: HttpClient) {
-  }
+  constructor(private readonly httpClient: HttpClient) {}
 
-  findByLease(leaseId: string, page = 0, size = 20): Observable<Page<LeaseDocument>> {
+  findByLease(
+    leaseId: string,
+    page = 0,
+    size = 20,
+  ): Observable<Page<LeaseDocument>> {
     return this.httpClient.get<Page<LeaseDocument>>(
-      `${this.documentsBaseUrl}?leaseId=${encodeURIComponent(leaseId)}&page=${page}&size=${size}`
+      `${this.documentsBaseUrl}?leaseId=${encodeURIComponent(leaseId)}&page=${page}&size=${size}`,
     );
   }
 
@@ -34,15 +37,21 @@ export class DocumentService {
   }
 
   getLeasePreviewBlob(leaseId: string): Observable<Blob> {
-    return this.httpClient.get(this.getLeasePreviewUrl(leaseId), {responseType: 'blob'});
+    return this.httpClient.get(this.getLeasePreviewUrl(leaseId), {
+      responseType: 'blob',
+    });
   }
 
   getDocumentViewBlob(documentId: string): Observable<Blob> {
-    return this.httpClient.get(this.getViewUrl(documentId), {responseType: 'blob'});
+    return this.httpClient.get(this.getViewUrl(documentId), {
+      responseType: 'blob',
+    });
   }
 
   getDocumentDownloadBlob(documentId: string): Observable<Blob> {
-    return this.httpClient.get(this.getDownloadUrl(documentId), {responseType: 'blob'});
+    return this.httpClient.get(this.getDownloadUrl(documentId), {
+      responseType: 'blob',
+    });
   }
 
   openBlobInNewTab(blob: Blob): void {
@@ -62,4 +71,3 @@ export class DocumentService {
     setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
   }
 }
-

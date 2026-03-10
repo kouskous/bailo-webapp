@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {RouterLink} from '@angular/router';
-import {LucideAngularModule, PlusCircleIcon} from 'lucide-angular';
-import {PropertySkeletonCard} from './property-skeleton-card/property-skeleton-card';
-import {PropertyService} from '../../service/property-service';
-import {Property} from '../../model/property/property';
-import {AuthService} from '@auth0/auth0-angular';
-import {PropertyCard} from './property-card/property-card';
+import { Component, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { LucideAngularModule, PlusCircleIcon } from 'lucide-angular';
+import { PropertySkeletonCard } from './property-skeleton-card/property-skeleton-card';
+import { PropertyService } from '../../service/property-service';
+import { Property } from '../../model/property/property';
+import { AuthService } from '@auth0/auth0-angular';
+import { PropertyCard } from './property-card/property-card';
 
 @Component({
   selector: 'app-home',
@@ -14,28 +14,26 @@ import {PropertyCard} from './property-card/property-card';
     RouterLink,
     LucideAngularModule,
     PropertySkeletonCard,
-    PropertyCard
+    PropertyCard,
   ],
   templateUrl: './properties.component.html',
-  styleUrls: ['./properties.component.scss']
+  styleUrls: ['./properties.component.scss'],
 })
 export class Properties implements OnInit {
-
-
   properties: Property[] = [];
   loading = true;
 
-  constructor(private readonly propertyRepository: PropertyService,
-              private readonly auth: AuthService) {
-  }
-
+  constructor(
+    private readonly propertyRepository: PropertyService,
+    private readonly auth: AuthService,
+  ) {}
 
   ngOnInit(): void {
-    this.auth.user$.subscribe(user => {
+    this.auth.user$.subscribe((user) => {
       if (user) {
-        this.loadProperties(user.sub?? '');
+        this.loadProperties(user.sub ?? '');
       }
-    })
+    });
   }
 
   private loadProperties(accountId: string): void {

@@ -1,20 +1,30 @@
 <div class="min-h-[calc(100vh-4rem)] bg-slate-50 px-4 py-8 md:px-8">
   <div class="mx-auto flex max-w-3xl flex-col gap-6">
     <div class="rounded-3xl bg-white p-6 shadow-sm md:p-8">
-      <div class="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+      <div
+        class="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700"
+      >
         <lucide-icon [img]="CheckCircle2Icon" class="h-7 w-7"></lucide-icon>
       </div>
 
-      <p class="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Paiement validé</p>
-      <h1 class="text-2xl font-extrabold text-slate-900 md:text-3xl">Votre abonnement Bailo est actif</h1>
+      <p
+        class="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-emerald-700"
+      >
+        Paiement validé
+      </p>
+      <h1 class="text-2xl font-extrabold text-slate-900 md:text-3xl">
+        Votre abonnement Bailo est actif
+      </h1>
       <p class="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600">
-        Merci pour votre confiance. Vous pouvez maintenant revenir à l'application et gérer vos biens sans interruption.
+        Merci pour votre confiance. Vous pouvez maintenant revenir à
+        l'application et gérer vos biens sans interruption.
       </p>
 
       <div class="mt-6 flex flex-wrap gap-2">
         <a
           class="inline-flex items-center rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 transition"
-          [routerLink]="['/properties']">
+          [routerLink]="['/properties']"
+        >
           Retour à l'application
         </a>
       </div>

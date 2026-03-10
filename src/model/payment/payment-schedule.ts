@@ -11,4 +11,3 @@ export interface PaymentSchedule {
   createdAt?: string;
   updatedAt?: string;
 }
-

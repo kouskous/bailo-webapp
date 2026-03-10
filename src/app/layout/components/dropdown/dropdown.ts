@@ -1,21 +1,17 @@
-import {Component, forwardRef, Injector, Input, OnInit} from '@angular/core';
+import { Component, forwardRef, Injector, Input, OnInit } from '@angular/core';
 import {
   AbstractControl,
   ControlValueAccessor,
   FormsModule,
   NG_VALUE_ACCESSOR,
   NgControl,
-  ReactiveFormsModule
+  ReactiveFormsModule,
 } from '@angular/forms';
-import {DropdownOption} from './dropdown-option';
-
+import { DropdownOption } from './dropdown-option';
 
 @Component({
   selector: 'app-dropdown',
-  imports: [
-    ReactiveFormsModule,
-    FormsModule
-  ],
+  imports: [ReactiveFormsModule, FormsModule],
   templateUrl: './dropdown.html',
   styleUrl: './dropdown.scss',
   providers: [
@@ -37,22 +33,17 @@ export class Dropdown implements ControlValueAccessor, OnInit {
   private ngControl?: NgControl | null;
   errorMessage: string = '';
 
-  constructor(private readonly injector: Injector) {
-  }
-
+  constructor(private readonly injector: Injector) {}
 
   ngOnInit(): void {
-
-    this.ngControl = this.injector.get(NgControl, null, {self: true});
+    this.ngControl = this.injector.get(NgControl, null, { self: true });
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
     }
   }
 
-  onChange = (value: any) => {
-  };
-  onTouched = () => {
-  };
+  onChange = (value: any) => {};
+  onTouched = () => {};
 
   writeValue(value: any): void {
     this.value = value;
@@ -88,9 +79,13 @@ export class Dropdown implements ControlValueAccessor, OnInit {
 
   private setErrorMessage() {
     this.errorMessage = '';
-    if (this.ngControl?.errors){
-      Object.keys(this.ngControl?.errors).forEach((errorKey) =>
-        this.errorMessage = this.getMessage(errorKey, this.ngControl?.errors?.[errorKey])
+    if (this.ngControl?.errors) {
+      Object.keys(this.ngControl?.errors).forEach(
+        (errorKey) =>
+          (this.errorMessage = this.getMessage(
+            errorKey,
+            this.ngControl?.errors?.[errorKey],
+          )),
       );
     }
   }
@@ -108,5 +103,4 @@ export class Dropdown implements ControlValueAccessor, OnInit {
 
     return messages[type]?.(value) || 'Champ invalide.';
   }
-
 }

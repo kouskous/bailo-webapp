@@ -1,63 +1,83 @@
 @if (lease) {
-  <div class="rounded-2xl border border-slate-200 bg-white p-4 md:p-6 shadow-sm">
-    <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-      <div>
-        <div class="text-lg font-bold text-slate-900">
-          {{ getTenantNames() }}
-        </div>
-        <div class="text-sm text-slate-600">
-          {{ lease.startDate | date:'dd MMM yyyy' }} - {{ lease.endDate | date:'dd MMM yyyy' }}
-        </div>
-        <div class="text-sm text-slate-600 mt-1">
-          Loyer : <span class="font-medium">{{ lease.rentAmount }} {{ lease.rentCurrency }}</span>
-        </div>
-        <div class="text-sm text-slate-600">
-          Fréquence : <span class="font-medium">{{ lease.paymentFrequency | paymentFrequency }}</span>
-        </div>
+<div class="rounded-2xl border border-slate-200 bg-white p-4 md:p-6 shadow-sm">
+  <div
+    class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between"
+  >
+    <div>
+      <div class="text-lg font-bold text-slate-900">{{ getTenantNames() }}</div>
+      <div class="text-sm text-slate-600">
+        {{ lease.startDate | date:'dd MMM yyyy' }} - {{ lease.endDate | date:'dd
+        MMM yyyy' }}
       </div>
-      <span class="self-start rounded-full px-3 py-1 text-sm font-semibold whitespace-nowrap"
-            [ngClass]="{
+      <div class="text-sm text-slate-600 mt-1">
+        Loyer :
+        <span class="font-medium"
+          >{{ lease.rentAmount }} {{ lease.rentCurrency }}</span
+        >
+      </div>
+      <div class="text-sm text-slate-600">
+        Fréquence :
+        <span class="font-medium"
+          >{{ lease.paymentFrequency | paymentFrequency }}</span
+        >
+      </div>
+    </div>
+    <span
+      class="self-start rounded-full px-3 py-1 text-sm font-semibold whitespace-nowrap"
+      [ngClass]="{
               'bg-green-100 text-green-700': lease.status === 'ACTIVE',
               'bg-slate-100 text-slate-700': lease.status !== 'ACTIVE'
-            }">
-        {{ lease.status | leaseStatus }}
-      </span>
-    </div>
+            }"
+    >
+      {{ lease.status | leaseStatus }}
+    </span>
+  </div>
 
-    @if (canPreview || canDownload) {
-      <div class="mt-5 rounded-xl border border-slate-200 bg-slate-50/80 p-3 md:p-4">
-        <div class="mb-3 flex items-center justify-between gap-3">
-          <div>
-            <div class="text-xs font-bold uppercase tracking-wide text-slate-500">Documents du bail</div>
-            <div class="text-sm text-slate-700">Accédez rapidement au document contractuel.</div>
-          </div>
+  @if (canPreview || canDownload) {
+  <div
+    class="mt-5 rounded-xl border border-slate-200 bg-slate-50/80 p-3 md:p-4"
+  >
+    <div class="mb-3 flex items-center justify-between gap-3">
+      <div>
+        <div class="text-xs font-bold uppercase tracking-wide text-slate-500">
+          Documents du bail
         </div>
-        <div class="flex flex-wrap gap-2">
-          @if (canPreview) {
-            <button
-              type="button"
-              class="cursor-pointer inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition"
-              (click)="onPreview()">
-              <lucide-icon [img]="FileTextIcon" class="w-4 h-4"></lucide-icon>
-              Visualiser le bail
-            </button>
-          }
-          @if (canDownload) {
-            <button
-              type="button"
-              class="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 transition"
-              (click)="onDownload()">
-              <lucide-icon [img]="DownloadIcon" class="w-4 h-4"></lucide-icon>
-              Télécharger le bail
-            </button>
-          }
+        <div class="text-sm text-slate-700">
+          Accédez rapidement au document contractuel.
         </div>
       </div>
-    }
+    </div>
+    <div class="flex flex-wrap gap-2">
+      @if (canPreview) {
+      <button
+        type="button"
+        class="cursor-pointer inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-50 transition"
+        (click)="onPreview()"
+      >
+        <lucide-icon [img]="FileTextIcon" class="w-4 h-4"></lucide-icon>
+        Visualiser le bail
+      </button>
+      } @if (canDownload) {
+      <button
+        type="button"
+        class="cursor-pointer inline-flex items-center gap-2 rounded-xl bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700 transition"
+        (click)="onDownload()"
+      >
+        <lucide-icon [img]="DownloadIcon" class="w-4 h-4"></lucide-icon>
+        Télécharger le bail
+      </button>
+      }
+    </div>
   </div>
+  }
+</div>
 } @else {
-  <div class="rounded-2xl border border-slate-200 bg-white p-4 md:p-6 shadow-sm text-slate-800">
-    <div class="text-lg font-bold">Aucun bail sélectionné</div>
-    <div class="text-sm text-slate-600 mt-1">Sélectionnez un bail pour voir le détail.</div>
+<div
+  class="rounded-2xl border border-slate-200 bg-white p-4 md:p-6 shadow-sm text-slate-800"
+>
+  <div class="text-lg font-bold">Aucun bail sélectionné</div>
+  <div class="text-sm text-slate-600 mt-1">
+    Sélectionnez un bail pour voir le détail.
   </div>
+</div>
 }

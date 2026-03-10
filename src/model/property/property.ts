@@ -1,5 +1,5 @@
-import {Address} from '../shared/address';
-import {Contractor} from '../lease/contractor';
+import { Address } from '../shared/address';
+import { Contractor } from '../lease/contractor';
 
 export interface PropertyFeature {
   elevator?: boolean;

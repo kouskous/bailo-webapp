@@ -1,22 +1,22 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {
   AlertCircleIcon,
   Banknote,
   CalendarIcon,
   CreditCardIcon,
   FileTextIcon,
-  LucideAngularModule
+  LucideAngularModule,
 } from 'lucide-angular';
-import {PaymentSchedule} from '../../../../model/payment/payment-schedule';
-import {DecimalPipe, NgClass} from '@angular/common';
-import {Payment} from '../../../../model/payment/payment';
-import {PaymentService} from '../../../../service/payment.service';
-import {take} from 'rxjs';
-import {SchedulesList} from './schedules-list/schedules-list';
-import {PaymentsList} from './payments-list/payments-list';
-import {LeaseDocument} from '../../../../model/document/lease-document';
-import {DocumentService} from '../../../../service/document.service';
-import {DocumentsList} from './documents-list/documents-list';
+import { PaymentSchedule } from '../../../../model/payment/payment-schedule';
+import { DecimalPipe, NgClass } from '@angular/common';
+import { Payment } from '../../../../model/payment/payment';
+import { PaymentService } from '../../../../service/payment.service';
+import { take } from 'rxjs';
+import { SchedulesList } from './schedules-list/schedules-list';
+import { PaymentsList } from './payments-list/payments-list';
+import { LeaseDocument } from '../../../../model/document/lease-document';
+import { DocumentService } from '../../../../service/document.service';
+import { DocumentsList } from './documents-list/documents-list';
 
 @Component({
   selector: 'app-payments-schedule',
@@ -26,10 +26,10 @@ import {DocumentsList} from './documents-list/documents-list';
     NgClass,
     SchedulesList,
     PaymentsList,
-    DocumentsList
+    DocumentsList,
   ],
   templateUrl: './payments-schedule.html',
-  styleUrl: './payments-schedule.scss'
+  styleUrl: './payments-schedule.scss',
 })
 export class PaymentsSchedule implements OnChanges {
   @Input()
@@ -46,9 +46,8 @@ export class PaymentsSchedule implements OnChanges {
 
   constructor(
     private readonly paymentService: PaymentService,
-    private readonly documentService: DocumentService
-  ) {
-  }
+    private readonly documentService: DocumentService,
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['leaseId']) {
@@ -62,16 +61,23 @@ export class PaymentsSchedule implements OnChanges {
   }
 
   get totalScheduledAmount(): number {
-    return this.schedules.reduce((sum, schedule) => sum + this.asNumber(schedule.amount), 0);
+    return this.schedules.reduce(
+      (sum, schedule) => sum + this.asNumber(schedule.amount),
+      0,
+    );
   }
 
   get totalPaidAmount(): number {
-    return this.payments.reduce((sum, payment) => sum + this.asNumber(payment.amount), 0);
+    return this.payments.reduce(
+      (sum, payment) => sum + this.asNumber(payment.amount),
+      0,
+    );
   }
 
   get totalOutstandingAmount(): number {
     const outstanding = this.schedules.reduce((sum, schedule) => {
-      const remaining = this.asNumber(schedule.amount) - this.asNumber(schedule.paidAmount);
+      const remaining =
+        this.asNumber(schedule.amount) - this.asNumber(schedule.paidAmount);
       return sum + (remaining > 0 ? remaining : 0);
     }, 0);
     return Number(outstanding.toFixed(2));
@@ -93,31 +99,41 @@ export class PaymentsSchedule implements OnChanges {
   }
 
   createPayment(payment: Payment): void {
-    if (!this.leaseId || !payment.paymentDate || !payment.amount || payment.amount <= 0) {
+    if (
+      !this.leaseId ||
+      !payment.paymentDate ||
+      !payment.amount ||
+      payment.amount <= 0
+    ) {
       return;
     }
 
     this.creatingPayment = true;
-    this.paymentService.createPayment({
-      leaseId: this.leaseId,
-      paymentDate: new Date(`${payment.paymentDate}T00:00:00.000Z`).toISOString(),
-      amount: Number(payment.amount),
-      currency: payment.currency ?? 'CHF',
-      method: payment.method ?? 'BANK_TRANSFER',
-      note: payment.note ?? ''
-    }).pipe(take(1)).subscribe({
-      next: () => {
-        this.loadPayments();
-        this.loadSchedules();
-        this.loadDocuments();
-      },
-      error: () => {
-        this.creatingPayment = false;
-      },
-      complete: () => {
-        this.creatingPayment = false;
-      }
-    });
+    this.paymentService
+      .createPayment({
+        leaseId: this.leaseId,
+        paymentDate: new Date(
+          `${payment.paymentDate}T00:00:00.000Z`,
+        ).toISOString(),
+        amount: Number(payment.amount),
+        currency: payment.currency ?? 'CHF',
+        method: payment.method ?? 'BANK_TRANSFER',
+        note: payment.note ?? '',
+      })
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.loadPayments();
+          this.loadSchedules();
+          this.loadDocuments();
+        },
+        error: () => {
+          this.creatingPayment = false;
+        },
+        complete: () => {
+          this.creatingPayment = false;
+        },
+      });
   }
 
   private loadPayments(): void {
@@ -127,18 +143,21 @@ export class PaymentsSchedule implements OnChanges {
     }
 
     this.loadingPayments = true;
-    this.paymentService.findPaymentsByLease(this.leaseId, 0, 100).pipe(take(1)).subscribe({
-      next: (page) => {
-        this.payments = page.content ?? [];
-      },
-      error: () => {
-        this.payments = [];
-        this.loadingPayments = false;
-      },
-      complete: () => {
-        this.loadingPayments = false;
-      }
-    });
+    this.paymentService
+      .findPaymentsByLease(this.leaseId, 0, 100)
+      .pipe(take(1))
+      .subscribe({
+        next: (page) => {
+          this.payments = page.content ?? [];
+        },
+        error: () => {
+          this.payments = [];
+          this.loadingPayments = false;
+        },
+        complete: () => {
+          this.loadingPayments = false;
+        },
+      });
   }
 
   private loadSchedules(): void {
@@ -147,14 +166,17 @@ export class PaymentsSchedule implements OnChanges {
       return;
     }
 
-    this.paymentService.findSchedulesByLease(this.leaseId, 0, 100).pipe(take(1)).subscribe({
-      next: (page) => {
-        this.schedules = page.content ?? [];
-      },
-      error: () => {
-        this.schedules = [];
-      }
-    });
+    this.paymentService
+      .findSchedulesByLease(this.leaseId, 0, 100)
+      .pipe(take(1))
+      .subscribe({
+        next: (page) => {
+          this.schedules = page.content ?? [];
+        },
+        error: () => {
+          this.schedules = [];
+        },
+      });
   }
 
   private loadDocuments(): void {
@@ -164,18 +186,21 @@ export class PaymentsSchedule implements OnChanges {
     }
 
     this.loadingDocuments = true;
-    this.documentService.findByLease(this.leaseId, 0, 100).pipe(take(1)).subscribe({
-      next: (page) => {
-        this.documents = page.content ?? [];
-      },
-      error: () => {
-        this.documents = [];
-        this.loadingDocuments = false;
-      },
-      complete: () => {
-        this.loadingDocuments = false;
-      }
-    });
+    this.documentService
+      .findByLease(this.leaseId, 0, 100)
+      .pipe(take(1))
+      .subscribe({
+        next: (page) => {
+          this.documents = page.content ?? [];
+        },
+        error: () => {
+          this.documents = [];
+          this.loadingDocuments = false;
+        },
+        complete: () => {
+          this.loadingDocuments = false;
+        },
+      });
   }
 
   private asNumber(value: number | undefined): number {

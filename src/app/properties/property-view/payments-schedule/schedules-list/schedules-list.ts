@@ -1,15 +1,17 @@
-import {Component, Input} from '@angular/core';
-import {PaymentSchedule} from '../../../../../model/payment/payment-schedule';
-import {DatePipe} from '@angular/common';
-import {AlertCircleIcon, CheckCircleIcon, LucideAngularModule, XCircleIcon} from 'lucide-angular';
+import { Component, Input } from '@angular/core';
+import { PaymentSchedule } from '../../../../../model/payment/payment-schedule';
+import { DatePipe } from '@angular/common';
+import {
+  AlertCircleIcon,
+  CheckCircleIcon,
+  LucideAngularModule,
+  XCircleIcon,
+} from 'lucide-angular';
 
 @Component({
   selector: 'app-schedules-list',
-  imports: [
-    LucideAngularModule,
-    DatePipe
-  ],
-  templateUrl: './schedules-list.html'
+  imports: [LucideAngularModule, DatePipe],
+  templateUrl: './schedules-list.html',
 })
 export class SchedulesList {
   @Input()

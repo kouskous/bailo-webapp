@@ -1,10 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'heatingType'
+  name: 'heatingType',
 })
 export class HeatingTypePipe implements PipeTransform {
-
   private readonly translations: { [key: string]: string } = {
     ELECTRIC: 'Électrique',
     GAS: 'Gaz',
@@ -13,12 +12,11 @@ export class HeatingTypePipe implements PipeTransform {
     DISTRICT: 'Chauffage urbain',
     WOOD: 'Bois',
     SOLAR: 'Solaire',
-    OTHER: 'Autre'
+    OTHER: 'Autre',
   };
 
   transform(value: string | undefined): string {
     if (!value) return '';
     return this.translations[value] || value;
   }
-
 }

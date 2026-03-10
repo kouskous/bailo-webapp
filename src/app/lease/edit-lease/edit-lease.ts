@@ -1,22 +1,29 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   ArrowLeftIcon,
   CalendarDaysIcon,
   CheckCircle2Icon,
   CircleDollarSignIcon,
   LucideAngularModule,
-  UsersIcon
+  UsersIcon,
 } from 'lucide-angular';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
-import {EditPropertySkeleton} from '../../properties/edit-property/edit-property-skeleton/edit-property-skeleton';
-import {AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {LeaseService} from '../../../service/lease.service';
-import {Contractor} from '../../../model/lease/contractor';
-import {Lease} from '../../../model/lease/lease';
-import {Dropdown} from '../../layout/components/dropdown/dropdown';
-import {TextInput} from '../../layout/components/text-input/text-input';
-import {Checkbox} from '../../layout/components/checkbox/checkbox';
-import {combineLatest, take, timer} from 'rxjs';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { EditPropertySkeleton } from '../../properties/edit-property/edit-property-skeleton/edit-property-skeleton';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { LeaseService } from '../../../service/lease.service';
+import { Contractor } from '../../../model/lease/contractor';
+import { Lease } from '../../../model/lease/lease';
+import { Dropdown } from '../../layout/components/dropdown/dropdown';
+import { TextInput } from '../../layout/components/text-input/text-input';
+import { Checkbox } from '../../layout/components/checkbox/checkbox';
+import { combineLatest, take, timer } from 'rxjs';
 
 interface LeaseFormStep {
   key: 'dates' | 'finance' | 'tenants' | 'review';
@@ -35,9 +42,9 @@ interface LeaseFormStep {
     ReactiveFormsModule,
     Dropdown,
     TextInput,
-    Checkbox
+    Checkbox,
   ],
-  templateUrl: './edit-lease.html'
+  templateUrl: './edit-lease.html',
 })
 export class EditLease implements OnInit {
   leaseForm!: FormGroup;
@@ -53,47 +60,52 @@ export class EditLease implements OnInit {
       title: 'Quand commence et se termine le bail ?',
       subtitle: 'Definissez la periode de location.',
       controls: ['startDate', 'endDate', 'furnished'],
-      icon: 'calendar'
+      icon: 'calendar',
     },
     {
       key: 'finance',
       title: 'Quels sont les elements financiers ?',
       subtitle: 'Loyer, devise, frequence et depot de garantie.',
-      controls: ['rentAmount', 'rentCurrency', 'paymentFrequency', 'securityDeposit'],
-      icon: 'money'
+      controls: [
+        'rentAmount',
+        'rentCurrency',
+        'paymentFrequency',
+        'securityDeposit',
+      ],
+      icon: 'money',
     },
     {
       key: 'tenants',
       title: 'Qui occupe le logement ?',
       subtitle: 'Ajoutez les locataires rattaches a ce bail.',
       controls: ['tenants'],
-      icon: 'users'
+      icon: 'users',
     },
     {
       key: 'review',
       title: 'Verification finale',
       subtitle: 'Relisez puis validez la creation du bail.',
       controls: [],
-      icon: 'check'
-    }
+      icon: 'check',
+    },
   ];
 
   readonly currencyOptions = [
-    {key: 'CHF', label: 'CHF'},
-    {key: 'EUR', label: 'EUR'}
+    { key: 'CHF', label: 'CHF' },
+    { key: 'EUR', label: 'EUR' },
   ];
 
   readonly paymentFrequencyOptions = [
-    {key: 'MONTHLY', label: 'Mensuel'},
-    {key: 'QUARTERLY', label: 'Trimestriel'},
-    {key: 'YEARLY', label: 'Annuel'}
+    { key: 'MONTHLY', label: 'Mensuel' },
+    { key: 'QUARTERLY', label: 'Trimestriel' },
+    { key: 'YEARLY', label: 'Annuel' },
   ];
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly fb: FormBuilder,
-    private readonly leaseService: LeaseService
+    private readonly leaseService: LeaseService,
   ) {
     this.initForm();
   }
@@ -107,10 +119,8 @@ export class EditLease implements OnInit {
       return;
     }
 
-    combineLatest([
-      this.leaseService.findById(this.leaseId),
-      timer(350)
-    ]).pipe(take(1))
+    combineLatest([this.leaseService.findById(this.leaseId), timer(350)])
+      .pipe(take(1))
       .subscribe({
         next: ([lease]) => {
           this.lease = lease;
@@ -121,14 +131,14 @@ export class EditLease implements OnInit {
             rentAmount: lease.rentAmount ?? '',
             rentCurrency: lease.rentCurrency ?? 'CHF',
             paymentFrequency: lease.paymentFrequency ?? 'MONTHLY',
-            securityDeposit: lease.securityDeposit ?? ''
+            securityDeposit: lease.securityDeposit ?? '',
           });
           this.setContractors('tenants', lease.tenants);
           this.loading = false;
         },
         error: () => {
           this.loading = false;
-        }
+        },
       });
   }
 
@@ -169,7 +179,9 @@ export class EditLease implements OnInit {
   }
 
   isCurrentStepValid(): boolean {
-    return this.currentStep.controls.every((controlName) => this.leaseForm.get(controlName)?.valid);
+    return this.currentStep.controls.every(
+      (controlName) => this.leaseForm.get(controlName)?.valid,
+    );
   }
 
   previousStep(): void {
@@ -207,20 +219,28 @@ export class EditLease implements OnInit {
     const lease = this.buildLeaseFromForm();
     if (this.leaseId) {
       lease.id = this.leaseId;
-      this.leaseService.update(lease).pipe(take(1)).subscribe(() => {
-        this.router.navigate(['/properties', this.propertyId]).then();
-      });
+      this.leaseService
+        .update(lease)
+        .pipe(take(1))
+        .subscribe(() => {
+          this.router.navigate(['/properties', this.propertyId]).then();
+        });
       return;
     }
 
-    this.leaseService.create(lease).pipe(take(1)).subscribe(() => {
-      this.router.navigate(['/properties', this.propertyId]).then();
-    });
+    this.leaseService
+      .create(lease)
+      .pipe(take(1))
+      .subscribe(() => {
+        this.router.navigate(['/properties', this.propertyId]).then();
+      });
   }
 
   private goToFirstInvalidStep(): void {
     const firstInvalidStep = this.steps.findIndex((step) =>
-      step.controls.some((controlName) => this.leaseForm.get(controlName)?.invalid)
+      step.controls.some(
+        (controlName) => this.leaseForm.get(controlName)?.invalid,
+      ),
     );
 
     if (firstInvalidStep >= 0) {
@@ -232,7 +252,9 @@ export class EditLease implements OnInit {
   }
 
   private markCurrentStepAsTouched(): void {
-    this.currentStep.controls.forEach((controlName) => this.markControlTreeAsTouched(this.leaseForm.get(controlName)));
+    this.currentStep.controls.forEach((controlName) =>
+      this.markControlTreeAsTouched(this.leaseForm.get(controlName)),
+    );
   }
 
   private markControlTreeAsTouched(control: AbstractControl | null): void {
@@ -244,7 +266,9 @@ export class EditLease implements OnInit {
     if (!childControls) {
       return;
     }
-    Object.values(childControls).forEach((child) => this.markControlTreeAsTouched(child));
+    Object.values(childControls).forEach((child) =>
+      this.markControlTreeAsTouched(child),
+    );
   }
 
   private initForm(): void {
@@ -256,7 +280,7 @@ export class EditLease implements OnInit {
       rentCurrency: ['CHF', Validators.required],
       paymentFrequency: ['MONTHLY', Validators.required],
       securityDeposit: [''],
-      tenants: this.fb.array([])
+      tenants: this.fb.array([]),
     });
     this.addTenant();
   }
@@ -280,7 +304,7 @@ export class EditLease implements OnInit {
       firstName: [contractor?.firstName ?? ''],
       lastName: [contractor?.lastName ?? ''],
       email: [contractor?.email ?? ''],
-      phoneNumber: [contractor?.phoneNumber ?? '']
+      phoneNumber: [contractor?.phoneNumber ?? ''],
     });
   }
 
@@ -291,7 +315,9 @@ export class EditLease implements OnInit {
       target.push(this.createContractorGroup());
       return;
     }
-    contractors.forEach((contractor) => target.push(this.createContractorGroup(contractor)));
+    contractors.forEach((contractor) =>
+      target.push(this.createContractorGroup(contractor)),
+    );
   }
 
   private toDateInputValue(dateTime?: string): string {
@@ -315,7 +341,13 @@ export class EditLease implements OnInit {
     const controls = this.tenants.controls;
     return controls
       .map((control) => control.value as Contractor)
-      .filter((contractor) => !!contractor.firstName || !!contractor.lastName || !!contractor.email || !!contractor.phoneNumber);
+      .filter(
+        (contractor) =>
+          !!contractor.firstName ||
+          !!contractor.lastName ||
+          !!contractor.email ||
+          !!contractor.phoneNumber,
+      );
   }
 
   private buildLeaseFromForm(): Lease {
@@ -329,9 +361,11 @@ export class EditLease implements OnInit {
       rentAmount: Number(this.leaseForm.get('rentAmount')?.value),
       rentCurrency: this.leaseForm.get('rentCurrency')?.value,
       paymentFrequency: this.leaseForm.get('paymentFrequency')?.value,
-      securityDeposit: this.leaseForm.get('securityDeposit')?.value ? Number(this.leaseForm.get('securityDeposit')?.value) : 0,
+      securityDeposit: this.leaseForm.get('securityDeposit')?.value
+        ? Number(this.leaseForm.get('securityDeposit')?.value)
+        : 0,
       status: this.leaseId ? (this.lease?.status ?? 'DRAFT') : 'DRAFT',
-      tenants: this.buildContractors('tenants')
+      tenants: this.buildContractors('tenants'),
     };
   }
 

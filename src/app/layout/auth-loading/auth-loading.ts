@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-auth-loading',
   imports: [],
   templateUrl: './auth-loading.html',
-  styleUrl: './auth-loading.scss'
+  styleUrl: './auth-loading.scss',
 })
-export class AuthLoading {
-
-}
+export class AuthLoading {}

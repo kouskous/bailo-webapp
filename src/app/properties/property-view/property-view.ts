@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AlertCircleIcon,
   ArrowLeftIcon,
@@ -10,21 +10,21 @@ import {
   MapPinIcon,
   PencilIcon,
   PlusCircleIcon,
-  UserMinusIcon
+  UserMinusIcon,
 } from 'lucide-angular';
-import {ActivatedRoute, RouterLink} from '@angular/router';
-import {PaymentsSchedule} from './payments-schedule/payments-schedule';
-import {LeaseSummary} from './lease-summary/lease-summary';
-import {PropertyService} from '../../../service/property-service';
-import {LeaseService} from '../../../service/lease.service';
-import {Property} from '../../../model/property/property';
-import {Lease} from '../../../model/lease/lease';
-import {PaymentSchedule} from '../../../model/payment/payment-schedule';
-import {combineLatest, take} from 'rxjs';
-import {PaymentService} from '../../../service/payment.service';
-import {LeasesPanel} from './leases-panel/leases-panel';
-import {DocumentService} from '../../../service/document.service';
-import {LeaseDocument} from '../../../model/document/lease-document';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { PaymentsSchedule } from './payments-schedule/payments-schedule';
+import { LeaseSummary } from './lease-summary/lease-summary';
+import { PropertyService } from '../../../service/property-service';
+import { LeaseService } from '../../../service/lease.service';
+import { Property } from '../../../model/property/property';
+import { Lease } from '../../../model/lease/lease';
+import { PaymentSchedule } from '../../../model/payment/payment-schedule';
+import { combineLatest, take } from 'rxjs';
+import { PaymentService } from '../../../service/payment.service';
+import { LeasesPanel } from './leases-panel/leases-panel';
+import { DocumentService } from '../../../service/document.service';
+import { LeaseDocument } from '../../../model/document/lease-document';
 
 @Component({
   selector: 'app-property-view',
@@ -33,10 +33,10 @@ import {LeaseDocument} from '../../../model/document/lease-document';
     RouterLink,
     PaymentsSchedule,
     LeaseSummary,
-    LeasesPanel
+    LeasesPanel,
   ],
   templateUrl: './property-view.html',
-  styleUrl: './property-view.scss'
+  styleUrl: './property-view.scss',
 })
 export class PropertyView implements OnInit {
   propertyId: string | null = null;
@@ -51,9 +51,8 @@ export class PropertyView implements OnInit {
     private readonly propertyRepository: PropertyService,
     private readonly leaseRepository: LeaseService,
     private readonly paymentRepository: PaymentService,
-    private readonly documentService: DocumentService
-  ) {
-  }
+    private readonly documentService: DocumentService,
+  ) {}
 
   ngOnInit(): void {
     this.propertyId = this.route.snapshot.paramMap.get('id');
@@ -64,20 +63,23 @@ export class PropertyView implements OnInit {
 
     combineLatest([
       this.propertyRepository.findById(this.propertyId),
-      this.leaseRepository.findAll(this.propertyId, {page: 0, size: 100})
-    ]).pipe(take(1))
+      this.leaseRepository.findAll(this.propertyId, { page: 0, size: 100 }),
+    ])
+      .pipe(take(1))
       .subscribe({
         next: ([property, leasesPage]) => {
           this.property = property;
           const leases = leasesPage.content ?? [];
           this.leases = leases.filter((lease) => lease.status !== 'ARCHIVED');
-          this.selectedLease = this.leases.find((lease) => lease.status === 'ACTIVE') ?? this.leases[0];
+          this.selectedLease =
+            this.leases.find((lease) => lease.status === 'ACTIVE') ??
+            this.leases[0];
           this.loadSchedulesForSelectedLease();
           this.loading = false;
         },
         error: () => {
           this.loading = false;
-        }
+        },
       });
   }
 
@@ -91,7 +93,8 @@ export class PropertyView implements OnInit {
     if (!leaseId) {
       return;
     }
-    this.leaseRepository.confirm(leaseId)
+    this.leaseRepository
+      .confirm(leaseId)
       .pipe(take(1))
       .subscribe((updatedLease) => {
         this.replaceLeaseInList(updatedLease);
@@ -103,7 +106,8 @@ export class PropertyView implements OnInit {
     if (!leaseId) {
       return;
     }
-    this.leaseRepository.archive(leaseId)
+    this.leaseRepository
+      .archive(leaseId)
       .pipe(take(1))
       .subscribe((updatedLease) => {
         this.replaceLeaseInList(updatedLease);
@@ -116,12 +120,15 @@ export class PropertyView implements OnInit {
       return;
     }
 
-    const confirmed = window.confirm('Résilier ce bail ? Cette action est irréversible.');
+    const confirmed = window.confirm(
+      'Résilier ce bail ? Cette action est irréversible.',
+    );
     if (!confirmed) {
       return;
     }
 
-    this.leaseRepository.terminate(leaseId)
+    this.leaseRepository
+      .terminate(leaseId)
       .pipe(take(1))
       .subscribe((updatedLease) => {
         this.replaceLeaseInList(updatedLease);
@@ -134,17 +141,22 @@ export class PropertyView implements OnInit {
       return;
     }
 
-    const confirmed = window.confirm('Supprimer ce bail ? Cette action est irréversible.');
+    const confirmed = window.confirm(
+      'Supprimer ce bail ? Cette action est irréversible.',
+    );
     if (!confirmed) {
       return;
     }
 
-    this.leaseRepository.delete(leaseId)
+    this.leaseRepository
+      .delete(leaseId)
       .pipe(take(1))
       .subscribe(() => {
         this.leases = this.leases.filter((item) => item.id !== leaseId);
         if (this.selectedLease?.id === leaseId) {
-          this.selectedLease = this.leases.find((item) => item.status === 'ACTIVE') ?? this.leases[0];
+          this.selectedLease =
+            this.leases.find((item) => item.status === 'ACTIVE') ??
+            this.leases[0];
           this.loadSchedulesForSelectedLease();
         }
       });
@@ -164,7 +176,8 @@ export class PropertyView implements OnInit {
     if (!leaseId) {
       return;
     }
-    this.documentService.getLeasePreviewBlob(leaseId)
+    this.documentService
+      .getLeasePreviewBlob(leaseId)
       .pipe(take(1))
       .subscribe((blob) => this.documentService.openBlobInNewTab(blob));
   }
@@ -176,19 +189,27 @@ export class PropertyView implements OnInit {
       return;
     }
 
-    this.documentService.findByLease(leaseId, 0, 100)
+    this.documentService
+      .findByLease(leaseId, 0, 100)
       .pipe(take(1))
       .subscribe((page) => {
         const contract = this.findReadyContract(page.content ?? []);
         if (!contract?.id) {
-          this.documentService.getLeasePreviewBlob(leaseId)
+          this.documentService
+            .getLeasePreviewBlob(leaseId)
             .pipe(take(1))
             .subscribe((blob) => this.documentService.openBlobInNewTab(blob));
           return;
         }
-        this.documentService.getDocumentDownloadBlob(contract.id)
+        this.documentService
+          .getDocumentDownloadBlob(contract.id)
           .pipe(take(1))
-          .subscribe((blob) => this.documentService.triggerBlobDownload(blob, contract.fileName ?? `bail-${leaseId}.pdf`));
+          .subscribe((blob) =>
+            this.documentService.triggerBlobDownload(
+              blob,
+              contract.fileName ?? `bail-${leaseId}.pdf`,
+            ),
+          );
       });
   }
 
@@ -211,7 +232,8 @@ export class PropertyView implements OnInit {
       return;
     }
 
-    this.paymentRepository.findSchedulesByLease(leaseId, 0, 100)
+    this.paymentRepository
+      .findSchedulesByLease(leaseId, 0, 100)
       .pipe(take(1))
       .subscribe({
         next: (schedulesPage) => {
@@ -219,7 +241,7 @@ export class PropertyView implements OnInit {
         },
         error: () => {
           this.paymentSchedules = [];
-        }
+        },
       });
   }
 
@@ -227,21 +249,30 @@ export class PropertyView implements OnInit {
     if (updatedLease.status === 'ARCHIVED') {
       this.leases = this.leases.filter((lease) => lease.id !== updatedLease.id);
       if (this.selectedLease?.id === updatedLease.id) {
-        this.selectedLease = this.leases.find((lease) => lease.status === 'ACTIVE') ?? this.leases[0];
+        this.selectedLease =
+          this.leases.find((lease) => lease.status === 'ACTIVE') ??
+          this.leases[0];
         this.loadSchedulesForSelectedLease();
       }
       return;
     }
 
-    this.leases = this.leases.map((lease) => lease.id === updatedLease.id ? updatedLease : lease);
+    this.leases = this.leases.map((lease) =>
+      lease.id === updatedLease.id ? updatedLease : lease,
+    );
     if (this.selectedLease?.id === updatedLease.id) {
       this.selectedLease = updatedLease;
       this.loadSchedulesForSelectedLease();
     }
   }
 
-  private findReadyContract(documents: LeaseDocument[]): LeaseDocument | undefined {
-    return documents.find((document) => document.type === 'LEASE_CONTRACT' && document.status === 'READY');
+  private findReadyContract(
+    documents: LeaseDocument[],
+  ): LeaseDocument | undefined {
+    return documents.find(
+      (document) =>
+        document.type === 'LEASE_CONTRACT' && document.status === 'READY',
+    );
   }
 
   protected readonly MapPinIcon = MapPinIcon;

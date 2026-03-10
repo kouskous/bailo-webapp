@@ -1,9 +1,13 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {DownloadIcon, FileTextIcon, LucideAngularModule} from 'lucide-angular';
-import {Lease} from '../../../../model/lease/lease';
-import {DatePipe, NgClass} from '@angular/common';
-import {LeaseStatusPipe} from '../../../../pipe/lease-status-pipe';
-import {PaymentFrequencyPipe} from '../../../../pipe/payment-frequency-pipe';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  DownloadIcon,
+  FileTextIcon,
+  LucideAngularModule,
+} from 'lucide-angular';
+import { Lease } from '../../../../model/lease/lease';
+import { DatePipe, NgClass } from '@angular/common';
+import { LeaseStatusPipe } from '../../../../pipe/lease-status-pipe';
+import { PaymentFrequencyPipe } from '../../../../pipe/payment-frequency-pipe';
 
 @Component({
   selector: 'app-lease-summary',
@@ -12,10 +16,10 @@ import {PaymentFrequencyPipe} from '../../../../pipe/payment-frequency-pipe';
     DatePipe,
     NgClass,
     LeaseStatusPipe,
-    PaymentFrequencyPipe
+    PaymentFrequencyPipe,
   ],
   templateUrl: './lease-summary.html',
-  styleUrl: './lease-summary.scss'
+  styleUrl: './lease-summary.scss',
 })
 export class LeaseSummary {
   @Input()
@@ -35,7 +39,9 @@ export class LeaseSummary {
       return 'Locataires non renseignés';
     }
     return this.lease.tenants
-      .map((tenant) => [tenant.firstName, tenant.lastName].filter(Boolean).join(' ').trim())
+      .map((tenant) =>
+        [tenant.firstName, tenant.lastName].filter(Boolean).join(' ').trim(),
+      )
       .filter(Boolean)
       .join(', ');
   }

@@ -1,13 +1,20 @@
-﻿import {Component} from '@angular/core';
-import {AuthService, User} from '@auth0/auth0-angular';
-import {Menu} from '../components/menu/menu';
-import {CircleAlertIcon, LoaderCircleIcon, LogOutIcon, LucideAngularModule, UserIcon, ZapIcon} from 'lucide-angular';
-import {MenuItem} from '../components/menu/menu-item';
-import {MenuTrigger} from '../components/menu/menu-trigger';
-import {take} from 'rxjs';
-import {SubscriptionService} from '../../../service/subscription.service';
-import {NgClass} from '@angular/common';
-import {SubscriptionStatusPipe} from '../../../pipe/subscription-status-pipe';
+﻿import { Component } from '@angular/core';
+import { AuthService, User } from '@auth0/auth0-angular';
+import { Menu } from '../components/menu/menu';
+import {
+  CircleAlertIcon,
+  LoaderCircleIcon,
+  LogOutIcon,
+  LucideAngularModule,
+  UserIcon,
+  ZapIcon,
+} from 'lucide-angular';
+import { MenuItem } from '../components/menu/menu-item';
+import { MenuTrigger } from '../components/menu/menu-trigger';
+import { take } from 'rxjs';
+import { SubscriptionService } from '../../../service/subscription.service';
+import { NgClass } from '@angular/common';
+import { SubscriptionStatusPipe } from '../../../pipe/subscription-status-pipe';
 
 @Component({
   selector: 'app-header',
@@ -20,7 +27,7 @@ import {SubscriptionStatusPipe} from '../../../pipe/subscription-status-pipe';
     SubscriptionStatusPipe,
   ],
   templateUrl: './header.html',
-  styleUrl: './header.scss'
+  styleUrl: './header.scss',
 })
 export class Header {
   user: User | null | undefined;
@@ -30,9 +37,11 @@ export class Header {
   redirectMessage = '';
   redirectError = '';
 
-  constructor(private readonly auth: AuthService,
-              private readonly subscriptionService: SubscriptionService) {
-    auth.user$.subscribe(user => {
+  constructor(
+    private readonly auth: AuthService,
+    private readonly subscriptionService: SubscriptionService,
+  ) {
+    auth.user$.subscribe((user) => {
       this.user = user;
       this.loadSubscriptionStatus();
     });
@@ -47,8 +56,8 @@ export class Header {
   logout() {
     this.auth.logout({
       logoutParams: {
-        returnTo: window.location.origin
-      }
+        returnTo: window.location.origin,
+      },
     });
   }
 
@@ -62,24 +71,23 @@ export class Header {
     }
     this.startRedirect(
       'Redirection vers le paiement securise',
-      'Preparation de votre session Stripe en cours...'
+      'Preparation de votre session Stripe en cours...',
     );
     const origin = window.location.origin;
     const successUrl = `${origin}/subscription/payment-success`;
     const cancelUrl = `${origin}/subscription/payment-failed`;
-    this.subscriptionService.createCheckoutSession(
-      accountId,
-      successUrl,
-      cancelUrl
-    ).pipe(take(1))
+    this.subscriptionService
+      .createCheckoutSession(accountId, successUrl, cancelUrl)
+      .pipe(take(1))
       .subscribe({
         next: (response) => {
           window.location.href = response.url;
         },
         error: () => {
           this.isRedirecting = false;
-          this.redirectError = 'Impossible de lancer le paiement pour le moment. Reessayez dans quelques instants.';
-        }
+          this.redirectError =
+            'Impossible de lancer le paiement pour le moment. Reessayez dans quelques instants.';
+        },
       });
   }
 
@@ -105,21 +113,21 @@ export class Header {
     }
     this.startRedirect(
       'Redirection vers votre espace abonnement',
-      'Ouverture du portail client securise...'
+      'Ouverture du portail client securise...',
     );
     const origin = window.location.origin;
-    this.subscriptionService.createPortalSession(
-      accountId,
-      origin
-    ).pipe(take(1))
+    this.subscriptionService
+      .createPortalSession(accountId, origin)
+      .pipe(take(1))
       .subscribe({
         next: (response) => {
           window.location.href = response.url;
         },
         error: () => {
           this.isRedirecting = false;
-          this.redirectError = 'Impossible d ouvrir le portail client. Reessayez dans quelques instants.';
-        }
+          this.redirectError =
+            'Impossible d ouvrir le portail client. Reessayez dans quelques instants.';
+        },
       });
   }
 
@@ -140,7 +148,8 @@ export class Header {
       this.subscriptionStatus = undefined;
       return;
     }
-    this.subscriptionService.getSubscription(accountId)
+    this.subscriptionService
+      .getSubscription(accountId)
       .pipe(take(1))
       .subscribe({
         next: (subscription) => {
@@ -148,7 +157,7 @@ export class Header {
         },
         error: () => {
           this.subscriptionStatus = undefined;
-        }
+        },
       });
   }
 
@@ -236,4 +245,3 @@ export class Header {
     }
   }
 }
-

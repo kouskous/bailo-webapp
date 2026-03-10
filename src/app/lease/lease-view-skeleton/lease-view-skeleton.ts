@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-lease-view-skeleton',
   imports: [],
   templateUrl: './lease-view-skeleton.html',
-  styleUrl: './lease-view-skeleton.scss'
+  styleUrl: './lease-view-skeleton.scss',
 })
-export class LeaseViewSkeleton {
-
-}
+export class LeaseViewSkeleton {}

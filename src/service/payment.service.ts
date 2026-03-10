@@ -1,23 +1,26 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {PaymentSchedule} from '../model/payment/payment-schedule';
-import {Payment} from '../model/payment/payment';
-import {Page} from '../model/shared/page';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { PaymentSchedule } from '../model/payment/payment-schedule';
+import { Payment } from '../model/payment/payment';
+import { Page } from '../model/shared/page';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PaymentService {
   private readonly schedulesUrl = 'https://api.bailo.ch/payment/schedules';
   private readonly paymentsUrl = 'https://api.bailo.ch/payment/payments';
 
-  constructor(private readonly httpClient: HttpClient) {
-  }
+  constructor(private readonly httpClient: HttpClient) {}
 
-  findSchedulesByLease(leaseId: string, page = 0, size = 20): Observable<Page<PaymentSchedule>> {
+  findSchedulesByLease(
+    leaseId: string,
+    page = 0,
+    size = 20,
+  ): Observable<Page<PaymentSchedule>> {
     return this.httpClient.get<Page<PaymentSchedule>>(
-      `${this.schedulesUrl}?leaseId=${encodeURIComponent(leaseId)}&page=${page}&size=${size}`
+      `${this.schedulesUrl}?leaseId=${encodeURIComponent(leaseId)}&page=${page}&size=${size}`,
     );
   }
 
@@ -25,9 +28,13 @@ export class PaymentService {
     return this.httpClient.get<PaymentSchedule>(`${this.schedulesUrl}/${id}`);
   }
 
-  findPaymentsByLease(leaseId: string, page = 0, size = 20): Observable<Page<Payment>> {
+  findPaymentsByLease(
+    leaseId: string,
+    page = 0,
+    size = 20,
+  ): Observable<Page<Payment>> {
     return this.httpClient.get<Page<Payment>>(
-      `${this.paymentsUrl}?leaseId=${encodeURIComponent(leaseId)}&page=${page}&size=${size}`
+      `${this.paymentsUrl}?leaseId=${encodeURIComponent(leaseId)}&page=${page}&size=${size}`,
     );
   }
 

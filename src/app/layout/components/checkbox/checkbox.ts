@@ -1,5 +1,5 @@
-import {Component, forwardRef, Input} from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import { Component, forwardRef, Input } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-checkbox',
@@ -10,19 +10,17 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => Checkbox),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class Checkbox implements ControlValueAccessor {
   @Input() label: string = '';
   @Input() disabled: boolean = false;
 
   value: boolean = false;
-  onChange = (value: boolean) => {
-  };
-  onTouched = () => {
-  };
+  onChange = (value: boolean) => {};
+  onTouched = () => {};
 
   writeValue(value: boolean): void {
     this.value = value;

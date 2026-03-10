@@ -1,19 +1,20 @@
-import {Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
-import {Payment} from '../../../../../model/payment/payment';
-import {DatePipe} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {PaymentMethodPipe} from '../../../../../pipe/payment-method-pipe';
-import {LucideAngularModule, PlusIcon, XIcon} from 'lucide-angular';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+} from '@angular/core';
+import { Payment } from '../../../../../model/payment/payment';
+import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { PaymentMethodPipe } from '../../../../../pipe/payment-method-pipe';
+import { LucideAngularModule, PlusIcon, XIcon } from 'lucide-angular';
 
 @Component({
   selector: 'app-payments-list',
-  imports: [
-    DatePipe,
-    FormsModule,
-    PaymentMethodPipe,
-    LucideAngularModule
-  ],
-  templateUrl: './payments-list.html'
+  imports: [DatePipe, FormsModule, PaymentMethodPipe, LucideAngularModule],
+  templateUrl: './payments-list.html',
 })
 export class PaymentsList {
   @Input()
@@ -35,7 +36,7 @@ export class PaymentsList {
     amount: undefined,
     currency: 'CHF',
     method: 'BANK_TRANSFER',
-    note: ''
+    note: '',
   };
 
   readonly paymentMethodOptions = [
@@ -44,11 +45,16 @@ export class PaymentsList {
     'CREDIT_CARD',
     'CASH',
     'CHECK',
-    'OTHER'
+    'OTHER',
   ];
 
   submitCreate(): void {
-    if (!this.leaseId || !this.newPayment.paymentDate || !this.newPayment.amount || this.newPayment.amount <= 0) {
+    if (
+      !this.leaseId ||
+      !this.newPayment.paymentDate ||
+      !this.newPayment.amount ||
+      this.newPayment.amount <= 0
+    ) {
       return;
     }
 
@@ -57,7 +63,7 @@ export class PaymentsList {
       amount: Number(this.newPayment.amount),
       currency: this.newPayment.currency ?? 'CHF',
       method: this.newPayment.method ?? 'BANK_TRANSFER',
-      note: this.newPayment.note ?? ''
+      note: this.newPayment.note ?? '',
     });
 
     this.newPayment = {
@@ -65,7 +71,7 @@ export class PaymentsList {
       amount: undefined,
       currency: this.newPayment.currency ?? 'CHF',
       method: this.newPayment.method ?? 'BANK_TRANSFER',
-      note: ''
+      note: '',
     };
     this.isCreateModalOpen = false;
   }

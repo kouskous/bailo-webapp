@@ -1,4 +1,4 @@
-import {Address} from '../shared/address';
+import { Address } from '../shared/address';
 
 export interface Contractor {
   id?: string;

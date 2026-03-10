@@ -1,7 +1,7 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'paymentFrequency'
+  name: 'paymentFrequency',
 })
 export class PaymentFrequencyPipe implements PipeTransform {
   private readonly translations: Record<string, string> = {
@@ -11,7 +11,7 @@ export class PaymentFrequencyPipe implements PipeTransform {
     BIMONTHLY: 'Bimestriel',
     QUARTERLY: 'Trimestriel',
     SEMIANNUAL: 'Semestriel',
-    YEARLY: 'Annuel'
+    YEARLY: 'Annuel',
   };
 
   transform(value: string | undefined | null): string {

@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './property-skeleton-card.html',
-  styleUrls: ['./property-skeleton-card.scss']
+  styleUrls: ['./property-skeleton-card.scss'],
 })
-export class PropertySkeletonCard {
-
-}
+export class PropertySkeletonCard {}

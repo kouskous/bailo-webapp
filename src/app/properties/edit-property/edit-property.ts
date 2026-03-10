@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   ArrowLeftIcon,
   CheckCircle2Icon,
@@ -10,9 +10,9 @@ import {
   RulerIcon,
   SettingsIcon,
   TagIcon,
-  UsersIcon
+  UsersIcon,
 } from 'lucide-angular';
-import {ActivatedRoute, Router, RouterLink} from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   AbstractControl,
   FormArray,
@@ -20,28 +20,37 @@ import {
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
-  Validators
+  Validators,
 } from '@angular/forms';
-import {Property} from '../../../model/property/property';
-import {Contractor} from '../../../model/lease/contractor';
-import {TextInput} from '../../layout/components/text-input/text-input';
-import {Dropdown} from '../../layout/components/dropdown/dropdown';
-import {Checkbox} from '../../layout/components/checkbox/checkbox';
-import {TextArea} from '../../layout/components/text-area/text-area';
-import {Address} from '../../../model/shared/address';
-import {PropertyService} from '../../../service/property-service';
-import {EditPropertySkeleton} from './edit-property-skeleton/edit-property-skeleton';
-import {combineLatest, take, timer} from 'rxjs';
-import {AuthService} from '@auth0/auth0-angular';
-import {AddressAutocompleteService} from '../../../service/address-autocomplete.service';
-import {AddressAutocompleteSuggestion} from '../../../model/shared/address-autocomplete';
+import { Property } from '../../../model/property/property';
+import { Contractor } from '../../../model/lease/contractor';
+import { TextInput } from '../../layout/components/text-input/text-input';
+import { Dropdown } from '../../layout/components/dropdown/dropdown';
+import { Checkbox } from '../../layout/components/checkbox/checkbox';
+import { TextArea } from '../../layout/components/text-area/text-area';
+import { Address } from '../../../model/shared/address';
+import { PropertyService } from '../../../service/property-service';
+import { EditPropertySkeleton } from './edit-property-skeleton/edit-property-skeleton';
+import { combineLatest, take, timer } from 'rxjs';
+import { AuthService } from '@auth0/auth0-angular';
+import { AddressAutocompleteService } from '../../../service/address-autocomplete.service';
+import { AddressAutocompleteSuggestion } from '../../../model/shared/address-autocomplete';
 
 interface FormStep {
   key: string;
   title: string;
   subtitle: string;
   groups: string[];
-  icon: 'home' | 'users' | 'map' | 'ruler' | 'tag' | 'flame' | 'settings' | 'info' | 'check';
+  icon:
+    | 'home'
+    | 'users'
+    | 'map'
+    | 'ruler'
+    | 'tag'
+    | 'flame'
+    | 'settings'
+    | 'info'
+    | 'check';
 }
 
 @Component({
@@ -55,10 +64,10 @@ interface FormStep {
     Dropdown,
     Checkbox,
     TextArea,
-    EditPropertySkeleton
+    EditPropertySkeleton,
   ],
   templateUrl: './edit-property.html',
-  styleUrl: './edit-property.scss'
+  styleUrl: './edit-property.scss',
 })
 export class EditProperty implements OnInit {
   propertyForm!: FormGroup;
@@ -70,142 +79,144 @@ export class EditProperty implements OnInit {
       title: 'Commencons simplement: quel bien voulez-vous ajouter ?',
       subtitle: 'Donnez-lui un nom clair et choisissez son type.',
       groups: ['generalIdentity'],
-      icon: 'home'
+      icon: 'home',
     },
     {
       key: 'owners',
       title: 'Qui sont les proprietaires de ce bien ?',
-      subtitle: 'Ces informations seront reutilisees automatiquement dans les baux et documents.',
+      subtitle:
+        'Ces informations seront reutilisees automatiquement dans les baux et documents.',
       groups: ['landlords'],
-      icon: 'users'
+      icon: 'users',
     },
     {
       key: 'address',
       title: 'Ou se situe ce bien ?',
-      subtitle: 'Une adresse precise permet de mieux organiser vos baux ensuite.',
+      subtitle:
+        'Une adresse precise permet de mieux organiser vos baux ensuite.',
       groups: ['address'],
-      icon: 'map'
+      icon: 'map',
     },
     {
       key: 'layout',
       title: 'Comment est organise le logement ?',
       subtitle: 'Quelques chiffres pour decrire les pieces.',
       groups: ['generalLayout'],
-      icon: 'ruler'
+      icon: 'ruler',
     },
     {
       key: 'surface',
       title: 'Parlons surfaces',
       subtitle: 'La surface habitable est obligatoire, le reste est optionnel.',
       groups: ['surface'],
-      icon: 'tag'
+      icon: 'tag',
     },
     {
       key: 'energy',
       title: 'Chauffage et energie',
       subtitle: 'Ces informations sont utiles pour vos contrats et le suivi.',
       groups: ['energy'],
-      icon: 'flame'
+      icon: 'flame',
     },
     {
       key: 'features',
       title: 'Quels equipements sont disponibles ?',
       subtitle: 'Selectionnez tout ce qui s applique.',
       groups: ['features'],
-      icon: 'settings'
+      icon: 'settings',
     },
     {
       key: 'description',
       title: 'Derniere touche',
       subtitle: 'Ajoutez une description libre avant validation.',
       groups: ['additionalInformation'],
-      icon: 'info'
-    }
+      icon: 'info',
+    },
   ];
 
   currentStepIndex = 0;
 
   heatingOptions = [
-    {key: 'GAS', label: 'Gaz'},
-    {key: 'FUEL', label: 'Fioul'},
-    {key: 'ELECTRIC', label: 'Electrique'},
-    {key: 'HEAT_PUMP', label: 'Pompe a chaleur'},
-    {key: 'WOOD', label: 'Bois'},
-    {key: 'DISTRICT', label: 'Reseau urbain'},
-    {key: 'SOLAR', label: 'Solaire'},
-    {key: 'OTHER', label: 'Autre'}
+    { key: 'GAS', label: 'Gaz' },
+    { key: 'FUEL', label: 'Fioul' },
+    { key: 'ELECTRIC', label: 'Electrique' },
+    { key: 'HEAT_PUMP', label: 'Pompe a chaleur' },
+    { key: 'WOOD', label: 'Bois' },
+    { key: 'DISTRICT', label: 'Reseau urbain' },
+    { key: 'SOLAR', label: 'Solaire' },
+    { key: 'OTHER', label: 'Autre' },
   ];
   heatingDistributions = [
-    {key: 'RADIATORS', label: 'Radiateurs'},
-    {key: 'UNDERFLOOR', label: 'Plancher chauffant'},
-    {key: 'AIR_BLOWER', label: 'Soufflage air chaud'},
-    {key: 'WALL_HEATING', label: 'Chauffage mural'},
-    {key: 'CEILING', label: 'Plafond chauffant'},
-    {key: 'STOVES', label: 'Poeles'},
-    {key: 'INDIVIDUAL_UNITS', label: 'Unites individuelles'},
-    {key: 'OTHER', label: 'Autre'}
+    { key: 'RADIATORS', label: 'Radiateurs' },
+    { key: 'UNDERFLOOR', label: 'Plancher chauffant' },
+    { key: 'AIR_BLOWER', label: 'Soufflage air chaud' },
+    { key: 'WALL_HEATING', label: 'Chauffage mural' },
+    { key: 'CEILING', label: 'Plafond chauffant' },
+    { key: 'STOVES', label: 'Poeles' },
+    { key: 'INDIVIDUAL_UNITS', label: 'Unites individuelles' },
+    { key: 'OTHER', label: 'Autre' },
   ];
   propertyTypes = [
-    {key: 'STUDIO', label: 'Studio'},
-    {key: 'APARTMENT', label: 'Appartement'},
-    {key: 'HOUSE', label: 'Maison'},
-    {key: 'DUPLEX', label: 'Duplex'},
-    {key: 'VILLA', label: 'Villa'},
-    {key: 'ROOM', label: 'Chambre'},
-    {key: 'COMMERCIAL', label: 'Local commercial'},
-    {key: 'LAND', label: 'Terrain'},
-    {key: 'OTHER', label: 'Autre'},
+    { key: 'STUDIO', label: 'Studio' },
+    { key: 'APARTMENT', label: 'Appartement' },
+    { key: 'HOUSE', label: 'Maison' },
+    { key: 'DUPLEX', label: 'Duplex' },
+    { key: 'VILLA', label: 'Villa' },
+    { key: 'ROOM', label: 'Chambre' },
+    { key: 'COMMERCIAL', label: 'Local commercial' },
+    { key: 'LAND', label: 'Terrain' },
+    { key: 'OTHER', label: 'Autre' },
   ];
   energyLabels = [
-    {key: 'A', label: 'A - Tres performant'},
-    {key: 'B', label: 'B - Performant'},
-    {key: 'C', label: 'C - Correct'},
-    {key: 'D', label: 'D - Passable'},
-    {key: 'E', label: 'E - Faible'},
-    {key: 'F', label: 'F - Tres faible'},
-    {key: 'G', label: 'G - Extremement faible'}
+    { key: 'A', label: 'A - Tres performant' },
+    { key: 'B', label: 'B - Performant' },
+    { key: 'C', label: 'C - Correct' },
+    { key: 'D', label: 'D - Passable' },
+    { key: 'E', label: 'E - Faible' },
+    { key: 'F', label: 'F - Tres faible' },
+    { key: 'G', label: 'G - Extremement faible' },
   ];
   featuresOptions = [
-    {key: 'elevator', label: 'Ascenseur'},
-    {key: 'balcony', label: 'Balcon'},
-    {key: 'terrace', label: 'Terrasse'},
-    {key: 'garden', label: 'Jardin'},
-    {key: 'cellar', label: 'Cave'},
-    {key: 'garage', label: 'Garage'},
-    {key: 'parking', label: 'Place de parking'},
-    {key: 'attic', label: 'Grenier'},
-    {key: 'accessible', label: 'Accessible PMR'},
-    {key: 'intercom', label: 'Interphone'},
-    {key: 'swimmingPool', label: 'Piscine'},
-    {key: 'fireplace', label: 'Cheminee'}
+    { key: 'elevator', label: 'Ascenseur' },
+    { key: 'balcony', label: 'Balcon' },
+    { key: 'terrace', label: 'Terrasse' },
+    { key: 'garden', label: 'Jardin' },
+    { key: 'cellar', label: 'Cave' },
+    { key: 'garage', label: 'Garage' },
+    { key: 'parking', label: 'Place de parking' },
+    { key: 'attic', label: 'Grenier' },
+    { key: 'accessible', label: 'Accessible PMR' },
+    { key: 'intercom', label: 'Interphone' },
+    { key: 'swimmingPool', label: 'Piscine' },
+    { key: 'fireplace', label: 'Cheminee' },
   ];
   cantons = [
-    {key: 'AG', label: 'Argovie'},
-    {key: 'AI', label: 'Appenzell Rhodes-Interieures'},
-    {key: 'AR', label: 'Appenzell Rhodes-Exterieures'},
-    {key: 'BE', label: 'Berne'},
-    {key: 'BL', label: 'Bale-Campagne'},
-    {key: 'BS', label: 'Bale-Ville'},
-    {key: 'FR', label: 'Fribourg'},
-    {key: 'GE', label: 'Geneve'},
-    {key: 'GL', label: 'Glaris'},
-    {key: 'GR', label: 'Grisons'},
-    {key: 'JU', label: 'Jura'},
-    {key: 'LU', label: 'Lucerne'},
-    {key: 'NE', label: 'Neuchatel'},
-    {key: 'NW', label: 'Nidwald'},
-    {key: 'OW', label: 'Obwald'},
-    {key: 'SG', label: 'Saint-Gall'},
-    {key: 'SH', label: 'Schaffhouse'},
-    {key: 'SO', label: 'Soleure'},
-    {key: 'SZ', label: 'Schwyz'},
-    {key: 'TG', label: 'Thurgovie'},
-    {key: 'TI', label: 'Tessin'},
-    {key: 'UR', label: 'Uri'},
-    {key: 'VD', label: 'Vaud'},
-    {key: 'VS', label: 'Valais'},
-    {key: 'ZG', label: 'Zoug'},
-    {key: 'ZH', label: 'Zurich'}
+    { key: 'AG', label: 'Argovie' },
+    { key: 'AI', label: 'Appenzell Rhodes-Interieures' },
+    { key: 'AR', label: 'Appenzell Rhodes-Exterieures' },
+    { key: 'BE', label: 'Berne' },
+    { key: 'BL', label: 'Bale-Campagne' },
+    { key: 'BS', label: 'Bale-Ville' },
+    { key: 'FR', label: 'Fribourg' },
+    { key: 'GE', label: 'Geneve' },
+    { key: 'GL', label: 'Glaris' },
+    { key: 'GR', label: 'Grisons' },
+    { key: 'JU', label: 'Jura' },
+    { key: 'LU', label: 'Lucerne' },
+    { key: 'NE', label: 'Neuchatel' },
+    { key: 'NW', label: 'Nidwald' },
+    { key: 'OW', label: 'Obwald' },
+    { key: 'SG', label: 'Saint-Gall' },
+    { key: 'SH', label: 'Schaffhouse' },
+    { key: 'SO', label: 'Soleure' },
+    { key: 'SZ', label: 'Schwyz' },
+    { key: 'TG', label: 'Thurgovie' },
+    { key: 'TI', label: 'Tessin' },
+    { key: 'UR', label: 'Uri' },
+    { key: 'VD', label: 'Vaud' },
+    { key: 'VS', label: 'Valais' },
+    { key: 'ZG', label: 'Zoug' },
+    { key: 'ZH', label: 'Zurich' },
   ];
 
   propertyId: string | null = null;
@@ -217,7 +228,9 @@ export class EditProperty implements OnInit {
   addressDetailsLoading = false;
   addressLookupError = '';
   showAddressForm = false;
-  private addressAutocompleteDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+  private addressAutocompleteDebounceTimer: ReturnType<
+    typeof setTimeout
+  > | null = null;
 
   protected readonly ArrowLeftIcon = ArrowLeftIcon;
   protected readonly MapPinIcon = MapPinIcon;
@@ -236,7 +249,7 @@ export class EditProperty implements OnInit {
     private readonly router: Router,
     private readonly propertyRepository: PropertyService,
     private readonly auth: AuthService,
-    private readonly addressAutocompleteService: AddressAutocompleteService
+    private readonly addressAutocompleteService: AddressAutocompleteService,
   ) {
     this.initForm();
   }
@@ -250,8 +263,9 @@ export class EditProperty implements OnInit {
     if (this.propertyId) {
       combineLatest([
         this.propertyRepository.findById(this.propertyId),
-        timer(500)
-      ]).pipe(take(1))
+        timer(500),
+      ])
+        .pipe(take(1))
         .subscribe(([property]) => {
           this.property = property;
           this.loading = false;
@@ -276,7 +290,9 @@ export class EditProperty implements OnInit {
 
   get reviewAddressLabel(): string {
     const address = this.buildAddressFromForm();
-    return [address.label, address.zipCode, address.city].filter(Boolean).join(' - ');
+    return [address.label, address.zipCode, address.city]
+      .filter(Boolean)
+      .join(' - ');
   }
 
   get currentStepIcon() {
@@ -347,7 +363,9 @@ export class EditProperty implements OnInit {
 
   private goToFirstInvalidStep(): void {
     const firstInvalidStep = this.steps.findIndex((step) =>
-      step.groups.some((groupName) => this.propertyForm.get(groupName)?.invalid)
+      step.groups.some(
+        (groupName) => this.propertyForm.get(groupName)?.invalid,
+      ),
     );
 
     if (firstInvalidStep >= 0) {
@@ -356,12 +374,15 @@ export class EditProperty implements OnInit {
   }
 
   isCurrentStepValid(): boolean {
-    return this.getStepGroups(this.currentStepIndex).every((groupName) => this.propertyForm.get(groupName)?.valid);
+    return this.getStepGroups(this.currentStepIndex).every(
+      (groupName) => this.propertyForm.get(groupName)?.valid,
+    );
   }
 
   private markCurrentStepAsTouched(): void {
-    this.getStepGroups(this.currentStepIndex)
-      .forEach((groupName) => this.markControlTreeAsTouched(this.propertyForm.get(groupName)));
+    this.getStepGroups(this.currentStepIndex).forEach((groupName) =>
+      this.markControlTreeAsTouched(this.propertyForm.get(groupName)),
+    );
   }
 
   private markControlTreeAsTouched(control: AbstractControl | null): void {
@@ -373,14 +394,19 @@ export class EditProperty implements OnInit {
     if (!childControls) {
       return;
     }
-    Object.values(childControls).forEach((child) => this.markControlTreeAsTouched(child));
+    Object.values(childControls).forEach((child) =>
+      this.markControlTreeAsTouched(child),
+    );
   }
 
   private getStepGroups(index: number): string[] {
     return this.steps[index]?.groups ?? [];
   }
 
-  getOptionLabel(options: { key: string; label: string }[], key: string): string {
+  getOptionLabel(
+    options: { key: string; label: string }[],
+    key: string,
+  ): string {
     const option = options.find((item) => item.key === key);
     return option?.label ?? key;
   }
@@ -414,14 +440,14 @@ export class EditProperty implements OnInit {
     this.propertyForm = this.fb.group({
       generalIdentity: this.fb.group({
         name: [this.property?.name ?? '', Validators.required],
-        type: [this.property?.type ?? '', Validators.required]
+        type: [this.property?.type ?? '', Validators.required],
       }),
       landlords: this.fb.array([]),
       generalLayout: this.fb.group({
         rooms: [this.property?.rooms ?? '', Validators.required],
         bedrooms: [this.property?.bedrooms ?? ''],
         bathrooms: [this.property?.bathrooms ?? ''],
-        toilets: [this.property?.toilets ?? '']
+        toilets: [this.property?.toilets ?? ''],
       }),
       address: this.fb.group({
         street: [this.property?.address?.label ?? '', Validators.required],
@@ -433,7 +459,7 @@ export class EditProperty implements OnInit {
         state: [this.property?.address?.canton ?? ''],
         country: [this.property?.address?.country ?? 'CH'],
         latitude: [this.property?.address?.latitude ?? ''],
-        longitude: [this.property?.address?.longitude ?? '']
+        longitude: [this.property?.address?.longitude ?? ''],
       }),
       surface: this.fb.group({
         livingArea: [this.property?.livingArea ?? '', Validators.required],
@@ -448,7 +474,7 @@ export class EditProperty implements OnInit {
         yearOfRenovation: [this.property?.yearOfRenovation ?? ''],
         heatingType: [this.property?.heatingType ?? '', Validators.required],
         heatingDistribution: [this.property?.heatingDistribution ?? ''],
-        energyLabel: [this.property?.energyLabel ?? '']
+        energyLabel: [this.property?.energyLabel ?? ''],
       }),
       features: this.fb.group({
         elevator: [this.property?.features?.elevator ?? false],
@@ -462,15 +488,19 @@ export class EditProperty implements OnInit {
         accessible: [this.property?.features?.accessible ?? false],
         intercom: [this.property?.features?.intercom ?? false],
         swimmingPool: [this.property?.features?.swimmingPool ?? false],
-        fireplace: [this.property?.features?.fireplace ?? false]
+        fireplace: [this.property?.features?.fireplace ?? false],
       }),
       additionalInformation: this.fb.group({
         description: [this.property?.description ?? ''],
-      })
+      }),
     });
 
     this.addressSearch = this.property?.address?.label ?? '';
-    this.showAddressForm = !!(this.property?.address?.label || this.property?.address?.zipCode || this.property?.address?.city);
+    this.showAddressForm = !!(
+      this.property?.address?.label ||
+      this.property?.address?.zipCode ||
+      this.property?.address?.city
+    );
     this.addressLookupError = '';
     this.addressSuggestions = [];
     this.setLandlords(this.property?.landlords);
@@ -496,17 +526,21 @@ export class EditProperty implements OnInit {
 
     this.addressLookupLoading = true;
     this.addressAutocompleteDebounceTimer = setTimeout(() => {
-      this.addressAutocompleteService.autocomplete(query).pipe(take(1)).subscribe({
-        next: (suggestions) => {
-          this.addressSuggestions = suggestions ?? [];
-          this.addressLookupLoading = false;
-        },
-        error: () => {
-          this.addressSuggestions = [];
-          this.addressLookupLoading = false;
-          this.addressLookupError = 'Impossible de recuperer les suggestions pour le moment.';
-        }
-      });
+      this.addressAutocompleteService
+        .autocomplete(query)
+        .pipe(take(1))
+        .subscribe({
+          next: (suggestions) => {
+            this.addressSuggestions = suggestions ?? [];
+            this.addressLookupLoading = false;
+          },
+          error: () => {
+            this.addressSuggestions = [];
+            this.addressLookupLoading = false;
+            this.addressLookupError =
+              'Impossible de recuperer les suggestions pour le moment.';
+          },
+        });
     }, 300);
   }
 
@@ -519,30 +553,37 @@ export class EditProperty implements OnInit {
     this.addressLookupError = '';
     this.addressDetailsLoading = true;
 
-    this.addressAutocompleteService.getDetails(suggestion.placeId).pipe(take(1)).subscribe({
-      next: (address) => {
-        this.patchAddressForm(address, suggestion);
-        this.addressDetailsLoading = false;
-        this.showAddressForm = true;
-      },
-      error: () => {
-        this.addressDetailsLoading = false;
-        this.addressLookupError = 'Adresse non resolue. Vous pouvez la saisir manuellement.';
-        this.showAddressForm = true;
-        this.patchAddressForm(undefined, suggestion);
-      }
-    });
+    this.addressAutocompleteService
+      .getDetails(suggestion.placeId)
+      .pipe(take(1))
+      .subscribe({
+        next: (address) => {
+          this.patchAddressForm(address, suggestion);
+          this.addressDetailsLoading = false;
+          this.showAddressForm = true;
+        },
+        error: () => {
+          this.addressDetailsLoading = false;
+          this.addressLookupError =
+            'Adresse non resolue. Vous pouvez la saisir manuellement.';
+          this.showAddressForm = true;
+          this.patchAddressForm(undefined, suggestion);
+        },
+      });
   }
 
   enableManualAddressEntry(): void {
     this.addressSuggestions = [];
     this.addressLookupError = '';
     this.showAddressForm = true;
-    if (!this.propertyForm.get('address.street')?.value && this.addressSearch.trim()) {
+    if (
+      !this.propertyForm.get('address.street')?.value &&
+      this.addressSearch.trim()
+    ) {
       this.propertyForm.patchValue({
         address: {
-          street: this.addressSearch.trim()
-        }
+          street: this.addressSearch.trim(),
+        },
       });
     }
   }
@@ -568,7 +609,9 @@ export class EditProperty implements OnInit {
     const building = this.propertyForm.get('address.building')?.value;
     const floor = this.propertyForm.get('address.floor')?.value;
     const state = this.propertyForm.get('address.state')?.value;
-    const labelParts = [street, additional, building, floor, state].filter((value) => !!value);
+    const labelParts = [street, additional, building, floor, state].filter(
+      (value) => !!value,
+    );
 
     return {
       label: labelParts.length ? labelParts.join(', ') : undefined,
@@ -576,13 +619,21 @@ export class EditProperty implements OnInit {
       city: this.propertyForm.get('address.city')?.value,
       canton: state || undefined,
       country: this.propertyForm.get('address.country')?.value ?? 'CH',
-      latitude: this.toOptionalNumber(this.propertyForm.get('address.latitude')?.value),
-      longitude: this.toOptionalNumber(this.propertyForm.get('address.longitude')?.value)
+      latitude: this.toOptionalNumber(
+        this.propertyForm.get('address.latitude')?.value,
+      ),
+      longitude: this.toOptionalNumber(
+        this.propertyForm.get('address.longitude')?.value,
+      ),
     } as Address;
   }
 
-  private patchAddressForm(address: Address | undefined, suggestion?: AddressAutocompleteSuggestion): void {
-    const fallbackStreet = suggestion?.mainText || suggestion?.description || this.addressSearch;
+  private patchAddressForm(
+    address: Address | undefined,
+    suggestion?: AddressAutocompleteSuggestion,
+  ): void {
+    const fallbackStreet =
+      suggestion?.mainText || suggestion?.description || this.addressSearch;
     this.propertyForm.patchValue({
       address: {
         street: address?.label ?? fallbackStreet ?? '',
@@ -591,8 +642,8 @@ export class EditProperty implements OnInit {
         state: address?.canton ?? '',
         country: address?.country ?? 'CH',
         latitude: address?.latitude ?? '',
-        longitude: address?.longitude ?? ''
-      }
+        longitude: address?.longitude ?? '',
+      },
     });
   }
 
@@ -609,7 +660,7 @@ export class EditProperty implements OnInit {
       firstName: [contractor?.firstName ?? ''],
       lastName: [contractor?.lastName ?? ''],
       email: [contractor?.email ?? ''],
-      phoneNumber: [contractor?.phoneNumber ?? '']
+      phoneNumber: [contractor?.phoneNumber ?? ''],
     });
   }
 
@@ -620,13 +671,21 @@ export class EditProperty implements OnInit {
       target.push(this.createContractorGroup());
       return;
     }
-    landlords.forEach((contractor) => target.push(this.createContractorGroup(contractor)));
+    landlords.forEach((contractor) =>
+      target.push(this.createContractorGroup(contractor)),
+    );
   }
 
   private buildLandlords(): Contractor[] {
     return this.landlords.controls
       .map((control) => control.value as Contractor)
-      .filter((contractor) => !!contractor.firstName || !!contractor.lastName || !!contractor.email || !!contractor.phoneNumber);
+      .filter(
+        (contractor) =>
+          !!contractor.firstName ||
+          !!contractor.lastName ||
+          !!contractor.email ||
+          !!contractor.phoneNumber,
+      );
   }
 
   private buildPropertyFromForm(): Property {
@@ -635,7 +694,9 @@ export class EditProperty implements OnInit {
     const surface = this.propertyForm.get('surface')?.value;
     const energy = this.propertyForm.get('energy')?.value;
     const features = this.propertyForm.get('features')?.value;
-    const additionalInfo = this.propertyForm.get('additionalInformation')?.value;
+    const additionalInfo = this.propertyForm.get(
+      'additionalInformation',
+    )?.value;
 
     return {
       accountId: this.accountId || this.property?.accountId || '',
@@ -659,8 +720,7 @@ export class EditProperty implements OnInit {
       heatingType: energy.heatingType,
       heatingDistribution: energy.heatingDistribution,
       features: features,
-      description: additionalInfo.description
+      description: additionalInfo.description,
     } as Property;
   }
 }
-

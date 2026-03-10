@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Lease} from '../../../../model/lease/lease';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Lease } from '../../../../model/lease/lease';
 import {
   ArchiveIcon,
   CheckIcon,
@@ -8,14 +8,14 @@ import {
   LucideAngularModule,
   PencilIcon,
   Trash2Icon,
-  XCircleIcon
+  XCircleIcon,
 } from 'lucide-angular';
-import {DatePipe, NgClass} from '@angular/common';
-import {RouterLink} from '@angular/router';
-import {LeaseStatusPipe} from '../../../../pipe/lease-status-pipe';
-import {Menu} from '../../../layout/components/menu/menu';
-import {MenuItem} from '../../../layout/components/menu/menu-item';
-import {MenuTrigger} from '../../../layout/components/menu/menu-trigger';
+import { DatePipe, NgClass } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { LeaseStatusPipe } from '../../../../pipe/lease-status-pipe';
+import { Menu } from '../../../layout/components/menu/menu';
+import { MenuItem } from '../../../layout/components/menu/menu-item';
+import { MenuTrigger } from '../../../layout/components/menu/menu-trigger';
 
 @Component({
   selector: 'app-leases-panel',
@@ -27,9 +27,9 @@ import {MenuTrigger} from '../../../layout/components/menu/menu-trigger';
     LeaseStatusPipe,
     Menu,
     MenuItem,
-    MenuTrigger
+    MenuTrigger,
   ],
-  templateUrl: './leases-panel.html'
+  templateUrl: './leases-panel.html',
 })
 export class LeasesPanel {
   @Input()
@@ -76,7 +76,10 @@ export class LeasesPanel {
 
   getLeaseLabel(lease: Lease): string {
     const tenant = lease.tenants?.[0];
-    const fullName = [tenant?.firstName, tenant?.lastName].filter(Boolean).join(' ').trim();
+    const fullName = [tenant?.firstName, tenant?.lastName]
+      .filter(Boolean)
+      .join(' ')
+      .trim();
     return fullName || 'Bail';
   }
 

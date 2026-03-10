@@ -1,18 +1,19 @@
-import {Component, Input} from '@angular/core';
-import {Banknote, CalendarIcon, LucideAngularModule, MapPinIcon} from 'lucide-angular';
-import {RouterLink} from '@angular/router';
-import {Property} from '../../../model/property/property';
-import {NgOptimizedImage} from '@angular/common';
+import { Component, Input } from '@angular/core';
+import {
+  Banknote,
+  CalendarIcon,
+  LucideAngularModule,
+  MapPinIcon,
+} from 'lucide-angular';
+import { RouterLink } from '@angular/router';
+import { Property } from '../../../model/property/property';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-property-card',
-  imports: [
-    LucideAngularModule,
-    RouterLink,
-    NgOptimizedImage
-  ],
+  imports: [LucideAngularModule, RouterLink, NgOptimizedImage],
   templateUrl: './property-card.html',
-  styleUrl: './property-card.scss'
+  styleUrl: './property-card.scss',
 })
 export class PropertyCard {
   @Input()

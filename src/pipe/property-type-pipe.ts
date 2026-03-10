@@ -1,10 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'propertyType'
+  name: 'propertyType',
 })
 export class PropertyTypePipe implements PipeTransform {
-
   private readonly translations: { [key: string]: string } = {
     APARTMENT: 'Appartement',
     HOUSE: 'Maison',
@@ -14,7 +13,7 @@ export class PropertyTypePipe implements PipeTransform {
     ROOM: 'Chambre',
     COMMERCIAL: 'Local commercial',
     LAND: 'Terrain',
-    OTHER: 'Autre'
+    OTHER: 'Autre',
   };
 
   transform(value: string | undefined): string {

@@ -1,7 +1,7 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'paymentMethodLabel'
+  name: 'paymentMethodLabel',
 })
 export class PaymentMethodPipe implements PipeTransform {
   private readonly translations: Record<string, string> = {
@@ -10,7 +10,7 @@ export class PaymentMethodPipe implements PipeTransform {
     CREDIT_CARD: 'Carte bancaire',
     CASH: 'Espèces',
     CHECK: 'Chèque',
-    OTHER: 'Autre'
+    OTHER: 'Autre',
   };
 
   transform(value: string | undefined | null): string {

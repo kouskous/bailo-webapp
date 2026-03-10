@@ -1,223 +1,411 @@
 @if (loading) {
-  <app-edit-property-skeleton></app-edit-property-skeleton>
+<app-edit-property-skeleton></app-edit-property-skeleton>
 } @else {
-  <form class="min-h-[calc(100vh-4rem)] bg-slate-50 p-3 md:p-6" [formGroup]="propertyForm" (ngSubmit)="onPrimaryAction()">
-    <header class="mx-auto mb-4 flex w-full max-w-4xl items-start gap-3">
-      <a
-        [routerLink]="'/properties'"
-        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-red-600 shadow-sm hover:bg-red-50"
+<form
+  class="min-h-[calc(100vh-4rem)] bg-slate-50 p-3 md:p-6"
+  [formGroup]="propertyForm"
+  (ngSubmit)="onPrimaryAction()"
+>
+  <header class="mx-auto mb-4 flex w-full max-w-4xl items-start gap-3">
+    <a
+      [routerLink]="'/properties'"
+      class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-red-600 shadow-sm hover:bg-red-50"
+    >
+      <lucide-icon [img]="ArrowLeftIcon" class="h-5 w-5"></lucide-icon>
+    </a>
+    <div>
+      <p class="m-0 text-xs font-bold uppercase tracking-[0.18em] text-red-700">
+        Parcours de creation
+      </p>
+      <h1 class="m-0.5 text-2xl font-extrabold text-slate-900">
+        {{ propertyId ? 'Mettons a jour votre bien' : 'Ajoutons votre bien pas a
+        pas' }}
+      </h1>
+    </div>
+  </header>
+
+  <section class="mx-auto mb-4 w-full max-w-4xl">
+    <div
+      class="mb-2 flex items-center justify-between text-xs font-semibold text-slate-600"
+    >
+      <span>Avancement</span>
+      <span>{{ currentStepIndex + 1 }} / {{ steps.length }}</span>
+    </div>
+    <div class="h-2 overflow-hidden rounded-full bg-slate-200">
+      <div
+        class="h-full rounded-full bg-red-600 transition-all duration-500"
+        [style.width.%]="progressPercentage"
+      ></div>
+    </div>
+  </section>
+
+  <section
+    class="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:p-7"
+  >
+    <div class="mb-5 flex items-start gap-4">
+      <div
+        class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-50 text-red-600"
       >
-        <lucide-icon [img]="ArrowLeftIcon" class="h-5 w-5"></lucide-icon>
-      </a>
+        <lucide-icon [img]="currentStepIcon" class="h-6 w-6"></lucide-icon>
+      </div>
       <div>
-        <p class="m-0 text-xs font-bold uppercase tracking-[0.18em] text-red-700">Parcours de creation</p>
-        <h1 class="m-0.5 text-2xl font-extrabold text-slate-900">{{ propertyId ? 'Mettons a jour votre bien' : 'Ajoutons votre bien pas a pas' }}</h1>
+        <p
+          class="m-0 text-xs font-bold uppercase tracking-[0.16em] text-red-600"
+        >
+          Question
+        </p>
+        <h2 class="m-0.5 text-2xl font-extrabold text-slate-900">
+          {{ currentStep.title }}
+        </h2>
+        <p class="m-0 mt-1 text-sm text-slate-600">
+          {{ currentStep.subtitle }}
+        </p>
       </div>
-    </header>
+    </div>
 
-    <section class="mx-auto mb-4 w-full max-w-4xl">
-      <div class="mb-2 flex items-center justify-between text-xs font-semibold text-slate-600">
-        <span>Avancement</span>
-        <span>{{ currentStepIndex + 1 }} / {{ steps.length }}</span>
+    @if (currentStep.key === 'identity') {
+    <div
+      class="grid grid-cols-1 gap-4 md:grid-cols-2"
+      formGroupName="generalIdentity"
+    >
+      <app-dropdown
+        [label]="'Type du bien'"
+        [options]="propertyTypes"
+        formControlName="type"
+      ></app-dropdown>
+      <app-text-input
+        [label]="'Nom du bien'"
+        [placeholder]="'Ex: Appartement Lausanne centre'"
+        formControlName="name"
+      ></app-text-input>
+    </div>
+    } @if (currentStep.key === 'owners') {
+    <div class="rounded-xl border border-slate-200 p-4">
+      <div class="mb-3 flex items-center justify-between">
+        <h3 class="text-sm font-bold uppercase tracking-wide text-slate-700">
+          Proprietaires du bien
+        </h3>
+        <button
+          type="button"
+          class="cursor-pointer rounded-lg border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700"
+          (click)="addLandlord()"
+        >
+          Ajouter
+        </button>
       </div>
-      <div class="h-2 overflow-hidden rounded-full bg-slate-200">
-        <div class="h-full rounded-full bg-red-600 transition-all duration-500" [style.width.%]="progressPercentage"></div>
-      </div>
-    </section>
 
-    <section class="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:p-7">
-      <div class="mb-5 flex items-start gap-4">
-        <div class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-50 text-red-600">
-          <lucide-icon [img]="currentStepIcon" class="h-6 w-6"></lucide-icon>
-        </div>
-        <div>
-          <p class="m-0 text-xs font-bold uppercase tracking-[0.16em] text-red-600">Question</p>
-          <h2 class="m-0.5 text-2xl font-extrabold text-slate-900">{{ currentStep.title }}</h2>
-          <p class="m-0 mt-1 text-sm text-slate-600">{{ currentStep.subtitle }}</p>
-        </div>
-      </div>
-
-      @if (currentStep.key === 'identity') {
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2" formGroupName="generalIdentity">
-          <app-dropdown [label]="'Type du bien'" [options]="propertyTypes" formControlName="type"></app-dropdown>
-          <app-text-input [label]="'Nom du bien'" [placeholder]="'Ex: Appartement Lausanne centre'" formControlName="name"></app-text-input>
-        </div>
-      }
-
-      @if (currentStep.key === 'owners') {
-        <div class="rounded-xl border border-slate-200 p-4">
-          <div class="mb-3 flex items-center justify-between">
-            <h3 class="text-sm font-bold uppercase tracking-wide text-slate-700">Proprietaires du bien</h3>
-            <button type="button" class="cursor-pointer rounded-lg border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700" (click)="addLandlord()">
-              Ajouter
+      <div formArrayName="landlords" class="space-y-3">
+        @for (landlord of landlords.controls; let i = $index; track i) {
+        <div [formGroupName]="i" class="rounded-lg border border-slate-200 p-3">
+          <div class="mb-2 flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500"
+              >Proprietaire {{ i + 1 }}</span
+            >
+            <button
+              type="button"
+              class="cursor-pointer text-xs font-semibold text-red-600"
+              (click)="removeLandlord(i)"
+            >
+              Supprimer
             </button>
           </div>
-
-          <div formArrayName="landlords" class="space-y-3">
-            @for (landlord of landlords.controls; let i = $index; track i) {
-              <div [formGroupName]="i" class="rounded-lg border border-slate-200 p-3">
-                <div class="mb-2 flex items-center justify-between">
-                  <span class="text-xs font-semibold text-slate-500">Proprietaire {{ i + 1 }}</span>
-                  <button type="button" class="cursor-pointer text-xs font-semibold text-red-600" (click)="removeLandlord(i)">Supprimer</button>
-                </div>
-                <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-                  <app-text-input [label]="'Prenom'" formControlName="firstName"></app-text-input>
-                  <app-text-input [label]="'Nom'" formControlName="lastName"></app-text-input>
-                  <app-text-input [label]="'Email'" [type]="'email'" formControlName="email"></app-text-input>
-                  <app-text-input [label]="'Telephone'" formControlName="phoneNumber"></app-text-input>
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-      }
-
-      @if (currentStep.key === 'address') {
-        <div class="space-y-4">
-          <div class="rounded-xl border border-slate-200 p-4">
-            <label class="block text-sm/6 font-medium text-gray-900">Rechercher une adresse</label>
-            <input
-              type="text"
-              [value]="addressSearch"
-              (input)="onAddressSearchInput($event)"
-              placeholder="Ex: Avenue de la Gare 12, Lausanne"
-              autocomplete="off"
-              class="mt-1 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400 sm:text-sm/6"
-            />
-            <div class="mt-2 flex flex-wrap items-center gap-3">
-              @if (addressLookupLoading) {
-                <span class="text-xs text-slate-500">Recherche en cours...</span>
-              }
-              <button
-                type="button"
-                class="cursor-pointer rounded-lg border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700"
-                (click)="enableManualAddressEntry()">
-                Saisir manuellement
-              </button>
-            </div>
-            @if (addressLookupError) {
-              <div class="mt-2 text-xs text-red-600">{{ addressLookupError }}</div>
-            }
-            @if (addressSuggestions.length) {
-              <ul class="mt-3 max-h-56 overflow-auto rounded-xl border border-slate-200 bg-white">
-                @for (suggestion of addressSuggestions; track suggestion.placeId) {
-                  <li>
-                    <button
-                      type="button"
-                      class="w-full cursor-pointer px-3 py-2 text-left hover:bg-slate-50"
-                      (click)="selectAddressSuggestion(suggestion)">
-                      <div class="text-sm font-semibold text-slate-800">{{ suggestion.mainText || suggestion.description }}</div>
-                      @if (suggestion.secondaryText) {
-                        <div class="text-xs text-slate-500">{{ suggestion.secondaryText }}</div>
-                      }
-                    </button>
-                  </li>
-                }
-              </ul>
-            }
-          </div>
-
-          @if (addressDetailsLoading) {
-            <div class="text-sm text-slate-600">Chargement des details de l'adresse...</div>
-          }
-
-          @if (showAddressForm) {
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2" formGroupName="address">
-              <div class="md:col-span-2">
-                <app-text-input [label]="'Adresse'" [placeholder]="'Ex: Rue Centrale 21'" formControlName="street"></app-text-input>
-              </div>
-              <div class="md:col-span-2">
-                <app-text-input [label]="'Complement'" [placeholder]="'Ex: Residence des Alpes'" formControlName="additional"></app-text-input>
-              </div>
-              <app-text-input [label]="'Batiment'" [placeholder]="'Ex: B'" formControlName="building"></app-text-input>
-              <app-text-input [label]="'Etage'" [placeholder]="'Ex: 3'" formControlName="floor"></app-text-input>
-              <app-text-input [label]="'Code postal'" [placeholder]="'Ex: 1005'" formControlName="zipCode"></app-text-input>
-              <app-text-input [label]="'Ville'" [placeholder]="'Ex: Lausanne'" formControlName="city"></app-text-input>
-              <div class="md:col-span-2">
-                <app-dropdown [label]="'Canton'" [options]="cantons" formControlName="state"></app-dropdown>
-              </div>
-            </div>
-          }
-        </div>
-      }
-
-      @if (currentStep.key === 'layout') {
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2" formGroupName="generalLayout">
-          <app-text-input [label]="'Nombre de pieces'" [placeholder]="'Ex: 4.5'" type="number" formControlName="rooms"></app-text-input>
-          <app-text-input [label]="'Chambres'" [placeholder]="'Ex: 3'" type="number" formControlName="bedrooms"></app-text-input>
-          <app-text-input [label]="'Salles de bain'" [placeholder]="'Ex: 2'" type="number" formControlName="bathrooms"></app-text-input>
-          <app-text-input [label]="'Toilettes'" [placeholder]="'Ex: 2'" type="number" formControlName="toilets"></app-text-input>
-        </div>
-      }
-
-      @if (currentStep.key === 'surface') {
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2" formGroupName="surface">
-          <app-text-input [label]="'Surface habitable (m2)'" [placeholder]="'Ex: 85'" type="number" formControlName="livingArea"></app-text-input>
-          <app-text-input [label]="'Surface totale (m2)'" [placeholder]="'Ex: 102'" type="number" formControlName="totalArea"></app-text-input>
-          <app-text-input [label]="'Surface terrain (m2)'" [placeholder]="'Ex: 300'" type="number" formControlName="landArea"></app-text-input>
-          <app-text-input [label]="'Balcon (m2)'" [placeholder]="'Ex: 8'" type="number" formControlName="balconyArea"></app-text-input>
-          <app-text-input [label]="'Terrasse (m2)'" [placeholder]="'Ex: 18'" type="number" formControlName="terraceArea"></app-text-input>
-          <app-text-input [label]="'Jardin (m2)'" [placeholder]="'Ex: 60'" type="number" formControlName="gardenArea"></app-text-input>
-        </div>
-      }
-
-      @if (currentStep.key === 'energy') {
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2" formGroupName="energy">
-          <app-dropdown [label]="'Chauffage principal'" formControlName="heatingType" [options]="heatingOptions"></app-dropdown>
-          <app-dropdown [label]="'Distribution chaleur'" formControlName="heatingDistribution" [options]="heatingDistributions"></app-dropdown>
-          <app-text-input [label]="'Annee de construction'" [placeholder]="'Ex: 2008'" type="number" formControlName="yearOfConstruction"></app-text-input>
-          <app-text-input [label]="'Annee de renovation'" [placeholder]="'Ex: 2022'" type="number" formControlName="yearOfRenovation"></app-text-input>
-          <div class="md:col-span-2">
-            <app-dropdown [label]="'Etiquette energetique'" formControlName="energyLabel" [options]="energyLabels"></app-dropdown>
-          </div>
-        </div>
-      }
-
-      @if (currentStep.key === 'features') {
-        <div class="rounded-2xl border border-red-200 bg-red-50 p-4" formGroupName="features">
-          <h3 class="mb-3 text-sm font-bold uppercase tracking-wide text-red-700">Selectionnez les equipements</h3>
           <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-            @for (feature of featuresOptions; track feature.key) {
-              <app-checkbox [formControlName]="feature.key" [label]="feature.label"></app-checkbox>
-            }
+            <app-text-input
+              [label]="'Prenom'"
+              formControlName="firstName"
+            ></app-text-input>
+            <app-text-input
+              [label]="'Nom'"
+              formControlName="lastName"
+            ></app-text-input>
+            <app-text-input
+              [label]="'Email'"
+              [type]="'email'"
+              formControlName="email"
+            ></app-text-input>
+            <app-text-input
+              [label]="'Telephone'"
+              formControlName="phoneNumber"
+            ></app-text-input>
           </div>
         </div>
-      }
-
-      @if (currentStep.key === 'description') {
-        <div class="space-y-4" formGroupName="additionalInformation">
-          <app-text-area [label]="'Description'" formControlName="description" [placeholder]="'Ex: Appartement lumineux, proche transports, ideal pour un couple.'"></app-text-area>
-
-          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <h3 class="m-0 text-sm font-bold text-slate-800">Recap rapide</h3>
-            <p class="m-0 mt-2 text-sm text-slate-600">{{ propertyForm.get('generalIdentity.name')?.value || 'Sans nom' }} - {{ getOptionLabel(propertyTypes, propertyForm.get('generalIdentity.type')?.value || '') }}</p>
-            <p class="m-0 mt-1 text-sm text-slate-600">{{ reviewAddressLabel || 'Adresse incomplete' }}</p>
-            <p class="m-0 mt-1 text-sm text-slate-600">Surface habitable: {{ propertyForm.get('surface.livingArea')?.value || '-' }} m2</p>
-            <p class="m-0 mt-1 text-sm text-slate-600">Proprietaires: {{ landlords.length }}</p>
-          </div>
-        </div>
-      }
-    </section>
-
-    <footer class="mx-auto mt-4 flex w-full max-w-4xl gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
-      <button
-        type="button"
-        class="min-h-11 flex-1 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
-        [disabled]="currentStepIndex === 0"
-        (click)="previousStep()">
-        Retour
-      </button>
-
-      <button
-        type="submit"
-        class="min-h-11 flex-1 rounded-xl border border-red-500 bg-red-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
-        [disabled]="isLastStep() ? !propertyForm.valid : !isCurrentStepValid()">
-        @if (isLastStep()) {
-          {{ saveButtonLabel }}
-        } @else {
-          Continuer
         }
-      </button>
-    </footer>
-  </form>
+      </div>
+    </div>
+    } @if (currentStep.key === 'address') {
+    <div class="space-y-4">
+      <div class="rounded-xl border border-slate-200 p-4">
+        <label class="block text-sm/6 font-medium text-gray-900"
+          >Rechercher une adresse</label
+        >
+        <input
+          type="text"
+          [value]="addressSearch"
+          (input)="onAddressSearchInput($event)"
+          placeholder="Ex: Avenue de la Gare 12, Lausanne"
+          autocomplete="off"
+          class="mt-1 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 outline-gray-300 placeholder:text-gray-400 sm:text-sm/6"
+        />
+        <div class="mt-2 flex flex-wrap items-center gap-3">
+          @if (addressLookupLoading) {
+          <span class="text-xs text-slate-500">Recherche en cours...</span>
+          }
+          <button
+            type="button"
+            class="cursor-pointer rounded-lg border border-slate-300 px-3 py-1 text-xs font-semibold text-slate-700"
+            (click)="enableManualAddressEntry()"
+          >
+            Saisir manuellement
+          </button>
+        </div>
+        @if (addressLookupError) {
+        <div class="mt-2 text-xs text-red-600">{{ addressLookupError }}</div>
+        } @if (addressSuggestions.length) {
+        <ul
+          class="mt-3 max-h-56 overflow-auto rounded-xl border border-slate-200 bg-white"
+        >
+          @for (suggestion of addressSuggestions; track suggestion.placeId) {
+          <li>
+            <button
+              type="button"
+              class="w-full cursor-pointer px-3 py-2 text-left hover:bg-slate-50"
+              (click)="selectAddressSuggestion(suggestion)"
+            >
+              <div class="text-sm font-semibold text-slate-800">
+                {{ suggestion.mainText || suggestion.description }}
+              </div>
+              @if (suggestion.secondaryText) {
+              <div class="text-xs text-slate-500">
+                {{ suggestion.secondaryText }}
+              </div>
+              }
+            </button>
+          </li>
+          }
+        </ul>
+        }
+      </div>
+
+      @if (addressDetailsLoading) {
+      <div class="text-sm text-slate-600">
+        Chargement des details de l'adresse...
+      </div>
+      } @if (showAddressForm) {
+      <div
+        class="grid grid-cols-1 gap-4 md:grid-cols-2"
+        formGroupName="address"
+      >
+        <div class="md:col-span-2">
+          <app-text-input
+            [label]="'Adresse'"
+            [placeholder]="'Ex: Rue Centrale 21'"
+            formControlName="street"
+          ></app-text-input>
+        </div>
+        <div class="md:col-span-2">
+          <app-text-input
+            [label]="'Complement'"
+            [placeholder]="'Ex: Residence des Alpes'"
+            formControlName="additional"
+          ></app-text-input>
+        </div>
+        <app-text-input
+          [label]="'Batiment'"
+          [placeholder]="'Ex: B'"
+          formControlName="building"
+        ></app-text-input>
+        <app-text-input
+          [label]="'Etage'"
+          [placeholder]="'Ex: 3'"
+          formControlName="floor"
+        ></app-text-input>
+        <app-text-input
+          [label]="'Code postal'"
+          [placeholder]="'Ex: 1005'"
+          formControlName="zipCode"
+        ></app-text-input>
+        <app-text-input
+          [label]="'Ville'"
+          [placeholder]="'Ex: Lausanne'"
+          formControlName="city"
+        ></app-text-input>
+        <div class="md:col-span-2">
+          <app-dropdown
+            [label]="'Canton'"
+            [options]="cantons"
+            formControlName="state"
+          ></app-dropdown>
+        </div>
+      </div>
+      }
+    </div>
+    } @if (currentStep.key === 'layout') {
+    <div
+      class="grid grid-cols-1 gap-4 md:grid-cols-2"
+      formGroupName="generalLayout"
+    >
+      <app-text-input
+        [label]="'Nombre de pieces'"
+        [placeholder]="'Ex: 4.5'"
+        type="number"
+        formControlName="rooms"
+      ></app-text-input>
+      <app-text-input
+        [label]="'Chambres'"
+        [placeholder]="'Ex: 3'"
+        type="number"
+        formControlName="bedrooms"
+      ></app-text-input>
+      <app-text-input
+        [label]="'Salles de bain'"
+        [placeholder]="'Ex: 2'"
+        type="number"
+        formControlName="bathrooms"
+      ></app-text-input>
+      <app-text-input
+        [label]="'Toilettes'"
+        [placeholder]="'Ex: 2'"
+        type="number"
+        formControlName="toilets"
+      ></app-text-input>
+    </div>
+    } @if (currentStep.key === 'surface') {
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2" formGroupName="surface">
+      <app-text-input
+        [label]="'Surface habitable (m2)'"
+        [placeholder]="'Ex: 85'"
+        type="number"
+        formControlName="livingArea"
+      ></app-text-input>
+      <app-text-input
+        [label]="'Surface totale (m2)'"
+        [placeholder]="'Ex: 102'"
+        type="number"
+        formControlName="totalArea"
+      ></app-text-input>
+      <app-text-input
+        [label]="'Surface terrain (m2)'"
+        [placeholder]="'Ex: 300'"
+        type="number"
+        formControlName="landArea"
+      ></app-text-input>
+      <app-text-input
+        [label]="'Balcon (m2)'"
+        [placeholder]="'Ex: 8'"
+        type="number"
+        formControlName="balconyArea"
+      ></app-text-input>
+      <app-text-input
+        [label]="'Terrasse (m2)'"
+        [placeholder]="'Ex: 18'"
+        type="number"
+        formControlName="terraceArea"
+      ></app-text-input>
+      <app-text-input
+        [label]="'Jardin (m2)'"
+        [placeholder]="'Ex: 60'"
+        type="number"
+        formControlName="gardenArea"
+      ></app-text-input>
+    </div>
+    } @if (currentStep.key === 'energy') {
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2" formGroupName="energy">
+      <app-dropdown
+        [label]="'Chauffage principal'"
+        formControlName="heatingType"
+        [options]="heatingOptions"
+      ></app-dropdown>
+      <app-dropdown
+        [label]="'Distribution chaleur'"
+        formControlName="heatingDistribution"
+        [options]="heatingDistributions"
+      ></app-dropdown>
+      <app-text-input
+        [label]="'Annee de construction'"
+        [placeholder]="'Ex: 2008'"
+        type="number"
+        formControlName="yearOfConstruction"
+      ></app-text-input>
+      <app-text-input
+        [label]="'Annee de renovation'"
+        [placeholder]="'Ex: 2022'"
+        type="number"
+        formControlName="yearOfRenovation"
+      ></app-text-input>
+      <div class="md:col-span-2">
+        <app-dropdown
+          [label]="'Etiquette energetique'"
+          formControlName="energyLabel"
+          [options]="energyLabels"
+        ></app-dropdown>
+      </div>
+    </div>
+    } @if (currentStep.key === 'features') {
+    <div
+      class="rounded-2xl border border-red-200 bg-red-50 p-4"
+      formGroupName="features"
+    >
+      <h3 class="mb-3 text-sm font-bold uppercase tracking-wide text-red-700">
+        Selectionnez les equipements
+      </h3>
+      <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+        @for (feature of featuresOptions; track feature.key) {
+        <app-checkbox
+          [formControlName]="feature.key"
+          [label]="feature.label"
+        ></app-checkbox>
+        }
+      </div>
+    </div>
+    } @if (currentStep.key === 'description') {
+    <div class="space-y-4" formGroupName="additionalInformation">
+      <app-text-area
+        [label]="'Description'"
+        formControlName="description"
+        [placeholder]="'Ex: Appartement lumineux, proche transports, ideal pour un couple.'"
+      ></app-text-area>
+
+      <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+        <h3 class="m-0 text-sm font-bold text-slate-800">Recap rapide</h3>
+        <p class="m-0 mt-2 text-sm text-slate-600">
+          {{ propertyForm.get('generalIdentity.name')?.value || 'Sans nom' }} -
+          {{ getOptionLabel(propertyTypes,
+          propertyForm.get('generalIdentity.type')?.value || '') }}
+        </p>
+        <p class="m-0 mt-1 text-sm text-slate-600">
+          {{ reviewAddressLabel || 'Adresse incomplete' }}
+        </p>
+        <p class="m-0 mt-1 text-sm text-slate-600">
+          Surface habitable: {{ propertyForm.get('surface.livingArea')?.value ||
+          '-' }} m2
+        </p>
+        <p class="m-0 mt-1 text-sm text-slate-600">
+          Proprietaires: {{ landlords.length }}
+        </p>
+      </div>
+    </div>
+    }
+  </section>
+
+  <footer
+    class="mx-auto mt-4 flex w-full max-w-4xl gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
+  >
+    <button
+      type="button"
+      class="min-h-11 flex-1 rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+      [disabled]="currentStepIndex === 0"
+      (click)="previousStep()"
+    >
+      Retour
+    </button>
+
+    <button
+      type="submit"
+      class="min-h-11 flex-1 rounded-xl border border-red-500 bg-red-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40"
+      [disabled]="isLastStep() ? !propertyForm.valid : !isCurrentStepValid()"
+    >
+      @if (isLastStep()) { {{ saveButtonLabel }} } @else { Continuer }
+    </button>
+  </footer>
+</form>
 }

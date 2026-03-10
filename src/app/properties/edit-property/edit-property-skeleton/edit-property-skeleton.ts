@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-edit-property-skeleton',
   imports: [],
   templateUrl: './edit-property-skeleton.html',
-  styleUrl: './edit-property-skeleton.scss'
+  styleUrl: './edit-property-skeleton.scss',
 })
-export class EditPropertySkeleton {
-
-}
+export class EditPropertySkeleton {}

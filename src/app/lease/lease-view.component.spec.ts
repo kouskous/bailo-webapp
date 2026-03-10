@@ -8,9 +8,8 @@ describe('Lease', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [LeaseView]
-    })
-    .compileComponents();
+      imports: [LeaseView],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LeaseView);
     component = fixture.componentInstance;

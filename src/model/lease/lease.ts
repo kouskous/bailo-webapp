@@ -1,5 +1,5 @@
-import {Contractor} from './contractor';
-import {Address} from '../shared/address';
+import { Contractor } from './contractor';
+import { Address } from '../shared/address';
 
 export interface AncillaryChargeItem {
   label?: string;

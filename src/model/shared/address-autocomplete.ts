@@ -4,4 +4,3 @@ export interface AddressAutocompleteSuggestion {
   mainText?: string;
   secondaryText?: string;
 }
-

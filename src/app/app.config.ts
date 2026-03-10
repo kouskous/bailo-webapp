@@ -1,9 +1,18 @@
-import { ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  LOCALE_ID,
+  provideBrowserGlobalErrorListeners,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import {AuthHttpInterceptor, provideAuth0} from '@auth0/auth0-angular';
-import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import { AuthHttpInterceptor, provideAuth0 } from '@auth0/auth0-angular';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,17 +37,17 @@ export const appConfig: ApplicationConfig = {
             tokenOptions: {
               authorizationParams: {
                 audience: 'https://api.bailo.ch',
-                scope: 'openid profile email'
-              }
-            }
-          }
-        ]
-      }
+                scope: 'openid profile email',
+              },
+            },
+          },
+        ],
+      },
     }),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthHttpInterceptor,
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 };

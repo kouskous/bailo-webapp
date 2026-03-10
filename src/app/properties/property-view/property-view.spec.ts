@@ -8,9 +8,8 @@ describe('PropertyView', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PropertyView]
-    })
-    .compileComponents();
+      imports: [PropertyView],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(PropertyView);
     component = fixture.componentInstance;

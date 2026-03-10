@@ -1,7 +1,7 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'leaseStatus'
+  name: 'leaseStatus',
 })
 export class LeaseStatusPipe implements PipeTransform {
   private readonly translations: Record<string, string> = {
@@ -10,7 +10,7 @@ export class LeaseStatusPipe implements PipeTransform {
     ARCHIVED: 'Archive',
     TERMINATED: 'Resilie',
     PENDING: 'En attente',
-    CANCELED: 'Annule'
+    CANCELED: 'Annule',
   };
 
   transform(value: string | undefined | null): string {

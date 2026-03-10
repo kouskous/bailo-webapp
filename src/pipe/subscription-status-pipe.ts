@@ -1,10 +1,9 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'subscriptionStatus'
+  name: 'subscriptionStatus',
 })
 export class SubscriptionStatusPipe implements PipeTransform {
-
   private readonly translations: { [key: string]: string } = {
     ACTIVE: 'Actif',
     PAST_DUE: 'Paiement en retard',
@@ -15,7 +14,7 @@ export class SubscriptionStatusPipe implements PipeTransform {
     UNPAID: 'Impaye',
     PAUSED: 'Suspendu',
     NONE: 'Aucun abonnement',
-    UNKNOWN: 'Inconnu'
+    UNKNOWN: 'Inconnu',
   };
 
   transform(value: string | undefined): string {

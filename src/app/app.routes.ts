@@ -1,23 +1,23 @@
-import {Routes} from '@angular/router';
-import {AuthGuard} from '@auth0/auth0-angular';
-import {EditContractors} from './lease/edit-contractors/edit-contractors';
-import {Properties} from './properties/properties.component';
-import {PropertyView} from './properties/property-view/property-view';
-import {EditProperty} from './properties/edit-property/edit-property';
-import {EditLease} from './lease/edit-lease/edit-lease';
-import {PaymentSuccess} from './subscription/payment-success/payment-success';
-import {PaymentFailed} from './subscription/payment-failed/payment-failed';
+import { Routes } from '@angular/router';
+import { AuthGuard } from '@auth0/auth0-angular';
+import { EditContractors } from './lease/edit-contractors/edit-contractors';
+import { Properties } from './properties/properties.component';
+import { PropertyView } from './properties/property-view/property-view';
+import { EditProperty } from './properties/edit-property/edit-property';
+import { EditLease } from './lease/edit-lease/edit-lease';
+import { PaymentSuccess } from './subscription/payment-success/payment-success';
+import { PaymentFailed } from './subscription/payment-failed/payment-failed';
 
 export const routes: Routes = [
   {
     path: '',
     redirectTo: 'properties',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'properties',
     component: Properties,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'properties/new',
@@ -27,12 +27,12 @@ export const routes: Routes = [
   {
     path: 'properties/:id/edit',
     component: EditProperty,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'properties/:id',
     component: PropertyView,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
   },
   {
     path: 'properties/:propertyId/lease/:leaseId/property',
@@ -56,10 +56,10 @@ export const routes: Routes = [
   },
   {
     path: 'subscription/payment-success',
-    component: PaymentSuccess
+    component: PaymentSuccess,
   },
   {
     path: 'subscription/payment-failed',
-    component: PaymentFailed
-  }
+    component: PaymentFailed,
+  },
 ];

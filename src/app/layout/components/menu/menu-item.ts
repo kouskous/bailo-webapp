@@ -1,10 +1,10 @@
-import {Directive, HostBinding, Input} from '@angular/core';
+import { Directive, HostBinding, Input } from '@angular/core';
 
 @Directive({
-  selector: '[appMenuItem]'
+  selector: '[appMenuItem]',
 })
 export class MenuItem {
-  @Input() icon = ''
+  @Input() icon = '';
 
   @HostBinding('class') className =
     'min-h-12 flex items-center w-full gap-2 px-4 py-3 text-sm hover:bg-gray-100 rounded transition cursor-pointer';

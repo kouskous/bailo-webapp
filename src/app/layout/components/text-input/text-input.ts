@@ -1,12 +1,15 @@
-import {Component, forwardRef, Injector, Input, OnInit} from '@angular/core';
-import {AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl} from '@angular/forms';
-import {NgClass} from '@angular/common';
+import { Component, forwardRef, Injector, Input, OnInit } from '@angular/core';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  NgControl,
+} from '@angular/forms';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-text-input',
-  imports: [
-    NgClass
-  ],
+  imports: [NgClass],
   templateUrl: './text-input.html',
   styleUrl: './text-input.scss',
   providers: [
@@ -18,7 +21,6 @@ import {NgClass} from '@angular/common';
   ],
 })
 export class TextInput implements ControlValueAccessor, OnInit {
-
   @Input() label = '';
   @Input() placeholder = '';
   @Input() type: 'number' | 'text' | 'email' | 'password' = 'text';
@@ -27,8 +29,7 @@ export class TextInput implements ControlValueAccessor, OnInit {
   isDisabled = false;
   private ngControl?: NgControl | null;
 
-  constructor(private readonly injector: Injector) {
-  }
+  constructor(private readonly injector: Injector) {}
 
   ngOnInit(): void {
     this.ngControl = this.injector.get(NgControl, null, { self: true });
@@ -76,9 +77,13 @@ export class TextInput implements ControlValueAccessor, OnInit {
 
   private setErrorMessage() {
     this.errorMessage = '';
-    if (this.ngControl?.errors){
-      Object.keys(this.ngControl?.errors).forEach((errorKey) =>
-        this.errorMessage = this.getMessage(errorKey, this.ngControl?.errors?.[errorKey])
+    if (this.ngControl?.errors) {
+      Object.keys(this.ngControl?.errors).forEach(
+        (errorKey) =>
+          (this.errorMessage = this.getMessage(
+            errorKey,
+            this.ngControl?.errors?.[errorKey],
+          )),
       );
     }
   }
